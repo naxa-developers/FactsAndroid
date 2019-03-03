@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
 
     tools:context=".feed.detail.FactDetailActivity">
 
+    <include layout="@layout/toolbar" />
+
     <TextView
-        android:padding="@dimen/default_activity_padding"
-        style="@style/Text.Title.Detail"
-        tools:text="@string/demo_fact"
         android:id="@+id/tv_fact_details_title"
+        style="@style/Text.Title.Detail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_activity_padding"
+        tools:text="@string/demo_fact" />
 
     <ImageView
-        android:layout_marginTop="10dp"
         android:id="@+id/iv_fact_detail"
         android:layout_width="match_parent"
         android:layout_height="177dp"
+        android:layout_marginTop="10dp"
         android:transitionName="@string/transtion_fact_list_details" />
 
 </LinearLayout>

@@ -47,8 +47,7 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setupToolbar();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -65,7 +64,7 @@ public class MainActivity extends BaseActivity
         setupSurveyCard();
         mockSurveyCard();
         setupChips();
-        centerToolbarTitle(toolbar);
+
     }
 
     private void setupChips() {
@@ -126,12 +125,7 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -186,7 +180,7 @@ public class MainActivity extends BaseActivity
         intent.putExtra(Constant.EXTRA_IMAGE, fact);
 
         ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this, (ImageView)view, getString(R.string.transtion_fact_list_details));
+                makeSceneTransitionAnimation(this, (ImageView) view, getString(R.string.transtion_fact_list_details));
         startActivity(intent, options.toBundle());
 
 

@@ -22,7 +22,6 @@
 
 
         <include
-
             layout="@layout/feed_category_chips" />
 
 

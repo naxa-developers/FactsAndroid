@@ -9,6 +9,7 @@ import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.Fade;
 import android.transition.TransitionSet;
+import android.view.Menu;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class FactDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fact_detail);
+        setupToolbar();
         bindUI();
 
         Fact fact = (Fact) getIntent().getSerializableExtra(Constant.EXTRA_IMAGE);
@@ -73,11 +75,12 @@ public class FactDetailActivity extends BaseActivity {
 //        }
 
     }
-
     private void bindUI() {
         imageView = findViewById(R.id.iv_fact_detail);
         tvTitle = findViewById(R.id.tv_fact_details_title);
     }
+
+
 
 
     @Override
