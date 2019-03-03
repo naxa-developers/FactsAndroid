@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
     }
 
     private void loadNextPage() {
@@ -192,7 +195,7 @@ public class MainActivity extends AppCompatActivity
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                surveyCardView.setVisibility(View.VISIBLE);
+//                surveyCardView.setVisibility(View.VISIBLE);
             }
         }, TimeUnit.SECONDS.toMillis(3));
     }

@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/default_activity_padding"
     tools:context=".feed.detail.FactDetailActivity">
 
+    <TextView
+
+        style="@style/Text.Title.Detail"
+        tools:text="@string/demo_fact"
+        android:id="@+id/tv_fact_details_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <ImageView
-        android:transitionName="@string/transtion_fact_list_details"
+        android:layout_marginTop="10dp"
         android:id="@+id/iv_fact_detail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="177dp"
+        android:transitionName="@string/transtion_fact_list_details" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

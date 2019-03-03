@@ -2,5 +2,6 @@
 <transitionSet
     android:duration="@android:integer/config_longAnimTime"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <changeImageTransform/>
+    <changeBounds/>
+    <fade/>
 </transitionSet>

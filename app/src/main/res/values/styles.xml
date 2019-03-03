@@ -44,9 +44,25 @@
     </style>
 
     <style name="Text.Title" parent="TextAppearance.AppCompat.Body1">
+
+        <item name="android:textSize">14sp</item>
+        <item name="android:minLines">2</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Text.Title.Card" parent="Text.Title">
         <item name="android:layout_marginLeft">13dp</item>
         <item name="android:layout_marginTop">9dp</item>
         <item name="android:layout_marginRight">35dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minLines">2</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Text.Title.Detail" parent="Text.Title">
+
         <item name="android:textSize">14sp</item>
         <item name="android:minLines">2</item>
         <item name="android:maxLines">2</item>

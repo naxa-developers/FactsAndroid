@@ -66,7 +66,9 @@ public class ShowcaseFeedActivity extends AppCompatActivity
         recyclerViewFeed.setAdapter(adapter);
 
         loadNextPage();
+
         SnapHelper snapHelper = new PagerSnapHelper();
+
         snapHelper.attachToRecyclerView(recyclerViewFeed);
 
 //        recyclerViewFeed.addOnScrollListener(new PaginationScrollListener(manager) {
