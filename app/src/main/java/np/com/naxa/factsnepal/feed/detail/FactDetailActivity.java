@@ -1,9 +1,14 @@
 package np.com.naxa.factsnepal.feed.detail;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.ViewUtils;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.Fade;
+import android.transition.TransitionSet;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,6 +56,21 @@ public class FactDetailActivity extends BaseActivity {
                 })
                 .into(imageView);
 
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getWindow().setEnterTransition(new Fade());
+//            getWindow().setSharedElementExitTransition(new TransitionSet()
+//                    .addTransition(new ChangeBounds())
+//                    .addTransition(new Fade())
+//
+//            );
+//            getWindow().setSharedElementEnterTransition(
+//                    new TransitionSet()
+//                            .addTransition(new ChangeBounds())
+//                            .addTransition(new Fade())
+//
+//            );
+//        }
 
     }
 
