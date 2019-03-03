@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="32dp"
+    android:layout_height="32dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_notifications_24dp"/>
+
+    <FrameLayout
+        android:id="@+id/view_alert_red_circle"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_gravity="top|end"
+        android:background="@drawable/notification_bubble"
+        tools:visibility="visible">
+
+        <TextView
+            android:textColor="@color/colorAccent"
+            android:text="999"
+            android:id="@+id/tv_notification_counter"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            tools:text="399"/>
+
+    </FrameLayout>
+
+</FrameLayout>

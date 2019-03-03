@@ -1,5 +1,7 @@
 package np.com.naxa.factsnepal.common;
 
+import android.view.View;
+
 public interface OnCardItemClickListener<T> {
 
 
@@ -7,6 +9,7 @@ public interface OnCardItemClickListener<T> {
 
     void onCardItemLongClicked(T t);
 
+    void onCardItemClicked(T t, View view);
 
 
 }

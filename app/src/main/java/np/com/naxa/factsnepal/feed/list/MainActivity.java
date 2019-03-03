@@ -1,10 +1,12 @@
-package np.com.naxa.factsnepal.feed;
+package np.com.naxa.factsnepal.feed.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.SwipeDismissBehavior;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,13 +19,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.common.PaginationScrollListener;
+import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
+import np.com.naxa.factsnepal.utils.DialogUtils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact> {
@@ -54,6 +61,14 @@ public class MainActivity extends AppCompatActivity
         setupRecyclerView();
         setupSurveyCard();
         mockSurveyCard();
+        setupChips();
+    }
+
+    private void setupChips() {
+        findViewById(R.id.btn_add_more_chips)
+                .setOnClickListener(v -> {
+                    DialogUtils.showChipsDialog(this).show();
+                });
     }
 
     private void bindUI() {
@@ -160,7 +175,19 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void mockSurveyCard(){
+    @Override
+    public void onCardItemClicked(Fact fact, View view) {
+        Intent intent = new Intent(this, FactDetailActivity.class);
+        intent.putExtra(Constant.EXTRA_IMAGE, fact);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, (ImageView)view, getString(R.string.transtion_fact_list_details));
+        startActivity(intent, options.toBundle());
+
+
+    }
+
+    private void mockSurveyCard() {
         surveyCardView.setVisibility(View.GONE);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -178,5 +205,6 @@ public class MainActivity extends AppCompatActivity
                 (CoordinatorLayout.LayoutParams) surveyCardView.getLayoutParams();
 
         layoutParams.setBehavior(swipeDismissBehavior);
+
     }
 }

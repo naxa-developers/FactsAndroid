@@ -2,12 +2,11 @@ package np.com.naxa.factsnepal.feed;
 
 import android.util.Pair;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-import np.com.naxa.factsnepal.common.Constant;
-
-public class Fact {
+public class Fact implements Serializable {
     private String title;
     private String imagePath;
     private String category;
@@ -18,7 +17,7 @@ public class Fact {
     }
 
 
-    public Fact(String title, String imagePath, String category) {
+    private Fact(String title, String imagePath, String category) {
         this.title = title;
         this.imagePath = imagePath;
         this.category = category;
@@ -55,7 +54,7 @@ public class Fact {
         ArrayList<Fact> facts = new ArrayList<>();
         for (int i = offset; i <= numbers; i++) {
             Pair p = getRandom();
-            facts.add(new Fact(p.first.toString(),p.second.toString(),"Category "+1));
+            facts.add(new Fact(p.first.toString(), p.second.toString(), "Category " + 1));
         }
 
         return facts;
@@ -85,7 +84,7 @@ public class Fact {
 
     private static ArrayList<Pair> getFacts() {
 
-         ArrayList<Pair> list = new ArrayList<Pair>();
+        ArrayList<Pair> list = new ArrayList<Pair>();
 
         list.add(Pair.create("Among 167 countries, Nepal ranks at 97th position with an overall score of 5.18 in the Democracy Index 2018.",
                 "https://scontent.fktm8-1.fna.fbcdn.net/v/t1.0-9/52598128_2388654841158088_3154020005595578368_n.jpg?_nc_cat=108&_nc_ht=scontent.fktm8-1.fna&oh=c05dbe8435ba5f7d20a6e3abd2c4e585&oe=5D12307D"));
@@ -95,7 +94,7 @@ public class Fact {
 
         list.add(Pair.create("In terms of population, Province 3 has the highest number of literate persons among the 7 provinces of Nepal.",
                 "https://scontent.fktm8-1.fna.fbcdn.net/v/t1.0-9/51968913_2376859975670908_6870779992251301888_n.png?_nc_cat=102&_nc_ht=scontent.fktm8-1.fna&oh=c6a42de61f964c94f5442f4bfeed3533&oe=5D1DCA51"
-                ));
+        ));
 
         list.add(Pair.create("In terms of population, Province 3 has the highest number of literate persons among the 7 provinces of Nepal.",
                 "https://scontent.fktm8-1.fna.fbcdn.net/v/t1.0-9/51968913_2376859975670908_6870779992251301888_n.png?_nc_cat=102&_nc_ht=scontent.fktm8-1.fna&oh=c6a42de61f964c94f5442f4bfeed3533&oe=5D1DCA51"
