@@ -6,4 +6,14 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="action_save">Saved</string>
+    <string name="action_share">Share</string>
+    <string name="btn_retry">Retry</string>
+    <string name="my_api_key">ec01f8c2eb6ac402f2ca026dc2d9b8fd</string>
+    <string name="error_msg_no_internet">Not connected to internet</string>
+    <string name="error_msg_timeout">The server took too long to respond</string>
+    <string name="error_msg_unknown">An unexpected error occurred</string>
+    <string name="demo_fact">According to the Metropolitan Traffic Police, a total of 10,802 vehicles entered Kathmandu Valley through different entry points, whereas 10,815 vehicles left the valley on B.S. 2075-11-11.</string>
+    <string name="demo_survey_question">Who do you think will win upcoming election?</string>
+    <string name="actions_notification">Notification</string>
 </resources>

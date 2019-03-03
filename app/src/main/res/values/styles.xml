@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -17,4 +17,114 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="feed_bold_text" parent="TextAppearance.AppCompat.Body1">
+
+
+    </style>
+
+    <style name="Feed.Widget.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">8dp</item>
+        <item name="contentPaddingLeft">13dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPaddingTop">9dp</item>
+
+    </style>
+
+    <style name="Feed.Widget.CardView.Survey" parent="Feed.Widget.CardView">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">2dp</item>
+
+    </style>
+
+    <style name="Feed.Widget.Showcase.CardView" parent="Widget.MaterialComponents.CardView">
+        <item name="android:padding">4dp</item>
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardElevation">1dp</item>
+
+    </style>
+
+    <style name="Text.Title" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:layout_marginLeft">13dp</item>
+        <item name="android:layout_marginTop">9dp</item>
+        <item name="android:layout_marginRight">35dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minLines">2</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Text.Title.Survey" parent="TextAppearance.AppCompat.Body1">
+
+        <item name="android:textSize">16sp</item>
+        <item name="android:minLines">2</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingLeft">24dp</item>
+        <item name="android:paddingRight">24dp</item>
+    </style>
+
+    <style name="Text.Desc" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:layout_marginLeft">13dp</item>
+        <item name="android:layout_marginTop">9dp</item>
+        <item name="android:layout_marginRight">35dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minLines">2</item>
+        <item name="android:maxLines">4</item>
+        <item name="android:ellipsize">end</item>
+
+    </style>
+
+    <style name="Text.Compound" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginBottom">13dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Text.Compound.Share" parent="Text.Compound">
+        <item name="android:drawableLeft">@drawable/ic_like_stateful</item>
+        <item name="android:drawableStart">@drawable/ic_like_stateful</item>
+    </style>
+
+    <style name="Text.Compound.Date" parent="Text.Compound">
+        <item name="android:drawableLeft">@drawable/ic_like_stateful</item>
+        <item name="android:drawableStart">@drawable/ic_like_stateful</item>
+    </style>
+
+    <style name="Text.Compound.Saved" parent="Text.Compound">
+        <item name="android:drawableLeft">@drawable/ic_like_stateful</item>
+        <item name="android:drawableStart">@drawable/ic_like_stateful</item>
+    </style>
+
+    <style name="Text.Compound.Count" parent="Text.Compound">
+        <item name="android:drawableLeft">@drawable/ic_like_stateful</item>
+        <item name="android:drawableStart">@drawable/ic_like_stateful</item>
+    </style>
+
+    <style name="Feed.Widget.Chip" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/colorAccent</item>
+        <item name="chipCornerRadius">4dp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="checkedIcon">@drawable/ic_check_white_24dp</item>
+    </style>
+
+
+    <style name="Feed.Widget.Chip.Orange" parent="@style/Feed.Widget.Chip">
+        <item name="chipBackgroundColor">@color/orange</item>
+        <item name="chipCornerRadius">4dp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="checkedIcon">@drawable/ic_check_white_24dp</item>
+    </style>
+
+    <style name="Feed.Widget.Chip.Green" parent="@style/Feed.Widget.Chip">
+        <item name="chipBackgroundColor">@color/green</item>
+        <item name="chipCornerRadius">4dp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="checkedIcon">@drawable/ic_check_white_24dp</item>
+    </style>
+
+
+    <color name="orange">#E67E22</color>
+    <color name="green">#16A085</color>
 </resources>
