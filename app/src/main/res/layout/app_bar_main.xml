@@ -8,6 +8,7 @@
     tools:context=".feed.list.MainActivity">
 
     <android.support.design.widget.AppBarLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -21,8 +22,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
-        <include
-            layout="@layout/feed_category_chips" />
+        <include layout="@layout/feed_category_chips" />
 
 
     </android.support.design.widget.AppBarLayout>
@@ -69,16 +69,35 @@
 
     </android.support.v7.widget.CardView>
 
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_feed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <ProgressBar
+        android:indeterminate="true"
+        app:layout_anchorGravity="bottom"
+        app:layout_anchor="@id/rv_feed"
+        android:id="@+id/progress_bar_feed"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@id/rv_feed"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal"
+        android:visibility="visible" />
+
+
+
+
+
 
 
     <!--<include layout="@layout/content_main" />-->
+
 
 </android.support.design.widget.CoordinatorLayout>
