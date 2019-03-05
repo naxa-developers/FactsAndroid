@@ -17,4 +17,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Poll.Widget.Rating" parent="Base.Widget.AppCompat.RatingBar">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="android:progressDrawable">@drawable/facts_poll_rating_bar</item>
+    </style>
+
 </resources>

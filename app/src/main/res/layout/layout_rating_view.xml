@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tv_rating_header_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/rating_bar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        tools:text="Not likely at all" />
+
+    <TextView
+        android:id="@+id/tv_rating_header_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/rating_bar"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        tools:text="Extremely likely " />
+
+    <RatingBar
+
+        android:id="@+id/rating_bar"
+        style="@style/Poll.Widget.Rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:numStars="5"
+        android:rating="2" />
+</RelativeLayout>
