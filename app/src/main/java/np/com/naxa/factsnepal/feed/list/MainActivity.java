@@ -34,6 +34,7 @@ import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.feed.EndlessScrollListener;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
+import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.utils.DialogUtils;
 
 public class MainActivity extends BaseActivity
@@ -79,7 +80,8 @@ public class MainActivity extends BaseActivity
     private void setupChips() {
         findViewById(R.id.btn_add_more_chips)
                 .setOnClickListener(v -> {
-                    DialogUtils.showChipsDialog(this).show();
+                    BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance();
+                    bottomSheetDialog.show(getSupportFragmentManager(), "Chips Dialog");
                 });
     }
 

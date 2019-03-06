@@ -74,6 +74,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_chip_add_24dp"
+        app:src="@drawable/ic_chip_add_24dp"
         tools:ignore="ContentDescription" />
 </RelativeLayout>
