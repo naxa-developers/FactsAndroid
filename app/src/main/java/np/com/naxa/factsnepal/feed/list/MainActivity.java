@@ -22,20 +22,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
-import np.com.naxa.factsnepal.common.HeaderDecoration;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.feed.EndlessScrollListener;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
-import np.com.naxa.factsnepal.utils.DialogUtils;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact> {
@@ -101,12 +98,6 @@ public class MainActivity extends BaseActivity
 
         recyclerViewFeed.addOnScrollListener(createInfiniteScrollListener());
 
-        HeaderDecoration headerDecoration = HeaderDecoration.with(recyclerViewFeed)
-                .inflate(R.layout.layout_progress)
-                .parallax(0.2f)
-                .dropShadowDp(4)
-                .build();
-        recyclerViewFeed.addItemDecoration(headerDecoration);
         recyclerViewFeed.setAdapter(adapter);
 
     }
