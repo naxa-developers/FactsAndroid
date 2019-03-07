@@ -23,6 +23,7 @@ public class ImageUtils {
     }
 
 
+
     public static GlideRequest<Drawable> loadRemoteImage(Context context, String path) {
         return GlideApp.with(context)
                 .load(path.trim())

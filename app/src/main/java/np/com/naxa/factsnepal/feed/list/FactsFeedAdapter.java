@@ -18,7 +18,7 @@ import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.R;
 
-public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.ViewHolder> {
+public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.FeedCardVH> {
 
     private ArrayList<Fact> facts;
     private OnCardItemClickListener<Fact> listener;
@@ -56,13 +56,13 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.View
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+    public FeedCardVH onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_facts_feed_card, parent, false);
-        return new ViewHolder(view);
+        return new FeedCardVH(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull FeedCardVH viewHolder, int i) {
         Context context = viewHolder.imageView.getContext();
         int position = viewHolder.getAdapterPosition();
         Fact fact = facts.get(position);
@@ -83,38 +83,35 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.View
         return facts;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+
+    class FeedCardVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvTitle, tvCategory, tvSaved;
         ImageView imageView;
         View root;
 
-        ViewHolder(@NonNull View itemView) {
+        FeedCardVH(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tv_feed_card_title);
             tvCategory = itemView.findViewById(R.id.tv_feed_card_category);
             tvSaved = itemView.findViewById(R.id.tv_saved);
             root = itemView.findViewById(R.id.root_item_facts_feed_card);
-
-            tvSaved.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tvSaved.getCompoundDrawables()[0].setState(new int[]{
-                            android.R.attr.checked
-                    });
-
-                }
-            });
-
-            root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    listener.onCardItemClicked(facts.get(pos),imageView);
-                }
-            });
             imageView = itemView.findViewById(R.id.iv_feed);
         }
 
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.tv_saved:
+                    tvSaved.getCompoundDrawables()[0].setState(new int[]{
+                            android.R.attr.checked
+                    });
+                    break;
+                case R.id.root_item_facts_feed_card:
+                    int pos = getAdapterPosition();
+                    listener.onCardItemClicked(facts.get(pos), imageView);
+                    break;
+            }
+        }
     }
 }
