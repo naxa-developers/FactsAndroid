@@ -41,24 +41,8 @@ public class FactDetailActivity extends BaseActivity {
 
         Fact fact = (Fact) getIntent().getSerializableExtra(Constant.EXTRA_IMAGE);
         tvTitle.setText(fact.getTitle());
-        ImageUtils.loadRemoteImage(this, fact.getImagePath())
-                .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark).dontTransform())
-                .centerCrop()
-                .addListener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+        setupImageLoad(fact);
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        supportStartPostponedEnterTransition();
-                        return false;
-                    }
-                })
-                .into(imageView);
-
-//
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            getWindow().setEnterTransition(new Fade());
 //            getWindow().setSharedElementExitTransition(new TransitionSet()
@@ -75,12 +59,30 @@ public class FactDetailActivity extends BaseActivity {
 //        }
 
     }
+
+    private void setupImageLoad(Fact fact) {
+        ImageUtils.loadRemoteImage(this, fact.getImagePath())
+                .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark).dontTransform())
+                .centerCrop()
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        supportStartPostponedEnterTransition();
+                        return false;
+                    }
+                })
+                .into(imageView);
+    }
+
     private void bindUI() {
         imageView = findViewById(R.id.iv_fact_detail);
         tvTitle = findViewById(R.id.tv_fact_details_title);
     }
-
-
 
 
     @Override
