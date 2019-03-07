@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_item_facts_feed_card"
+    android:layout_width="match_parent"
+    android:layout_height="300dp">
+
+    <ImageView
+        android:transitionName="@string/transtion_fact_list_details"
+        android:id="@+id/iv_feed"
+        android:layout_width="match_parent"
+        android:layout_height="177dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <android.support.v4.widget.Space
+        android:id="@+id/marginSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="22dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_feed"
+        app:layout_constraintLeft_toLeftOf="@id/iv_feed"
+        app:layout_constraintRight_toRightOf="@id/iv_feed" />
+
+
+    <android.support.design.card.MaterialCardView
+
+        android:id="@+id/editText"
+        style="@style/Feed.Widget.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginStart="18dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/marginSpacer"
+        android:layout_marginLeft="18dp">
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_feed_card_title"
+                style="@style/Text.Title.Card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:visibility="visible"
+                tools:text="Mount Everest have more people killed than it’s height" />
+
+            <LinearLayout
+                android:id="@+id/layout_button_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_feed_card_title"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <TextView
+                    android:id="@+id/tv_saved"
+                    style="@style/Text.Compound.Saved"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="Today" />
+
+
+                <TextView
+                    android:id="@+id/two"
+                    style="@style/Text.Compound.Share"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/action_share" />
+
+                <TextView
+                    android:id="@+id/three"
+                    style="@style/Text.Compound.Count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="240" />
+
+
+                <CheckBox
+                    style="@style/Text.Compound"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@drawable/ic_like_stateful"
+                    android:text="@string/action_save"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tv_feed_card_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_button_wrapper"
+                android:layout_marginStart="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/shape_chip"
+                android:textAllCaps="true"
+                android:textColor="#ffff"
+                android:textSize="12sp"
+                tools:text="Education" />
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="0dp"
+                android:background="@drawable/shape_card_button"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_forward_black_24dp"
+                android:tint="#fff"
+                tools:ignore="ContentDescription" />
+        </RelativeLayout>
+    </android.support.design.card.MaterialCardView>
+
+
+</android.support.constraint.ConstraintLayout>
