@@ -25,8 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
-import np.com.naxa.factsnepal.MainActivity;
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 
 
 public class FirebaseMessanging extends FirebaseMessagingService {
@@ -70,7 +70,7 @@ public class FirebaseMessanging extends FirebaseMessagingService {
         }
         Intent notificationIntent;
         if (data == null || data.length() == 0) {
-            notificationIntent = new Intent(context, MainActivity.class);
+            notificationIntent = new Intent(context, FeedListActivity.class);
             notificationIntent.putExtra("page", type);
         }/*else if(type.equals("youtube")) {
             notificationIntent = new Intent(context, PlayerActivity.class)
@@ -86,13 +86,13 @@ public class FirebaseMessanging extends FirebaseMessagingService {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Intent i = new Intent(this, MainActivity.class).putExtra("alert_title", title).putExtra("data", data).putExtra("page", type);
-        PendingIntent pe = PendingIntent.getBroadcast(context, (int) Math.random(), i, PendingIntent.FLAG_UPDATE_CURRENT);
+//        Intent i = new Intent(this, FeedListActivity.class).putExtra("alert_title", title).putExtra("data", data).putExtra("page", type);
+//        PendingIntent pe = PendingIntent.getBroadcast(context, (int) Math.random(), i, PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
         mBuilder.setContentTitle(title)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pe)
+                .setContentIntent(pendingIntent)
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
@@ -100,8 +100,8 @@ public class FirebaseMessanging extends FirebaseMessagingService {
         if (!TextUtils.isEmpty(image_url)) {
             try {
                 Bitmap bitmap = Glide.with(getApplicationContext())
-                        .load(image_url)
                         .asBitmap()
+                        .load(image_url)
                         .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                         .get();
                 NotificationCompat.BigPictureStyle style = new NotificationCompat.BigPictureStyle()
