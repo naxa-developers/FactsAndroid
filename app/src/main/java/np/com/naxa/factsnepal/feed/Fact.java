@@ -111,4 +111,16 @@ public class Fact implements Serializable {
         int rnd = new Random().nextInt(list.size());
         return list.get(rnd);
     }
+
+
+    public static ArrayList<Pair> getDemoCategories() {
+        ArrayList<Pair> arrayList = new ArrayList<>();
+        arrayList.add(Pair.create("1", "All"));
+        arrayList.add(Pair.create("2", "Education"));
+        arrayList.add(Pair.create("3", "Health"));
+        arrayList.add(Pair.create("4", "Politics"));
+        arrayList.add(Pair.create("5", "Economics"));
+
+        return arrayList;
+    }
 }

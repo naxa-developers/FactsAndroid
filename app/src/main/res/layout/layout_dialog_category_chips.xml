@@ -26,68 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp">
 
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="All" />
 
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip.Orange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Education" />
-
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip.Green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Health" />
-
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip.Orange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Politics" />
-
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip.Orange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Economics" />
-
-
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip.Green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category 1" />
-
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category 2" />
-
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip.Green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category 3" />
-
-
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip.Orange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category 4" />
-
-        <android.support.design.chip.Chip
-            style="@style/Feed.Widget.Chip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category 5" />
 
     </android.support.design.chip.ChipGroup>
 
