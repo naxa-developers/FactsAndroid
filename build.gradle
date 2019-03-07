@@ -4,11 +4,18 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
-        
+        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.google.gms:google-services:4.2.0'
+//        commenting this for now as it has a bug in this latest version
+//        two ways of fixing either downgrade the gradle version from 3.2.1 or comment the fabric
+//        and option remains on second one for now
+//        classpath 'io.fabric.tools:gradle:1.26.1'
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -18,7 +25,9 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        maven {
+            url 'https://maven.google.com/'
+        }
     }
 }
 

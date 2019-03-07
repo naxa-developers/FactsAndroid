@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "894222331658",
+    "firebase_url": "https://factsandroid.firebaseio.com",
+    "project_id": "factsandroid",
+    "storage_bucket": "factsandroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894222331658:android:974c2e5d2336839d",
+        "android_client_info": {
+          "package_name": "np.com.naxa.factsnepal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "894222331658-jvclo8rb97enn89dq1ko2mtgkdm90pvv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "np.com.naxa.factsnepal",
+            "certificate_hash": "b1f3dee298ce3c68412f03f7e598f1db8912158d"
+          }
+        },
+        {
+          "client_id": "894222331658-56ngviimlohomq6nhd3mogfaefdih829.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpuhE2PV7AyTQWMIGPwOn6L6-NKuXdmhc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "894222331658-56ngviimlohomq6nhd3mogfaefdih829.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
