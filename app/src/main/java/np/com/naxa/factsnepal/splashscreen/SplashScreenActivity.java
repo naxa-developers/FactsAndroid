@@ -1,12 +1,13 @@
 package np.com.naxa.factsnepal.splashscreen;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
-import np.com.naxa.factsnepal.MainActivity;
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.feed.list.FeedListActivity;
+
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -21,7 +22,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Do something after 100ms
-                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                startActivity(new Intent(SplashScreenActivity.this, FeedListActivity.class));
             }
         }, 2000);
     }

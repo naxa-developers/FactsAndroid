@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_card"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Feed.Widget.Showcase.CardView"
+    app:cardUseCompatPadding="true"
+    android:layout_width="match_parent"
+    android:layout_height="600dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_feed_showcase"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:src="@color/colorAccent" />
+
+        <TextView
+
+            android:id="@+id/tv_showcase_feed_card_desc"
+            style="@style/Text.Desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_showcase_feed_card_category"
+            android:layout_below="@+id/iv_feed_showcase"
+            tools:text="@string/demo_fact" />
+
+        <TextView
+
+            android:textColor="#fff"
+            android:layout_marginLeft="12dp"
+            android:id="@+id/tv_showcase_feed_card_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/layout_button_wrapper"
+            android:background="@drawable/shape_chip"
+            android:text="Education" />
+
+        <LinearLayout
+            android:id="@+id/layout_button_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_feed_card_title"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="9dp"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <TextView
+                android:id="@+id/tv_saved"
+                style="@style/Text.Compound.Saved"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="Today" />
+
+
+            <TextView
+                android:id="@+id/two"
+                style="@style/Text.Compound.Share"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/action_share" />
+
+            <TextView
+                android:id="@+id/three"
+                style="@style/Text.Compound.Count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="240" />
+
+
+            <CheckBox
+                style="@style/Text.Compound"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:button="@drawable/ic_like_stateful"
+                android:text="@string/action_save"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

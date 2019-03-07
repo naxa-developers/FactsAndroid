@@ -1,9 +1,19 @@
 <resources>
-    <string name="app_name">FactsNepal</string>
+    <string name="app_name">Facts Nepal</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="action_save">Saved</string>
+    <string name="action_share">Share</string>
+    <string name="btn_retry">Retry</string>
+    <string name="error_msg_no_internet">Not connected to internet</string>
+    <string name="error_msg_timeout">The server took too long to respond</string>
+    <string name="error_msg_unknown">An unexpected error occurred</string>
+    <string name="demo_fact">Mount Everest have more people killed than it’s height</string>
+    <string name="demo_survey_question">Who do you think will win upcoming election?</string>
+    <string name="actions_notification">Notification</string>
+    <string name="transtion_fact_list_details">facts.image</string>
 </resources>
