@@ -36,6 +36,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
+        init();
     }
 
 
@@ -53,8 +54,8 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
 
         cv_login_facebook = findViewById(R.id.cv_login_facebook);
         cv_login_google = findViewById(R.id.cv_login_google);
-        cv_login_twitter = findViewById(R.id.cv_login_twitter);
-        cv_login_twitter.setOnClickListener(this);
+//        cv_login_twitter = findViewById(R.id.cv_login_twitter);
+//        cv_login_twitter.setOnClickListener(this);
         cv_login_facebook.setOnClickListener(this);
         cv_login_google.setOnClickListener(this);
     }
