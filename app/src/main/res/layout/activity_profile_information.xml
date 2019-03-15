@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <include layout="@layout/toolbar" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true"
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            tools:context=".ProfileInformationActivity">
+
+            <EditText
+                android:id="@+id/et_ward"
+
+                style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Ward"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/et_district"
+                style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter District" />
+
+            <EditText
+                android:id="@+id/et_province"
+
+                style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Province" />
+
+            <EditText
+                android:id="@+id/et_municipality"
+
+                style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Municipality" />
+
+            <EditText
+                android:id="@+id/et_street"
+
+                style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Street" />
+
+
+            <EditText
+                android:id="@+id/et_dob"
+                style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Birth Year"
+                android:inputType="date" />
+
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/first"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Choose Gender"
+                    android:textSize="18sp" />
+
+                <RadioButton
+                    android:id="@+id/first"
+                    style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/male" />
+
+                <RadioButton
+                    android:id="@+id/second"
+                    style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/female" />
+            </RadioGroup>
+
+            <Spinner
+                android:id="@+id/spinner_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:drawSelectorOnTop="true"
+                android:entries="@array/gender_options"
+                android:hint="Choose Gender"
+                android:visibility="gone" />
+
+            <android.support.design.button.MaterialButton
+
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="GET LOCATION"
+                app:icon="@drawable/ic_bookmark_black_24dp" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@android:color/transparent" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+    <android.support.design.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/btn_skip"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="16dp"
+            android:enabled="true"
+            android:text="@string/action_skip" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="16dp"
+            android:enabled="false"
+            android:text="@string/action_next" />
+    </android.support.design.card.MaterialCardView>
+
+</android.support.design.widget.CoordinatorLayout>

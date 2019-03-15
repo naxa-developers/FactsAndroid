@@ -17,4 +17,14 @@
     <string name="actions_notification">Notification</string>
     <string name="transtion_fact_list_details">facts.image</string>
     <string name="facebook_app_id">415920922507619</string>
+    <string name="msg_invalid_input">Please enter valid %s</string>
+    <string-array name="gender_options">
+        <item>Non-Binary</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string name="action_next">NEXT</string>
+    <string name="action_skip">skip</string>
+    <string name="male">Male</string>
+    <string name="female" >Female</string>
 </resources>
