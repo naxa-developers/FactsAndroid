@@ -16,4 +16,5 @@
     <string name="demo_survey_question">Who do you think will win upcoming election?</string>
     <string name="actions_notification">Notification</string>
     <string name="transtion_fact_list_details">facts.image</string>
+    <string name="facebook_app_id">415920922507619</string>
 </resources>
