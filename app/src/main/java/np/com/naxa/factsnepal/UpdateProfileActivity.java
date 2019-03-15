@@ -25,7 +25,7 @@ import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 
-public class ProfileInformationActivity extends BaseActivity implements View.OnClickListener {
+public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText etWard;
     private AutoCompleteTextView etDistrict;
