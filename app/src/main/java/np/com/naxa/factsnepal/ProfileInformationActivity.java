@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -26,7 +28,7 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 public class ProfileInformationActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText etWard;
-    private EditText etDistrict;
+    private AutoCompleteTextView etDistrict;
     private Button btnNext;
     private EditText etDob;
     private Spinner spinnerGender;
@@ -35,7 +37,7 @@ public class ProfileInformationActivity extends BaseActivity implements View.OnC
     private DisposableSubscriber<Boolean> disposableObserver = null;
     private Flowable<CharSequence> genderChangeObservable;
     private Flowable<CharSequence> gpsChangeObservable;
-    private EditText etProvience;
+    private AutoCompleteTextView etProvience;
     private EditText etMunicipality;
     private EditText etStreet;
     private MaterialButton btnSkip;
@@ -48,6 +50,8 @@ public class ProfileInformationActivity extends BaseActivity implements View.OnC
         initView();
         setupToolbar();
         makeUIObservable();
+        setupDistrictAutoComplete();
+        setupProvinceAutoComplete();
     }
 
     private void initView() {
@@ -63,6 +67,28 @@ public class ProfileInformationActivity extends BaseActivity implements View.OnC
         btnNext = (MaterialButton) findViewById(R.id.btn_next);
         btnNext.setOnClickListener(this);
 
+    }
+
+    private void setupDistrictAutoComplete() {
+
+        String[] arr = getResources().getStringArray(R.array.districts);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this, android.R.layout.select_dialog_item, arr);
+
+        etDistrict.setThreshold(1);
+        etDistrict.setAdapter(adapter);
+    }
+
+    private void setupProvinceAutoComplete() {
+
+        String[] arr = getResources().getStringArray(R.array.provinces);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this, android.R.layout.select_dialog_item, arr);
+
+        etProvience.setThreshold(1);
+        etProvience.setAdapter(adapter);
     }
 
     private void makeUIObservable() {
