@@ -1,5 +1,6 @@
 package np.com.naxa.factsnepal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.Toolbar;
@@ -10,10 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.jakewharton.rxbinding2.widget.RxAdapterView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.text.ParseException;
+import java.util.HashMap;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -51,6 +60,25 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         setupToolbar();
         setupDistrictAutoComplete();
         setupProvinceAutoComplete();
+
+        Intent intent = getIntent();
+        HashMap<String, AccessToken> hashMap = (HashMap<String, AccessToken>) intent.getSerializableExtra("map");
+        AccessToken token = hashMap.get("token");
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,gender, birthday");
+
+        GraphRequest request = GraphRequest.newMeRequest(token, (object, response) -> {
+            try {
+                String name = object.getString("name");
+                String email = object.getString("email");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 
     private void initView() {

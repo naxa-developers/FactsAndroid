@@ -19,7 +19,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".UpdateProfileActivity"
-            android:exported="true"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
             android:name=".feed.detail.FactDetailActivity"
@@ -39,6 +38,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="true"
             android:name=".LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- Firebase -->
