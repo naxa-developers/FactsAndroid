@@ -18,30 +18,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".UpdateProfileActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
+        <activity
             android:name=".feed.detail.FactDetailActivity"
-            android:label="@string/app_name"/>
-
+            android:label="@string/app_name" />
         <activity
             android:name=".feed.list.FeedListActivity"
-            android:label="@string/app_name">
-
-
-        </activity>
+            android:label="@string/app_name"/>
         <activity
             android:name=".splashscreen.SplashScreenActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <!--Firebase -->
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- Firebase -->
         <service android:name=".firebase.FirebaseMessanging">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -51,8 +51,7 @@
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
-        </service>
-        <!--End of the firebase addition-->
+        </service> <!-- End of the firebase addition -->
         <!-- Facebook Configuration -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
