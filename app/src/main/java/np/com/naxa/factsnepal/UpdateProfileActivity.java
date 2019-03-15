@@ -49,7 +49,6 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_profile_information);
         initView();
         setupToolbar();
-        makeUIObservable();
         setupDistrictAutoComplete();
         setupProvinceAutoComplete();
     }
@@ -122,7 +121,6 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     private boolean isValidForm(CharSequence dob, CharSequence ward, CharSequence district, CharSequence province, CharSequence municipality, CharSequence street) {
 
         boolean validDob, validWard, validDistrict, validProvince, validMunicipality, validStreet;
-//        validDob = Integer.parseInt(dob.toString()) > 1980 || Integer.parseInt(dob.toString()) < 2018;
         validDob = !dob.toString().isEmpty();
         validWard = !ward.toString().isEmpty();
         validDistrict = !district.toString().isEmpty();
@@ -131,38 +129,51 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         validStreet = !street.toString().isEmpty();
 
         if (!validDob) {
-            etDob.setError(getString(R.string.msg_invalid_input, "year"));
+            showError(etDob, getString(R.string.msg_invalid_input, "year"));
         }
 
 
         if (!validWard) {
-            etWard.setError(getString(R.string.msg_invalid_input, "ward"));
+            showError(etWard, getString(R.string.msg_invalid_input, "ward"));
         }
 
 
         if (!validDistrict) {
-            etDistrict.setError(getString(R.string.msg_invalid_input, "district"));
+            showError(etDistrict, getString(R.string.msg_invalid_input, "district"));
         }
 
 
         if (!validProvince) {
-            etProvience.setError(getString(R.string.msg_invalid_input, "province"));
+            showError(etProvience, getString(R.string.msg_invalid_input, "province"));
         }
 
 
         if (!validMunicipality) {
-            etMunicipality.setError(getString(R.string.msg_invalid_input, "municipality"));
+            showError(etMunicipality, getString(R.string.msg_invalid_input, "municipality"));
         }
 
-
         if (!validStreet) {
-            etStreet.setError(getString(R.string.msg_invalid_input, "street"));
+            showError(etStreet, getString(R.string.msg_invalid_input, "street"));
         }
 
         return validDob && validWard && validDistrict && validProvince && validMunicipality && validStreet;
 
     }
 
+
+    private void showError(View view, String errorMessage) {
+        if (view instanceof EditText) {
+            ((EditText) view).setError(errorMessage);
+        } else if (view instanceof AutoCompleteTextView) {
+            ((AutoCompleteTextView) view).setError(errorMessage);
+
+        }
+    }
+
+
+    private void showError(AutoCompleteTextView editText, String error_message) {
+
+    }
 
     @Override
     protected void onDestroy() {
