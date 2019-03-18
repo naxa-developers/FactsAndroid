@@ -14,10 +14,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.network.NetworkApiClient;
+import np.com.naxa.factsnepal.network.NetworkApiInterface;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
+
+    protected NetworkApiInterface apiInterface = NetworkApiClient.getAPIClient().create(NetworkApiInterface.class);
+
 
     protected void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
