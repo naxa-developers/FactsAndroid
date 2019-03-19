@@ -34,6 +34,7 @@ import np.com.naxa.factsnepal.feed.EndlessScrollListener;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
+import np.com.naxa.factsnepal.network.facts.FetchFacts;
 
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact> {
@@ -56,7 +57,11 @@ public class FeedListActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupToolbar();
+
         this.facts = Fact.getDemoItems(NUMBER_OF_ITEMS, 0);
+
+        FetchFacts.fetchFactsFromServer(apiInterface);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
