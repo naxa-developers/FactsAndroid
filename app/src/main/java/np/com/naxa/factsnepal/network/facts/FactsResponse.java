@@ -1,18 +1,20 @@
 package np.com.naxa.factsnepal.network.facts;
 
+import java.util.List;
+
 public class FactsResponse {
-    private Category[] category;
+    private List<Category> category;
 
     private String version;
 
-    private Home[] home;
+    private List<Home> home;
 
-    public Category[] getCategory ()
+    public List<Category> getCategory ()
     {
         return category;
     }
 
-    public void setCategory (Category[] category)
+    public void setCategory (List<Category> category)
     {
         this.category = category;
     }
@@ -27,12 +29,12 @@ public class FactsResponse {
         this.version = version;
     }
 
-    public Home[] getHome ()
+    public List<Home> getHome ()
     {
         return home;
     }
 
-    public void setHome (Home[] home)
+    public void setHome (List<Home> home)
     {
         this.home = home;
     }
