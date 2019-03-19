@@ -26,7 +26,7 @@ public class NetworkApiClient {
 
             OkHttpClient okHttpClient = okHttpBuilder.build();
             retrofit = new Retrofit.Builder()
-                    .baseUrl(UrlClass.BASE_URL)
+                    .baseUrl(UrlConstant.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(okHttpClient)
