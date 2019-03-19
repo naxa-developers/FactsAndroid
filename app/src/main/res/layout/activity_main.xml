@@ -23,6 +23,7 @@
         app:headerLayout="@layout/nav_header_main"
         app:itemIconTint="@color/white_80"
         app:itemTextColor="@color/white_80"
+
         app:menu="@menu/activity_main_drawer"
         />
 

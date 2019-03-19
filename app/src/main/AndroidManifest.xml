@@ -18,6 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:exported="true"
             android:name=".UpdateProfileActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity

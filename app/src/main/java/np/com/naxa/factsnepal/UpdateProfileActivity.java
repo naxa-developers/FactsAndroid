@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.facebook.AccessToken;
@@ -33,6 +35,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
+import np.com.naxa.factsnepal.utils.ImageUtils;
 
 public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
 
@@ -50,6 +53,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     private EditText etMunicipality;
     private EditText etStreet;
     private MaterialButton btnSkip;
+    private ImageView ivProfilePhoto;
 
 
     @Override
@@ -62,23 +66,36 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         setupProvinceAutoComplete();
 
         Intent intent = getIntent();
-        HashMap<String, AccessToken> hashMap = (HashMap<String, AccessToken>) intent.getSerializableExtra("map");
-        AccessToken token = hashMap.get("token");
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,gender, birthday");
 
-        GraphRequest request = GraphRequest.newMeRequest(token, (object, response) -> {
-            try {
-                String name = object.getString("name");
-                String email = object.getString("email");
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            HashMap<String, AccessToken> hashMap = (HashMap<String, AccessToken>) intent.getSerializableExtra("map");
+            AccessToken token = hashMap.get("token");
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name,email,gender, birthday");
 
-        request.setParameters(parameters);
-        request.executeAsync();
+
+            String fbProfileImage = String.format("https://graph.facebook.com/%s/picture?type=large",token.getUserId());
+            ImageUtils.loadRemoteImage(this,fbProfileImage).circleCrop().into(ivProfilePhoto);
+
+
+            GraphRequest request = GraphRequest.newMeRequest(token, (object, response) -> {
+                try {
+                    String name = object.getString("name");
+                    String email = object.getString("email");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            request.setParameters(parameters);
+            request.executeAsync();
+
+        } catch (NullPointerException e) {
+            //unhandled
+            //WIP
+        }
     }
 
     private void initView() {
@@ -90,6 +107,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         etMunicipality = findViewById(R.id.et_municipality);
         etStreet = findViewById(R.id.et_street);
         btnSkip = findViewById(R.id.btn_skip);
+        ivProfilePhoto = findViewById(R.id.iv_profile_photo);
         btnSkip.setOnClickListener(this);
         btnNext = (MaterialButton) findViewById(R.id.btn_next);
         btnNext.setOnClickListener(this);
