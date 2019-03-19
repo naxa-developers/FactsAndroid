@@ -16,9 +16,10 @@ public class ActivityUtil {
         }
 
         if (EmptyUtil.isNotNull(data) && EmptyUtil.isNotEmpty(data)) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("map", data);
-            intent.putExtra("bundle", bundle);
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("map", data);
+//            intent.putExtra("bundle", bundle);
+            intent.putExtra("map", data);
         }
 
         context.startActivity(intent);

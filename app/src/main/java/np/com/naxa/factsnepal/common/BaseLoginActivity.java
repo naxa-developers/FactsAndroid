@@ -77,8 +77,6 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
     }
 
 
-
-
     @Override
     public void onClick(View v) {
         if (!Utils.isNetworkConnected(getApplicationContext())) {
