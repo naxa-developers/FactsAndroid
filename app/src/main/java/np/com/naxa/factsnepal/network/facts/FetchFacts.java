@@ -23,7 +23,7 @@ public class FetchFacts {
 
     public static void fetchFactsFromServer(@NonNull NetworkApiInterface networkApiInterface){
 
-        networkApiInterface.getFactsDetailsResponse()
+        networkApiInterface.getFactsDetailsResponse(null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new DisposableObserver<List<FactsResponse>>() {

@@ -3,8 +3,11 @@ package np.com.naxa.factsnepal.feed.list;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.SwipeDismissBehavior;
@@ -16,6 +19,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,7 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import np.com.naxa.factsnepal.userprofile.LoginActivity;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
@@ -34,16 +42,22 @@ import np.com.naxa.factsnepal.feed.EndlessScrollListener;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
+import np.com.naxa.factsnepal.network.facts.Category;
+import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.network.facts.FetchFacts;
+import np.com.naxa.factsnepal.userprofile.LoginActivity;
 
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact> {
+
+    private static final String TAG = "FeedListActivity";
 
     private RecyclerView recyclerViewFeed;
     private FactsFeedAdapter adapter;
     private CardView surveyCardView;
     private LinearLayoutManager layoutManager;
     private ProgressBar progressBar;
+    private ChipGroup chipGroup;
 
     private static final int MAX_ITEMS_PER_REQUEST = 10;
     private static final int NUMBER_OF_ITEMS = 20;
@@ -59,8 +73,7 @@ public class FeedListActivity extends BaseActivity
         setupToolbar();
 
         this.facts = Fact.getDemoItems(NUMBER_OF_ITEMS, 0);
-
-        FetchFacts.fetchFactsFromServer(apiInterface);
+        fetchFactsFromServer();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -78,16 +91,64 @@ public class FeedListActivity extends BaseActivity
         setupRecyclerView();
         setupSurveyCard();
         mockSurveyCard();
-        setupChips();
+        setupChips(null);
 
     }
 
-    private void setupChips() {
+    private void setupChips(List<Category> categoryList) {
+        chipGroup = findViewById(R.id.chipgroup);
         findViewById(R.id.btn_add_more_chips)
                 .setOnClickListener(v -> {
                     BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance();
                     bottomSheetDialog.show(getSupportFragmentManager(), "Chips Dialog");
                 });
+
+        if(categoryList == null){
+            return;
+        }
+
+        Observable.just(categoryList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapIterable(new Function<List<Category>, Iterable<Category>>() {
+                    @Override
+                    public Iterable<Category> apply(List<Category> categoryList) throws Exception {
+                        return categoryList;
+                    }
+                }).map(new Function<Category, Category>() {
+            @Override
+            public Category apply(Category category) throws Exception {
+                return category;
+            }
+        })
+                .subscribe(new DisposableObserver<Category>() {
+                    @Override
+                    public void onNext(Category category) {
+
+                        Chip chip = new Chip(chipGroup.getContext());
+                        chip.setChipText(category.getTitle());
+                        chip.setId(category.getId());
+//                        chip.setTextAppearanceResource(R.style.Feed_Widget_Chip_Orange);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            chip.setElevation(15);
+                        }
+
+                        chipGroup.addView(chip);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+
     }
 
     private void bindUI() {
@@ -98,7 +159,7 @@ public class FeedListActivity extends BaseActivity
     }
 
     private void setupRecyclerView() {
-        adapter = new FactsFeedAdapter(new ArrayList<>(this.facts.subList(page,MAX_ITEMS_PER_REQUEST)), this);
+        adapter = new FactsFeedAdapter(new ArrayList<>(this.facts.subList(page, MAX_ITEMS_PER_REQUEST)), this);
 
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewFeed.setLayoutManager(layoutManager);
@@ -259,5 +320,33 @@ public class FeedListActivity extends BaseActivity
 
         layoutParams.setBehavior(swipeDismissBehavior);
 
+    }
+
+    private void fetchFactsFromServer() {
+
+        apiInterface.getFactsDetailsResponse(null)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<List<FactsResponse>>() {
+                    @Override
+                    public void onNext(List<FactsResponse> factsResponse) {
+                        Log.d(TAG, "onNext: " + factsResponse.get(0).toString());
+                        if (factsResponse.get(0).getCategory() != null) {
+                            setupChips(factsResponse.get(0).getCategory());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                        Log.d(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: ");
+
+                    }
+                });
     }
 }

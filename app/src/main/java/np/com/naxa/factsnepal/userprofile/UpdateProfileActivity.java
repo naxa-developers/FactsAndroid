@@ -3,8 +3,6 @@ package np.com.naxa.factsnepal.userprofile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,27 +15,24 @@ import android.widget.Spinner;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.google.gson.Gson;
-import com.jakewharton.rxbinding2.widget.RxAdapterView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.Serializable;
-import java.text.ParseException;
 import java.util.HashMap;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Function6;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
+import np.com.naxa.factsnepal.network.NetworkApiClient;
+import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 
@@ -71,6 +66,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         setupToolbar();
         setupDistrictAutoComplete();
         setupProvinceAutoComplete();
+
 
         Intent intent = getIntent();
 
@@ -290,5 +286,28 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         String jsonInString = gson.toJson(userDetails);
         Log.d(TAG, "userRegistration: "+jsonInString);
 
+        apiInterface.getUserDetailsResponse(userDetails)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<UserDetailsResponse>() {
+                    @Override
+                    public void onNext(UserDetailsResponse userDetailsResponse) {
+                        if(userDetailsResponse.getSuccess()){
+
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }
