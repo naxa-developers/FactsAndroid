@@ -40,6 +40,7 @@
         android:fillViewport="true"
         android:fitsSystemWindows="true"
         android:scrollbars="vertical"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp"
-            tools:context=".UpdateProfileActivity">
+            tools:context=".userprofile.UpdateProfileActivity">
 
             <EditText
                 android:id="@+id/et_ward"
@@ -123,6 +124,7 @@
                 <RadioButton
                     android:id="@+id/first"
                     style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+                    android:onClick="onRadioButtonClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
@@ -131,6 +133,7 @@
                 <RadioButton
                     android:id="@+id/second"
                     style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+                    android:onClick="onRadioButtonClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
@@ -150,13 +153,15 @@
                 android:visibility="gone" />
 
             <android.support.design.button.MaterialButton
-
+                android:id="@+id/btn_get_gps"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="GET LOCATION"
-                app:icon="@drawable/ic_bookmark_black_24dp" />
+                app:icon="@drawable/ic_bookmark_black_24dp"
+                android:visibility="gone"
+                />
 
 
             <View

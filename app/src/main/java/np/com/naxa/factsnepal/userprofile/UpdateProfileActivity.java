@@ -1,21 +1,24 @@
-package np.com.naxa.factsnepal;
+package np.com.naxa.factsnepal.userprofile;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.widget.RxAdapterView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
@@ -32,16 +35,18 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function6;
 import io.reactivex.subscribers.DisposableSubscriber;
+import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 
 public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
+    private static final String TAG = "UpdateProfileActivity";
 
     private EditText etWard;
     private AutoCompleteTextView etDistrict;
-    private Button btnNext;
+    private Button btnNext, btnGetGPS;
     private EditText etDob;
     private Spinner spinnerGender;
 
@@ -54,6 +59,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     private EditText etStreet;
     private MaterialButton btnSkip;
     private ImageView ivProfilePhoto;
+
+    private String facebookToken = "", fbProfileImage = "", provider = "", gender = "male";
 
 
     @Override
@@ -75,7 +82,12 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             parameters.putString("fields", "id,name,email,gender, birthday");
 
 
-            String fbProfileImage = String.format("https://graph.facebook.com/%s/picture?type=large",token.getUserId());
+            fbProfileImage = String.format("https://graph.facebook.com/%s/picture?type=large",token.getUserId());
+            facebookToken = token.getToken();
+            provider = "facebook";
+
+            Log.d(TAG, "onCreate: userID "+token.getUserId());
+            Log.d(TAG, "onCreate: userToken "+token.getToken());
             ImageUtils.loadRemoteImage(this,fbProfileImage).circleCrop().into(ivProfilePhoto);
 
 
@@ -96,6 +108,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             //unhandled
             //WIP
         }
+
+        makeUIObservable();
     }
 
     private void initView() {
@@ -110,7 +124,9 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         ivProfilePhoto = findViewById(R.id.iv_profile_photo);
         btnSkip.setOnClickListener(this);
         btnNext = (MaterialButton) findViewById(R.id.btn_next);
+        btnGetGPS = (MaterialButton) findViewById(R.id.btn_get_gps);
         btnNext.setOnClickListener(this);
+        btnGetGPS.setOnClickListener(this);
 
     }
 
@@ -228,8 +244,11 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     public void updateButton(boolean valid) {
-        if (valid)
+        if (valid) {
             btnNext.setEnabled(true);
+        } else {
+            btnNext.setEnabled(false);
+        }
     }
 
 
@@ -237,6 +256,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
+                userRegistration();
                 break;
             case R.id.btn_skip:
                 ActivityUtil.openActivity(FeedListActivity.class, this, null, false);
@@ -244,5 +264,31 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             default:
                 break;
         }
+    }
+
+
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.first:
+                if (checked)
+                    gender = "male";
+                break;
+
+            case R.id.second:
+                if (checked)
+                    gender = "female";
+                break;
+        }
+    }
+
+    private void userRegistration(){
+        UserDetails userDetails = new UserDetails(fbProfileImage, etWard.getText().toString(), etDistrict.getText().toString(), etProvience.getText().toString(),
+                etMunicipality.getText().toString(), etStreet.getText().toString(), etDob.getText().toString(), gender, provider, facebookToken);
+
+        Gson gson = new Gson();
+        String jsonInString = gson.toJson(userDetails);
+        Log.d(TAG, "userRegistration: "+jsonInString);
+
     }
 }
