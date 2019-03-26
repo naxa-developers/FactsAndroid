@@ -1,10 +1,14 @@
 package np.com.naxa.factsnepal.feed;
 
+import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import np.com.naxa.factsnepal.network.facts.Category;
 
 public class Fact implements Serializable {
     private String title;
@@ -112,15 +116,28 @@ public class Fact implements Serializable {
         return list.get(rnd);
     }
 
-
+    public static ArrayList<Pair> arrayList ;
     public static ArrayList<Pair> getDemoCategories() {
-        ArrayList<Pair> arrayList = new ArrayList<>();
-        arrayList.add(Pair.create("1", "All"));
-        arrayList.add(Pair.create("2", "Education"));
-        arrayList.add(Pair.create("3", "Health"));
-        arrayList.add(Pair.create("4", "Politics"));
-        arrayList.add(Pair.create("5", "Economics"));
+        arrayList = new ArrayList<>();
+        arrayList.add(Pair.create(1, "All"));
+        arrayList.add(Pair.create(2, "Education"));
+        arrayList.add(Pair.create(3, "Health"));
+        arrayList.add(Pair.create(4, "Politics"));
+        arrayList.add(Pair.create(5, "Economics"));
 
+        return arrayList;
+    }
+
+
+    public static boolean hasCategories = false;
+    public static void setCategories(@NonNull List<Category> categoryList){
+        arrayList = new ArrayList<>();
+        for (Category category : categoryList){
+            arrayList.add(Pair.create(category.getId(), category.getTitle()));
+        }
+    }
+
+    public static ArrayList<Pair> getCategories(){
         return arrayList;
     }
 }

@@ -1,6 +1,8 @@
 package np.com.naxa.factsnepal.feed.dialog;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,11 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import com.facebook.login.LoginResult;
+
+import java.util.ArrayList;
+
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 
 @SuppressLint("ValidFragment")
 public class BottomDialogFragment extends BottomSheetDialogFragment {
+    FeedListActivity feedListActivity = new FeedListActivity();
 
     public static BottomDialogFragment getInstance() {
         return new BottomDialogFragment();
@@ -38,15 +46,31 @@ public class BottomDialogFragment extends BottomSheetDialogFragment {
         return view;
     }
 
+    public static ArrayList<Integer> categoryList = new ArrayList<Integer>();
+
     private void setupChips() {
-        for (Pair p : Fact.getDemoCategories()) {
+        if(Fact.getCategories() == null){
+            return;
+        }
+        for (Pair p : Fact.getCategories()) {
             Chip chip = new Chip(new ContextThemeWrapper(requireActivity(), R.style.Feed_Widget_Chip));
             chip.setText(p.second.toString());
             chip.setTag(p);
             chip.setCheckable(true);
 
+
             chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 String label = ((Pair) buttonView.getTag()).second.toString();
+                int id = Integer.parseInt(((Pair) buttonView.getTag()).first.toString());
+                Log.d("bottomsheet", "setupChips: "+label);
+                Log.d("bottomsheet", "setupChips: "+id);
+
+                if(!categoryList.contains(id)) {
+                    categoryList.add(id);
+
+                    feedListActivity.listenChipsStatus();
+
+                }
 
             });
 
@@ -54,6 +78,15 @@ public class BottomDialogFragment extends BottomSheetDialogFragment {
         }
         chipGroup.invalidate();
     }
+
+    public static void getSelectedCategories( @NonNull CategorySelectedListener listener) {
+        listener.onClick(categoryList);
+    }
+
+        public interface CategorySelectedListener {
+        void onClick(ArrayList<Integer> categoriesList);
+    }
+
 
     private void bindUI(View view) {
         chipGroup = view.findViewById(R.id.cg_dialog_category);

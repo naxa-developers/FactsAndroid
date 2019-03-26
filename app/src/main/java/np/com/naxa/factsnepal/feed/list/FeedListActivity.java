@@ -36,6 +36,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.ChipDialog;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.feed.EndlessScrollListener;
@@ -46,6 +47,8 @@ import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.network.facts.FetchFacts;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
+
+import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact> {
@@ -73,7 +76,8 @@ public class FeedListActivity extends BaseActivity
         setupToolbar();
 
         this.facts = Fact.getDemoItems(NUMBER_OF_ITEMS, 0);
-        fetchFactsFromServer();
+        fetchFactsFromServer(null);
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -91,28 +95,43 @@ public class FeedListActivity extends BaseActivity
         setupRecyclerView();
         setupSurveyCard();
         mockSurveyCard();
-        setupChips(null);
+//        setupChips(null);
+        initChips();
 
     }
 
-    private void setupChips(List<Category> categoryList) {
+    public void listenChipsStatus() {
+
+        BottomDialogFragment.getSelectedCategories(new BottomDialogFragment.CategorySelectedListener() {
+            @Override
+            public void onClick(ArrayList<Integer> categoriesList) {
+                Log.d(TAG, "onClick: chip selected"+categoriesList.size());
+                fetchFactsFromServer(categoriesList);
+            }
+        });
+    }
+
+    private void initChips(){
         chipGroup = findViewById(R.id.chipgroup);
         findViewById(R.id.btn_add_more_chips)
                 .setOnClickListener(v -> {
                     BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance();
                     bottomSheetDialog.show(getSupportFragmentManager(), "Chips Dialog");
                 });
+    }
 
+    private void setupChips(List<Category> categoryList) {
         if(categoryList == null){
             return;
         }
-
         Observable.just(categoryList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapIterable(new Function<List<Category>, Iterable<Category>>() {
                     @Override
                     public Iterable<Category> apply(List<Category> categoryList) throws Exception {
+                        Fact.setCategories(categoryList);
+
                         return categoryList;
                     }
                 }).map(new Function<Category, Category>() {
@@ -128,7 +147,10 @@ public class FeedListActivity extends BaseActivity
                         Chip chip = new Chip(chipGroup.getContext());
                         chip.setChipText(category.getTitle());
                         chip.setId(category.getId());
-//                        chip.setTextAppearanceResource(R.style.Feed_Widget_Chip_Orange);
+                        Log.d(TAG, "onNext: id"+category.getId());
+//                         chip.setCloseIconEnabled(true);
+//            chip.setCloseIconResource(R.drawable.your_icon);
+            chip.setChipBackgroundColorResource(R.color.colorAccent);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             chip.setElevation(15);
                         }
@@ -143,7 +165,9 @@ public class FeedListActivity extends BaseActivity
 
                     @Override
                     public void onComplete() {
+//                        chipGroup.invalidate();
 
+                        Log.d(TAG, "onComplete: chips added successfully");
                     }
                 });
 
@@ -322,9 +346,14 @@ public class FeedListActivity extends BaseActivity
 
     }
 
-    private void fetchFactsFromServer() {
+    private void fetchFactsFromServer(ArrayList<Integer> categories) {
 
-        apiInterface.getFactsDetailsResponse(null)
+        if(categories != null) {
+            Log.d(TAG, "fetchFactsFromServer: categories id lis" + categories.toString());
+
+        }
+
+        apiInterface.getFactsDetailsResponse(categories)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<List<FactsResponse>>() {
@@ -332,7 +361,11 @@ public class FeedListActivity extends BaseActivity
                     public void onNext(List<FactsResponse> factsResponse) {
                         Log.d(TAG, "onNext: " + factsResponse.get(0).toString());
                         if (factsResponse.get(0).getCategory() != null) {
-                            setupChips(factsResponse.get(0).getCategory());
+
+                            if(!hasCategories) {
+                                setupChips(factsResponse.get(0).getCategory());
+                            }
+                            hasCategories = true;
                         }
                     }
 
@@ -346,7 +379,11 @@ public class FeedListActivity extends BaseActivity
                     public void onComplete() {
                         Log.d(TAG, "onComplete: ");
 
+
+
                     }
                 });
     }
+
+
 }

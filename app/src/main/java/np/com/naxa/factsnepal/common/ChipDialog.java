@@ -3,6 +3,7 @@ package np.com.naxa.factsnepal.common;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.util.Log;
@@ -37,7 +38,7 @@ public class ChipDialog extends AlertDialog {
 //        findAllChips(group);
     }
 
-    private void findAllChips(ChipGroup chipGroup) {
+    private void findAllChips(@NonNull ChipGroup chipGroup) {
 
         int count = chipGroup.getChildCount();
         for (int i = 0; i < count; i++) {
