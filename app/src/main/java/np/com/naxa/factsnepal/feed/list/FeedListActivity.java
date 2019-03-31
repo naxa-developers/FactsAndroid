@@ -29,6 +29,7 @@ import np.com.naxa.factsnepal.LoginActivity;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
+import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.feed.EndlessScrollListener;
 import np.com.naxa.factsnepal.feed.Fact;
@@ -98,12 +99,13 @@ public class FeedListActivity extends BaseActivity
     }
 
     private void setupRecyclerView() {
-        adapter = new FactsFeedAdapter(new ArrayList<>(this.facts.subList(page,MAX_ITEMS_PER_REQUEST)), this);
+        adapter = new FactsFeedAdapter(new ArrayList<>(this.facts.subList(page, MAX_ITEMS_PER_REQUEST)), this);
 
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewFeed.setLayoutManager(layoutManager);
         recyclerViewFeed.setItemAnimator(new DefaultItemAnimator());
 
+        recyclerViewFeed.addItemDecoration(new ListPaddingDecoration(this));
         recyclerViewFeed.addOnScrollListener(createInfiniteScrollListener());
 
         recyclerViewFeed.setAdapter(adapter);
@@ -114,7 +116,7 @@ public class FeedListActivity extends BaseActivity
         return new EndlessScrollListener(MAX_ITEMS_PER_REQUEST, layoutManager) {
             @Override
             public void onScrolledToEnd(final int firstVisibleItemPosition) {
-                simulateLoading();
+
 
             }
         };

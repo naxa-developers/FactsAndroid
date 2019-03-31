@@ -1,0 +1,8 @@
+<TextView style="@style/Base.TextAppearance.AppCompat.Title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/demo_purple"
+    android:padding="30dp"
+    android:text="Ncell Survey"
+    android:textColor="@color/white_80"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

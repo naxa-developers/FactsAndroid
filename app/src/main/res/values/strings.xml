@@ -37,6 +37,12 @@
     <string name="title_share_your_opinion">Share your opinion</string>
     <string name="action_start_survey">start survey</string>
     <string name="demo_company_profile">Ncell Pvt. Ltd. has been working in Nepal since 2004 as the first private mobile operator in the country. We are committed to being the best local mobile network for the people living in the country. We provide services of international quality with a local touch. Most of our employees are Nepali and our services are designed to meet the needs of the local society. \n\nThis survey is about the services that we are providing and the response of it towards end users between age group 30 to 35</string>
+    <string name="demo_survey_question_1">1. How likely is that you would recommend this company to a friend or colleague?</string>
+    <string name="demo_very_satisfied">Very Satisfied</string>
+    <string name="demo_somewhat_satisfied">Somewhat satified</string>
+    <string name="demo_not_sure_satisfied">Neither satisfied or dissafied</string>
+    <string name="demo_not_satisfied">Very dissatisfied</string>
+    <string name="action_ok">ok</string>
 
 
     <string-array name="demo_options_array">

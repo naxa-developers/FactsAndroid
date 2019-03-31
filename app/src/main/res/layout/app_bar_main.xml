@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:background="#CECECE"
     tools:context=".feed.list.FeedListActivity">
 
     <android.support.design.widget.AppBarLayout

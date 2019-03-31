@@ -165,6 +165,15 @@
         <item name="colorButtonNormal">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="Text.Survey.Question" parent="Base.TextAppearance.AppCompat.Body1">
+        <item name="android:layout_margin">8dp</item>
+
+    </style>
+
+    <style name="RadioGroup.Survey.Question" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:padding">@dimen/margin_small</item>
+    </style>
+
     <color name="orange">#E67E22</color>
     <color name="green">#16A085</color>
 </resources>
