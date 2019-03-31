@@ -55,7 +55,7 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact> {
+        implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact>, View.OnClickListener {
 
     private static final String TAG = "FeedListActivity";
 
@@ -100,7 +100,14 @@ public class FeedListActivity extends BaseActivity
         mockSurveyCard();
 //        setupChips(null);
         initChips();
+        setupNavigationDrawer();
 
+    }
+
+    private void setupNavigationDrawer() {
+        findViewById(R.id.footer_item_facebook).setOnClickListener(this);
+        findViewById(R.id.footer_item_instagram).setOnClickListener(this);
+        findViewById(R.id.footer_item_twitter).setOnClickListener(this);
     }
 
     public void listenChipsStatus() {
@@ -382,4 +389,15 @@ public class FeedListActivity extends BaseActivity
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.footer_item_facebook:
+                break;
+            case R.id.footer_item_twitter:
+                break;
+            case R.id.footer_item_instagram:
+                break;
+        }
+    }
 }
