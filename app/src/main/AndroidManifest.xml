@@ -73,6 +73,19 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme" />
+        <activity
+            android:exported="true"
+            android:name=".publicpoll.PublicPollActivity" />
+        <activity
+            android:exported="true"
+            android:name=".publicpoll.PublicPollResultActivity" />
+        <activity
+            android:label="@string/app_name"
+            android:exported="true"
+            android:name=".surveys.SurveyStartActivity" />
+        <activity
+            android:exported="true"
+            android:name=".surveys.SurveyActivity" />
     </application>
 
 </manifest>

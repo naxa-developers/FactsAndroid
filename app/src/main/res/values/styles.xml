@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -90,7 +90,19 @@
 
     </style>
 
+
+
+    <style name="Text.Desc.Survey" parent="Text.Desc">
+
+        <item name="android:textSize">16sp</item>
+        <item name="android:minLines">2</item>
+        <item name="android:maxLines">100</item>
+        <item name="android:ellipsize">end</item>
+
+    </style>
+
     <style name="Text.Compound" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:drawablePadding">4dp</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:layout_marginBottom">13dp</item>
         <item name="android:layout_marginTop">4dp</item>
@@ -99,13 +111,13 @@
     </style>
 
     <style name="Text.Compound.Share" parent="Text.Compound">
-        <item name="android:drawableLeft">@drawable/ic_like_stateful</item>
-        <item name="android:drawableStart">@drawable/ic_like_stateful</item>
+        <item name="android:drawableLeft">@drawable/ic_share_24dp</item>
+        <item name="android:drawableStart">@drawable/ic_share_24dp</item>
     </style>
 
     <style name="Text.Compound.Date" parent="Text.Compound">
-        <item name="android:drawableLeft">@drawable/ic_like_stateful</item>
-        <item name="android:drawableStart">@drawable/ic_like_stateful</item>
+        <item name="android:drawableLeft">@drawable/ic_date_range_24dp</item>
+        <item name="android:drawableStart">@drawable/ic_date_range_24dp</item>
     </style>
 
     <style name="Text.Compound.Saved" parent="Text.Compound">
@@ -114,8 +126,8 @@
     </style>
 
     <style name="Text.Compound.Count" parent="Text.Compound">
-        <item name="android:drawableLeft">@drawable/ic_like_stateful</item>
-        <item name="android:drawableStart">@drawable/ic_like_stateful</item>
+        <item name="android:drawableLeft">@drawable/ic_heart_filled_24dp</item>
+        <item name="android:drawableStart">@drawable/ic_heart_filled_24dp</item>
     </style>
 
     <style name="Feed.Widget.Chip" parent="@style/Widget.MaterialComponents.Chip.Filter">
@@ -149,11 +161,25 @@
         <item name="android:textSize">14dp</item>
     </style>
 
+
+    <style name="Poll.Button" parent="Widget.MaterialComponents.Button">
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Text.Survey.Question" parent="Base.TextAppearance.AppCompat.Body1">
+        <item name="android:layout_margin">8dp</item>
+
+    </style>
+
+    <style name="RadioGroup.Survey.Question" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:padding">@dimen/margin_small</item>
+
     <style name="chip_button_style"  parent="@style/Feed.Widget.Chip">
         <item name="android:background">@drawable/button_state</item>
         <!--<item name="android:textSize">@dimen/text_size</item>-->
         <!--<item name="android:padding">@dimen/padding_button</item>-->
         <item name="android:textColor">@color/white_80</item>
+
     </style>
 
     <color name="orange">#E67E22</color>

@@ -24,4 +24,60 @@
         android:layout_marginTop="10dp"
         android:transitionName="@string/transtion_fact_list_details" />
 
+
+    <LinearLayout
+        android:layout_margin="@dimen/margin_small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <TextView
+
+            android:id="@+id/tv_saved"
+            style="@style/Text.Compound.Date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/demo_date"
+            tools:text="31 March, 2019" />
+
+        <TextView
+
+            android:id="@+id/tv_share"
+            style="@style/Text.Compound.Share"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/action_share"
+            tools:text="@string/action_share" />
+
+        <TextView
+            android:id="@+id/tv_like"
+            style="@style/Text.Compound.Count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/demo_likes"
+            tools:text="@string/demo_likes" />
+
+    </LinearLayout>
+
+    <android.support.design.chip.Chip
+        android:id="@+id/chip_category"
+        style="@style/Feed.Widget.Chip.Orange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:text="@string/demo_category" />
+
+    <TextView
+        style="@style/Text.Desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:maxLines="16"
+        android:minLines="10"
+        android:text="@string/lorem_ipsum" />
+
 </LinearLayout>
