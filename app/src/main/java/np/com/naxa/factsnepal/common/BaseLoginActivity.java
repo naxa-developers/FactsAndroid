@@ -1,9 +1,14 @@
 package np.com.naxa.factsnepal.common;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
@@ -19,6 +24,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import np.com.naxa.factsnepal.R;
@@ -30,6 +37,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
     CallbackManager callbackManager;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
+    private static final String TAG = "BaseLoginActivity";
 //    TwitterAuthClient mTwitterAuthClient;
 
     @Override
@@ -85,6 +93,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
         }
         switch (v.getId()) {
             case R.id.cv_login_facebook:
+                printHashKey(this);
                 LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
                 LoginManager.getInstance().registerCallback(callbackManager,
                         new FacebookCallback<LoginResult>() {
@@ -125,6 +134,22 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
 //                    }
 //                });
 //                break;
+        }
+    }
+
+    public void printHashKey(Context pContext) {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.i(TAG, "printHashKey() Hash Key: " + hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e(TAG, "printHashKey()", e);
         }
     }
 

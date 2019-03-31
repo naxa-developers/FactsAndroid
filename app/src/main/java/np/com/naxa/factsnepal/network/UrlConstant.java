@@ -9,5 +9,6 @@ public class UrlConstant {
 //        public static final String BASE_URL = "http://factsandroid.naxa.com.np/";
         public static final String BASE_URL = "http://139.59.67.104:8002/";
 
-        public static final String FETCH_CONFIG_URL = "config";
+        public static final String FETCH_CONFIG_URL = "api/config";
+        public static final String POST_USER_DETAILS_URL = "user_registration";
 }

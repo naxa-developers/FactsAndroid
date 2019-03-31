@@ -149,6 +149,12 @@
         <item name="android:textSize">14dp</item>
     </style>
 
+    <style name="chip_button_style"  parent="@style/Feed.Widget.Chip">
+        <item name="android:background">@drawable/button_state</item>
+        <!--<item name="android:textSize">@dimen/text_size</item>-->
+        <!--<item name="android:padding">@dimen/padding_button</item>-->
+        <item name="android:textColor">@color/white_80</item>
+    </style>
 
     <color name="orange">#E67E22</color>
     <color name="green">#16A085</color>

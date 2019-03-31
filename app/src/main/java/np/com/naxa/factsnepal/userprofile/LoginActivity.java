@@ -1,6 +1,7 @@
-package np.com.naxa.factsnepal;
+package np.com.naxa.factsnepal.userprofile;
 
 import android.content.Intent;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.Profile;
@@ -15,11 +16,16 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.Utils;
 
 public class LoginActivity extends BaseLoginActivity {
+    private static final String TAG = "LoginActivity";
 
     @Override
     public void onFacebookLogiSuccess(LoginResult result) {
         Profile profile = Profile.getCurrentProfile();
 
+        Log.d(TAG, "onFacebookLogiSuccess: Token"+ result.getAccessToken().getToken());
+        Log.d(TAG, "onFacebookLogiSuccess: Token"+ result.getAccessToken().getUserId());
+
+        //        Log.d(TAG, "onCreate: userToken "+token.getToken());
         HashMap<String, AccessToken> map = new HashMap<>();
         map.put("token", result.getAccessToken());
         ActivityUtil.openActivity(UpdateProfileActivity.class, this, map, false);
