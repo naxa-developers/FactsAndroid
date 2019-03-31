@@ -47,12 +47,15 @@ import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.network.facts.FetchFacts;
+import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
+import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
+import np.com.naxa.factsnepal.utils.ActivityUtil;
 
 import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact> {
+        implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact>, View.OnClickListener {
 
     private static final String TAG = "FeedListActivity";
 
@@ -80,7 +83,6 @@ public class FeedListActivity extends BaseActivity
         fetchFactsFromServer(null);
 
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -98,7 +100,14 @@ public class FeedListActivity extends BaseActivity
         mockSurveyCard();
 //        setupChips(null);
         initChips();
+        setupNavigationDrawer();
 
+    }
+
+    private void setupNavigationDrawer() {
+        findViewById(R.id.footer_item_facebook).setOnClickListener(this);
+        findViewById(R.id.footer_item_instagram).setOnClickListener(this);
+        findViewById(R.id.footer_item_twitter).setOnClickListener(this);
     }
 
     public void listenChipsStatus() {
@@ -106,13 +115,13 @@ public class FeedListActivity extends BaseActivity
         BottomDialogFragment.getSelectedCategories(new BottomDialogFragment.CategorySelectedListener() {
             @Override
             public void onClick(ArrayList<Integer> categoriesList) {
-                Log.d(TAG, "onClick: chip selected"+categoriesList.size());
+                Log.d(TAG, "onClick: chip selected" + categoriesList.size());
                 fetchFactsFromServer(categoriesList);
             }
         });
     }
 
-    private void initChips(){
+    private void initChips() {
         chipGroup = findViewById(R.id.chipgroup);
         findViewById(R.id.btn_add_more_chips)
                 .setOnClickListener(v -> {
@@ -122,7 +131,7 @@ public class FeedListActivity extends BaseActivity
     }
 
     private void setupChips(List<Category> categoryList) {
-        if(categoryList == null){
+        if (categoryList == null) {
             return;
         }
         Observable.just(categoryList)
@@ -148,10 +157,10 @@ public class FeedListActivity extends BaseActivity
                         Chip chip = new Chip(chipGroup.getContext());
                         chip.setChipText(category.getTitle());
                         chip.setId(category.getId());
-                        Log.d(TAG, "onNext: id"+category.getId());
+                        Log.d(TAG, "onNext: id" + category.getId());
 //                         chip.setCloseIconEnabled(true);
 //            chip.setCloseIconResource(R.drawable.your_icon);
-            chip.setChipBackgroundColorResource(R.color.colorAccent);
+                        chip.setChipBackgroundColorResource(R.color.colorAccent);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             chip.setElevation(15);
                         }
@@ -171,7 +180,6 @@ public class FeedListActivity extends BaseActivity
                         Log.d(TAG, "onComplete: chips added successfully");
                     }
                 });
-
 
 
     }
@@ -286,18 +294,12 @@ public class FeedListActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_home) {
+        } else if (id == R.id.nav_public_poll) {
+            ActivityUtil.openActivity(PublicPollActivity.class, this, null, false);
+        } else if (id == R.id.nav_survey) {
+            ActivityUtil.openActivity(SurveyStartActivity
+                    .class, this, null, false);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -350,7 +352,7 @@ public class FeedListActivity extends BaseActivity
 
     private void fetchFactsFromServer(ArrayList<Integer> categories) {
 
-        if(categories != null) {
+        if (categories != null) {
             Log.d(TAG, "fetchFactsFromServer: categories id lis" + categories.toString());
 
         }
@@ -364,7 +366,7 @@ public class FeedListActivity extends BaseActivity
                         Log.d(TAG, "onNext: " + factsResponse.get(0).toString());
                         if (factsResponse.get(0).getCategory() != null) {
 
-                            if(!hasCategories) {
+                            if (!hasCategories) {
                                 setupChips(factsResponse.get(0).getCategory());
                             }
                             hasCategories = true;
@@ -382,10 +384,20 @@ public class FeedListActivity extends BaseActivity
                         Log.d(TAG, "onComplete: ");
 
 
-
                     }
                 });
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.footer_item_facebook:
+                break;
+            case R.id.footer_item_twitter:
+                break;
+            case R.id.footer_item_instagram:
+                break;
+        }
+    }
 }
