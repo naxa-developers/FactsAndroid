@@ -54,6 +54,7 @@
                 tools:text="Mount Everest have more people killed than it’s height" />
 
             <LinearLayout
+                android:layout_margin="@dimen/margin_small"
                 android:id="@+id/layout_button_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
