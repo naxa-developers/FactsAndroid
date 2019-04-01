@@ -27,14 +27,16 @@ public class ListPaddingDecoration extends RecyclerView.ItemDecoration {
         if (itemPosition == RecyclerView.NO_POSITION) {
             return;
         }
-        if (itemPosition == 0) {
-            outRect.top = mPadding;
-        }
+//        if (itemPosition == 0) {
+//            outRect.top = mPadding;
+//        }
 
-        final RecyclerView.Adapter adapter = parent.getAdapter();
-        if ((adapter != null) && (itemPosition == adapter.getItemCount() - 1)) {
-            outRect.bottom = mPadding;
-        }
+        outRect.top = mPadding;
+
+//        final RecyclerView.Adapter adapter = parent.getAdapter();
+//        if ((adapter != null) && (itemPosition == adapter.getItemCount() - 1)) {
+//            outRect.bottom = mPadding;
+//        }
     }
 
 }

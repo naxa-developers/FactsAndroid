@@ -5,19 +5,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/colorPrimaryDark">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_gravity="center"
+            android:gravity="center"
+            style="@style/Base.TextAppearance.AppCompat.Subhead"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_weight="2"
+            android:text="Select Categories"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:background="@color/colorPrimaryDark"
-            android:rotation="270"
+            android:padding="@dimen/padding_small"
+            android:rotation="90"
             app:srcCompat="@drawable/ic_arrow_forward_black_24dp" />
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <android.support.design.chip.ChipGroup
@@ -25,7 +41,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp">
-
 
 
     </android.support.design.chip.ChipGroup>

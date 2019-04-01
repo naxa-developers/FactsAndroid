@@ -32,28 +32,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Education"
-                android:visibility="gone"/>
+                />
 
             <android.support.design.chip.Chip
                 style="@style/Feed.Widget.Chip.Green"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Health"
-                android:visibility="gone"/>
+                />
 
             <android.support.design.chip.Chip
                 style="@style/Feed.Widget.Chip.Orange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Politics"
-                android:visibility="gone"/>
+              />
 
             <android.support.design.chip.Chip
                 style="@style/Feed.Widget.Chip.Orange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Economics"
-                android:visibility="gone"/>
+                />
 
 
             <android.support.design.chip.Chip
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Category 1"
-                android:visibility="gone"/>
+               />
 
             <android.support.design.chip.Chip
                 style="@style/Feed.Widget.Chip.Orange"

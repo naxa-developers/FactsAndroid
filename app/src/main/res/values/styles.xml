@@ -87,9 +87,9 @@
         <item name="android:minLines">2</item>
         <item name="android:maxLines">4</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:padding">@dimen/padding_small</item>
 
     </style>
-
 
 
     <style name="Text.Desc.Survey" parent="Text.Desc">
@@ -173,8 +173,9 @@
 
     <style name="RadioGroup.Survey.Question" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:padding">@dimen/margin_small</item>
+    </style>
 
-    <style name="chip_button_style"  parent="@style/Feed.Widget.Chip">
+    <style name="chip_button_style" parent="@style/Feed.Widget.Chip">
         <item name="android:background">@drawable/button_state</item>
         <!--<item name="android:textSize">@dimen/text_size</item>-->
         <!--<item name="android:padding">@dimen/padding_button</item>-->
@@ -184,4 +185,5 @@
 
     <color name="orange">#E67E22</color>
     <color name="green">#16A085</color>
+    <dimen name="padding_small">8dp</dimen>
 </resources>

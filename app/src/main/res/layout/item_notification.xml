@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/root_layout"
+
+    android:background="@drawable/background_notification"
+    android:layout_height="?listPreferredItemHeight"
+   >
+
+    <ImageView
+
+        android:id="@+id/imageView4"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/margin_small"
+        android:src="@color/demo_purple" />
+
+    <TextView
+        android:id="@+id/tvNotificationTitle"
+        style="@style/Text.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_toEndOf="@id/imageView4"
+        android:layout_toRightOf="@id/imageView4"
+        android:maxLines="2"
+        android:minLines="1"
+        tools:text="Ncell survey in customer research" />
+
+    <TextView
+        android:id="@+id/tv_notification_time"
+        style="@style/Base.TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvNotificationTitle"
+        android:layout_toRightOf="@id/imageView4"
+        tools:text="12m ago"
+        android:layout_toEndOf="@id/imageView4" />
+
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/ic_arrow_black_24dp" />
+
+</RelativeLayout>
