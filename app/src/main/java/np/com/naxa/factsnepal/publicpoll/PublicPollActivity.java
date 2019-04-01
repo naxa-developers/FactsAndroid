@@ -28,7 +28,7 @@ public class PublicPollActivity extends BaseActivity {
         View button = null;
 
         View.OnClickListener onClick = v -> {
-            ActivityUtil.openActivity(PublicPollActivity.class, this, null, false);
+            ActivityUtil.openActivity(PublicPollResultActivity.class, this, null, false);
         };
 
         String[] array = getApplicationContext().getResources().getStringArray(R.array.demo_options_array);

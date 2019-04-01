@@ -22,6 +22,9 @@
             <include layout="@layout/layout_survey_question_rating"/>
             <include layout="@layout/layout_survey_question_checkbox"/>
 
+            <include layout="@layout/layout_survey_question_radio"/>
+            <include layout="@layout/layout_survey_question_rating"/>
+
 
         </LinearLayout>
 

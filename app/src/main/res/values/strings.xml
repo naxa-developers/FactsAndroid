@@ -67,5 +67,6 @@
     <string name="location_provider_accuracy">Using %1$s. Accuracy is %2$s m.</string>
     <string name="location_accuracy">Accuracy is %f$s m</string>
     <string name="location_metadata">Satellites available: %1$d/24\n\nTime elapsed: %2$s</string>
+    <string name="action_home">HOME</string>
 
 </resources>
