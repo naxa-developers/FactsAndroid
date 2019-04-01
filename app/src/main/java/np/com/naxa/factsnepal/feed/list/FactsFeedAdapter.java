@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.notification.FactsNotification;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.R;
@@ -116,4 +117,6 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             }
         }
     }
+
+
 }

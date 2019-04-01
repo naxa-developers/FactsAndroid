@@ -36,7 +36,6 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
-import np.com.naxa.factsnepal.common.ChipDialog;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
@@ -46,9 +45,12 @@ import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
+import np.com.naxa.factsnepal.notification.NotificationActivity;
+import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.network.facts.FetchFacts;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
+
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 
@@ -71,6 +73,7 @@ public class FeedListActivity extends BaseActivity
     private static final int SIMULATED_LOADING_TIME = (int) TimeUnit.SECONDS.toMillis(10);
     private int page;
     private List<Fact> facts;
+    private CardView cardSurvey;
 
 
     @Override
@@ -101,13 +104,22 @@ public class FeedListActivity extends BaseActivity
 //        setupChips(null);
         initChips();
         setupNavigationDrawer();
+        
+               cardSurvey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtil.openActivity(PublicPollActivity.class,FeedListActivity.this,null,false);
+            }
+        });
 
     }
+
 
     private void setupNavigationDrawer() {
         findViewById(R.id.footer_item_facebook).setOnClickListener(this);
         findViewById(R.id.footer_item_instagram).setOnClickListener(this);
         findViewById(R.id.footer_item_twitter).setOnClickListener(this);
+
     }
 
     public void listenChipsStatus() {
@@ -188,6 +200,7 @@ public class FeedListActivity extends BaseActivity
         recyclerViewFeed = findViewById(R.id.rv_feed);
         surveyCardView = findViewById(R.id.cv_survey_info);
         progressBar = findViewById(R.id.progress_bar_feed);
+        cardSurvey = findViewById(R.id.cv_survey_info);
 
     }
 
@@ -199,7 +212,6 @@ public class FeedListActivity extends BaseActivity
         recyclerViewFeed.setItemAnimator(new DefaultItemAnimator());
 
         recyclerViewFeed.addItemDecoration(new ListPaddingDecoration(this));
-        recyclerViewFeed.addOnScrollListener(createInfiniteScrollListener());
 
         recyclerViewFeed.setAdapter(adapter);
 
@@ -284,6 +296,11 @@ public class FeedListActivity extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.menu_notification:
+                ActivityUtil.openActivity(NotificationActivity.class, this, null, false);
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }

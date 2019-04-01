@@ -8,4 +8,5 @@
     <dimen name="default_activity_padding">16dp</dimen>
     <dimen name="margin_small">8dp</dimen>
     <dimen name="banner_height">300dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
 </resources>
