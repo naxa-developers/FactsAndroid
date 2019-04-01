@@ -175,7 +175,9 @@
         <item name="android:padding">@dimen/margin_small</item>
     </style>
 
-    <style name="chip_button_style" parent="@style/Feed.Widget.Chip">
+
+
+    <style name="chip_button_style"  parent="@style/Feed.Widget.Chip">
         <item name="android:background">@drawable/button_state</item>
         <!--<item name="android:textSize">@dimen/text_size</item>-->
         <!--<item name="android:padding">@dimen/padding_button</item>-->

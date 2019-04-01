@@ -47,13 +47,17 @@ import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
+import np.com.naxa.factsnepal.network.facts.FetchFacts;
+import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
+import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
+
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 
 import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact> {
+        implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact>, View.OnClickListener {
 
     private static final String TAG = "FeedListActivity";
 
@@ -99,13 +103,23 @@ public class FeedListActivity extends BaseActivity
         mockSurveyCard();
 //        setupChips(null);
         initChips();
-
-        cardSurvey.setOnClickListener(new View.OnClickListener() {
+        setupNavigationDrawer();
+        
+               cardSurvey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityUtil.openActivity(PublicPollActivity.class,FeedListActivity.this,null,false);
             }
         });
+
+    }
+
+
+    private void setupNavigationDrawer() {
+        findViewById(R.id.footer_item_facebook).setOnClickListener(this);
+        findViewById(R.id.footer_item_instagram).setOnClickListener(this);
+        findViewById(R.id.footer_item_twitter).setOnClickListener(this);
+
     }
 
     public void listenChipsStatus() {
@@ -297,18 +311,12 @@ public class FeedListActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_home) {
+        } else if (id == R.id.nav_public_poll) {
+            ActivityUtil.openActivity(PublicPollActivity.class, this, null, false);
+        } else if (id == R.id.nav_survey) {
+            ActivityUtil.openActivity(SurveyStartActivity
+                    .class, this, null, false);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -398,4 +406,15 @@ public class FeedListActivity extends BaseActivity
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.footer_item_facebook:
+                break;
+            case R.id.footer_item_twitter:
+                break;
+            case R.id.footer_item_instagram:
+                break;
+        }
+    }
 }
