@@ -24,4 +24,8 @@ public class ActivityUtil {
 
         context.startActivity(intent);
     }
+
+    public static void openActivity(Class className, Context context) {
+        openActivity(className, context, null, false);
+    }
 }
