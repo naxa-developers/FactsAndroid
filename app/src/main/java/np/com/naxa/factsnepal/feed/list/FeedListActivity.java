@@ -397,10 +397,11 @@ public class FeedListActivity extends BaseActivity
                         Log.d(TAG, "onNext: " + factsResponse.get(0).toString());
                         if (factsResponse.get(0).getCategory() != null) {
 
-                            if (!hasCategories) {
-                                setupChips(factsResponse.get(0).getCategory());
-                            }
-                            hasCategories = true;
+//                            if (!hasCategories) {
+                                // TODO: 4/2/2019  set dynamic category chip
+//                                setupChips(factsResponse.get(0).getCategory());
+//                            }
+//                            hasCategories = true;
                         }
                     }
 
