@@ -299,7 +299,7 @@ public class FeedListActivity extends BaseActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_notification:
-                ActivityUtil.openActivity(NotificationActivity.class, this, null, false);
+                ActivityUtil.openActivity(NotificationActivity.class, this);
                 break;
             case android.R.id.home:
 
@@ -317,10 +317,10 @@ public class FeedListActivity extends BaseActivity
 
         if (id == R.id.nav_home) {
         } else if (id == R.id.nav_public_poll) {
-            ActivityUtil.openActivity(PublicPollActivity.class, this, null, false);
+            ActivityUtil.openActivity(PublicPollActivity.class, this);
         } else if (id == R.id.nav_survey) {
             ActivityUtil.openActivity(SurveyStartActivity
-                    .class, this, null, false);
+                    .class, this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
