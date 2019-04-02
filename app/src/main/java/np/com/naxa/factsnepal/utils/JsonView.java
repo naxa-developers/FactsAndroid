@@ -28,6 +28,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * TODO: create the ratingbar view, check style adding
+ * [2019-04-02] first created
+ *
+ */
+
 public class JsonView extends LinearLayout {
     public interface RenderingCompleteListener {
         void onRendered(boolean isSuccess);
