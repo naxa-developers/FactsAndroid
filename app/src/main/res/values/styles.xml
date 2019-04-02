@@ -102,7 +102,8 @@
     </style>
 
     <style name="Text.Compound" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:drawablePadding">4dp</item>
+
+        <item name="android:drawablePadding">8dp</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:layout_marginBottom">13dp</item>
         <item name="android:layout_marginTop">4dp</item>
@@ -118,6 +119,12 @@
     <style name="Text.Compound.Date" parent="Text.Compound">
         <item name="android:drawableLeft">@drawable/ic_date_range_24dp</item>
         <item name="android:drawableStart">@drawable/ic_date_range_24dp</item>
+    </style>
+
+
+    <style name="Text.Compound.Bookmark" parent="Text.Compound">
+        <item name="android:drawableLeft">@drawable/ic_bookmark_border_black_24dp</item>
+        <item name="android:drawableStart">@drawable/ic_bookmark_border_black_24dp</item>
     </style>
 
     <style name="Text.Compound.Saved" parent="Text.Compound">
@@ -184,6 +191,8 @@
         <item name="android:textColor">@color/white_80</item>
 
     </style>
+
+
 
     <color name="orange">#E67E22</color>
     <color name="green">#16A085</color>
