@@ -58,7 +58,7 @@
         android:id="@+id/iv_feed"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@color/demo_purple"
+
         android:transitionName="@string/transtion_fact_list_details"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
