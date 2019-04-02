@@ -18,6 +18,7 @@
 
 
     <application
+        android:name=".FactsNepal"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -33,6 +34,7 @@
             android:name=".feed.detail.FactDetailActivity"
             android:label="@string/app_name" />
         <activity
+            android:exported="true"
             android:name=".feed.list.FeedListActivity"
             android:label="@string/app_name" />
         <activity
@@ -73,6 +75,22 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme" />
+        <activity
+            android:exported="true"
+            android:name=".publicpoll.PublicPollActivity" />
+        <activity
+            android:exported="true"
+            android:name=".publicpoll.PublicPollResultActivity" />
+        <activity
+            android:label="@string/app_name"
+            android:exported="true"
+            android:name=".surveys.SurveyStartActivity" />
+        <activity
+            android:exported="true"
+            android:name=".surveys.SurveyActivity" />
+        <activity
+            android:exported="true"
+            android:name=".notification.NotificationActivity" />
     </application>
 
 </manifest>

@@ -3,11 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+    <!--https://stackoverflow.com/questions/14908578/android-action-bar-menu-item-with-actionlayout-not-working-properly-->
     <item
-        android:id="@+id/activity_main_alerts_menu_item"
+        android:visible="false"
+        android:id="@+id/menu_notification_action_layout"
         android:orderInCategory="80"
         android:title="@string/actions_notification"
         app:actionLayout="@layout/action_view_notificaiton"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_notification"
+        android:orderInCategory="80"
+        android:title="@string/actions_notification"
+        android:icon="@drawable/ic_notifications_24dp"
         app:showAsAction="ifRoom" />
     <item
         android:orderInCategory="90"

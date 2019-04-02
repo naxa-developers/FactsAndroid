@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
+import np.com.naxa.factsnepal.userprofile.LoginActivity;
 
 
 public class SplashScreenActivity extends AppCompatActivity {

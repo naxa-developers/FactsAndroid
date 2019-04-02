@@ -58,7 +58,7 @@ public class Fact implements Serializable {
         ArrayList<Fact> facts = new ArrayList<>();
         for (int i = offset; i <= numbers; i++) {
             Pair p = getRandom();
-            facts.add(new Fact(p.first.toString(), p.second.toString(), "Category " + 1));
+            facts.add(new Fact(p.first.toString(), p.second.toString(), getRandomCategoryName()));
         }
 
         return facts;
@@ -116,10 +116,14 @@ public class Fact implements Serializable {
         return list.get(rnd);
     }
 
+    private static String getRandomCategoryName(){
+
+        return (String) getDemoCategories().get(new Random().nextInt(getDemoCategories().size())).second;
+    }
+
     public static ArrayList<Pair> arrayList ;
     public static ArrayList<Pair> getDemoCategories() {
         arrayList = new ArrayList<>();
-        arrayList.add(Pair.create(1, "All"));
         arrayList.add(Pair.create(2, "Education"));
         arrayList.add(Pair.create(3, "Health"));
         arrayList.add(Pair.create(4, "Politics"));

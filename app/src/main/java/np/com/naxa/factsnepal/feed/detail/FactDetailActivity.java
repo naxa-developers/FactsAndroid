@@ -63,7 +63,7 @@ public class FactDetailActivity extends BaseActivity {
     private void setupImageLoad(Fact fact) {
         ImageUtils.loadRemoteImage(this, fact.getImagePath())
                 .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark).dontTransform())
-                .centerCrop()
+                .fitCenter()
                 .addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
