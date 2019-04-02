@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout android:layout_width="32dp"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_height="32dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"

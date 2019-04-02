@@ -20,6 +20,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -104,11 +105,11 @@ public class FeedListActivity extends BaseActivity
 //        setupChips(null);
         initChips();
         setupNavigationDrawer();
-        
-               cardSurvey.setOnClickListener(new View.OnClickListener() {
+
+        cardSurvey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityUtil.openActivity(PublicPollActivity.class,FeedListActivity.this,null,false);
+                ActivityUtil.openActivity(PublicPollActivity.class, FeedListActivity.this, null, false);
             }
         });
 
@@ -289,16 +290,19 @@ public class FeedListActivity extends BaseActivity
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        //noinspection SimplifiableIfStatement
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
         switch (id) {
             case R.id.menu_notification:
                 ActivityUtil.openActivity(NotificationActivity.class, this, null, false);
+                break;
+            case android.R.id.home:
+
                 break;
         }
 
@@ -353,7 +357,7 @@ public class FeedListActivity extends BaseActivity
             public void run() {
                 surveyCardView.setVisibility(View.VISIBLE);
             }
-        }, TimeUnit.SECONDS.toMillis(30));
+        }, TimeUnit.SECONDS.toMillis(2));
     }
 
     private void setupSurveyCard() {
@@ -362,7 +366,17 @@ public class FeedListActivity extends BaseActivity
 
         CoordinatorLayout.LayoutParams layoutParams =
                 (CoordinatorLayout.LayoutParams) surveyCardView.getLayoutParams();
+        swipeDismissBehavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
+            @Override
+            public void onDismiss(View view) {
+                surveyCardView.setVisibility(View.GONE);
+            }
 
+            @Override
+            public void onDragStateChanged(int i) {
+
+            }
+        });
         layoutParams.setBehavior(swipeDismissBehavior);
 
     }
