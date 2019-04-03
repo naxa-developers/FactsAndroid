@@ -51,15 +51,12 @@ import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
-import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
-import np.com.naxa.factsnepal.network.facts.FetchFacts;
+import np.com.naxa.factsnepal.notification.NotificationCount;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
-
-import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact>, View.OnClickListener {
@@ -80,12 +77,16 @@ public class FeedListActivity extends BaseActivity
     private List<Fact> facts;
     private CardView cardSurvey;
 
+    NotificationCount notificationCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupToolbar();
+
+        notificationCount = new NotificationCount(FeedListActivity.this);
+
 
         this.facts = Fact.getDemoItems(NUMBER_OF_ITEMS, 0);
         fetchFactsFromServer(null);
@@ -317,7 +318,7 @@ public class FeedListActivity extends BaseActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        setCount(FeedListActivity.this, "9", menu);
+        setCount(FeedListActivity.this, notificationCount.getNotificationCount() + "", menu);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -429,7 +430,7 @@ public class FeedListActivity extends BaseActivity
                         if (factsResponse.get(0).getCategory() != null) {
 
 //                            if (!hasCategories) {
-                                // TODO: 4/2/2019  set dynamic category chip
+                            // TODO: 4/2/2019  set dynamic category chip
 //                                setupChips(factsResponse.get(0).getCategory());
 //                            }
 //                            hasCategories = true;
