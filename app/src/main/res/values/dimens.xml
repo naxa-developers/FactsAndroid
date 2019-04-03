@@ -9,4 +9,6 @@
     <dimen name="margin_small">8dp</dimen>
     <dimen name="banner_height">300dp</dimen>
     <dimen name="margin_large">16dp</dimen>
+
+    <dimen name="badge_count_textsize">12sp</dimen>
 </resources>

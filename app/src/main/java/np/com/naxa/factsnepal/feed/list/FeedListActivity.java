@@ -1,7 +1,10 @@
 package np.com.naxa.factsnepal.feed.list;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,6 +49,7 @@ import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
+import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.network.facts.FetchFacts;
@@ -299,6 +303,7 @@ public class FeedListActivity extends BaseActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_notification:
+
                 ActivityUtil.openActivity(NotificationActivity.class, this);
                 break;
             case android.R.id.home:
@@ -307,6 +312,32 @@ public class FeedListActivity extends BaseActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        setCount(FeedListActivity.this, "9", menu);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void setCount(Context context, String count, Menu defaultMenu) {
+        MenuItem menuItem = defaultMenu.findItem(R.id.menu_notification);
+        LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
+
+        CountDrawable badge;
+
+        // Reuse drawable if possible
+        Drawable reuse = icon.findDrawableByLayerId(R.id.ic_group_count);
+        if (reuse != null && reuse instanceof CountDrawable) {
+            badge = (CountDrawable) reuse;
+        } else {
+            badge = new CountDrawable(context);
+        }
+
+        badge.setCount(count);
+        icon.mutate();
+        icon.setDrawableByLayerId(R.id.ic_group_count, badge);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

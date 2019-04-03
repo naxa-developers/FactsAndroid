@@ -31,7 +31,6 @@ public class PublicPollResultActivity extends BaseActivity {
     ArrayList<String> BarEntryLabels ;
     BarDataSet Bardataset ;
     BarData BARDATA ;
-    Legend legend;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +60,7 @@ public class PublicPollResultActivity extends BaseActivity {
         chart.setFitBars(true);
 
         initAndSetLegend();
+//        setlegend();
         chart.animateY(3000);
     }
 
@@ -86,8 +86,9 @@ public class PublicPollResultActivity extends BaseActivity {
 
     // TODO: 4/3/2019
     public void setlegend(){
-        legend = chart.getLegend();
+        Legend legend = chart.getLegend();
         legend.setEnabled(true);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         legend.setDirection(Legend.LegendDirection.LEFT_TO_RIGHT);
         legend.setMaxSizePercent(.95f);
         legend.setWordWrapEnabled(true);
