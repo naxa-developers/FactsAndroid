@@ -11,6 +11,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +20,18 @@ import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.notification.FactsNotification;
+import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.R;
 
 public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.FeedCardVH> {
 
+    private final OnFeedCardItemClickListener listener;
     private ArrayList<Fact> facts;
-    private OnCardItemClickListener<Fact> listener;
 
 
-    public FactsFeedAdapter(ArrayList<Fact> facts, OnCardItemClickListener<Fact> listener) {
+    public FactsFeedAdapter(ArrayList<Fact> facts, OnFeedCardItemClickListener listener) {
         this.facts = facts;
         this.listener = listener;
     }
@@ -96,7 +99,10 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
         TextView tvTitle, tvCategory;
         ImageView imageView;
         View root;
+
         CheckBox tvSaved;
+
+
 
         FeedCardVH(@NonNull View itemView) {
             super(itemView);
@@ -105,8 +111,11 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             tvSaved = itemView.findViewById(R.id.tv_saved);
             root = itemView.findViewById(R.id.root_item_facts_feed_card);
             imageView = itemView.findViewById(R.id.iv_feed);
+            btnShare = itemView.findViewById(R.id.btn_share);
             root.setOnClickListener(this);
             tvSaved.setOnClickListener(this);
+
+            btnShare.setOnClickListener(this);
 
 
         }
@@ -115,16 +124,32 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_saved:
+
                     FactsLocalSource.getINSTANCE().toggleBookMark(facts.get(getAdapterPosition()))
                             .subscribeOn(Schedulers.io())
                             .subscribe();
+
                     break;
                 case R.id.root_item_facts_feed_card:
                     int pos = getAdapterPosition();
-                    listener.onCardItemClicked(facts.get(pos), imageView);
+                    listener.onCardTap(facts.get(pos), imageView);
+                    break;
+                case R.id.btn_share:
+                    listener.onShareButtonTap(facts.get(getAdapterPosition()));
                     break;
             }
         }
+
+
+    }
+
+
+    public interface OnFeedCardItemClickListener {
+        void onCardTap(Fact fact, ImageView imageView);
+
+        void onBookmarkButtonTap(Fact fact);
+
+        void onShareButtonTap(Fact fact);
     }
 
 

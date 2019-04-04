@@ -55,7 +55,7 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact>, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
 
     private static final String TAG = "FeedListActivity";
 
@@ -285,27 +285,6 @@ public class FeedListActivity extends BaseActivity
         return true;
     }
 
-    @Override
-    public void onCardItemClicked(Fact fact, int position) {
-
-    }
-
-    @Override
-    public void onCardItemLongClicked(Fact fact) {
-
-    }
-
-    @Override
-    public void onCardItemClicked(Fact fact, View view) {
-        Intent intent = new Intent(this, FactDetailActivity.class);
-        intent.putExtra(Constant.EXTRA_IMAGE, fact);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this, (ImageView) view, getString(R.string.transtion_fact_list_details));
-        startActivity(intent, options.toBundle());
-
-
-    }
 
     private void mockSurveyCard() {
         surveyCardView.setVisibility(View.GONE);
@@ -387,5 +366,26 @@ public class FeedListActivity extends BaseActivity
             case R.id.footer_item_instagram:
                 break;
         }
+    }
+
+    @Override
+    public void onCardTap(Fact fact, ImageView imageView) {
+        Intent intent = new Intent(this, FactDetailActivity.class);
+        intent.putExtra(Constant.EXTRA_IMAGE, fact);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, imageView, getString(R.string.transtion_fact_list_details));
+        startActivity(intent, options.toBundle());
+
+    }
+
+    @Override
+    public void onBookmarkButtonTap(Fact fact) {
+
+    }
+
+    @Override
+    public void onShareButtonTap(Fact fact) {
+        ActivityUtil.openShareIntent(this, fact.getTitle());
     }
 }

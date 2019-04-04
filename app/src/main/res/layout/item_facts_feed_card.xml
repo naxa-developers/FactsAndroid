@@ -134,7 +134,8 @@
                     tools:text="240" />
 
                 <TextView
-                    android:id="@+id/two"
+
+                    android:id="@+id/btn_share"
                     style="@style/Text.Compound.Share"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
