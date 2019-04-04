@@ -3,6 +3,8 @@ package np.com.naxa.factsnepal.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.ShareActionProvider;
+import android.text.Html;
 
 import java.util.HashMap;
 
@@ -27,5 +29,12 @@ public class ActivityUtil {
 
     public static void openActivity(Class className, Context context) {
         openActivity(className, context, null, false);
+    }
+
+    public static void openShareIntent(Context context,String text){
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, text);
+        context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
     }
 }
