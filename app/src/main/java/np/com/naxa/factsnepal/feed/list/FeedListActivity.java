@@ -300,8 +300,8 @@ public class FeedListActivity extends BaseActivity
     Menu menu ;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
-        sharedPreferenceUtils.removeKey(NotificationCount.KEY_NOTIFICATION_LIST);
+//        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
+//        sharedPreferenceUtils.removeKey(NotificationCount.KEY_NOTIFICATION_LIST);
         this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
@@ -335,7 +335,8 @@ public class FeedListActivity extends BaseActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.main, menu);
         try {
-            setCount(FeedListActivity.this, notificationCount.getNotificationCount() + "", menu);
+            long count = notificationCount.getNotificationCount();
+            setCount(FeedListActivity.this, count+ "", menu);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -7,11 +7,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public class NotificationActivity extends BaseActivity {
 
@@ -24,7 +29,12 @@ public class NotificationActivity extends BaseActivity {
         setContentView(R.layout.activity_notification);
         setupToolbar();
         bindUI();
-        setupListAdapter(FactsNotification.getDemoItems());
+
+        Gson gson = new Gson();
+        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
+        ArrayList<FactsNotification> factsNotification = gson.fromJson(sharedPreferenceUtils.getStringValue(NotificationCount.KEY_NOTIFICATION_LIST, "")
+                , new TypeToken<List<FactsNotification>>(){}.getType());
+        setupListAdapter(factsNotification);
 
     }
 

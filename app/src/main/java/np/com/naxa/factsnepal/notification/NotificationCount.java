@@ -2,6 +2,7 @@ package np.com.naxa.factsnepal.notification;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -10,7 +11,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import io.reactivex.Observable;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -22,6 +27,8 @@ public class NotificationCount {
 
     SharedPreferenceUtils sharedPreferenceUtils;
 
+    Gson gson = new Gson();
+
     int unreadCount = 0;
 
     public NotificationCount(Context context) {
@@ -32,50 +39,43 @@ public class NotificationCount {
         Gson gson = new Gson();
         ArrayList<FactsNotification> factsNotificationArrayList = FactsNotification.getDemoItems();
         String jsonString = gson.toJson(factsNotificationArrayList);
+
         JSONArray factsNotificationJSONArray = new JSONArray(jsonString);
-        Log.d(TAG, "getJsonArray: default" +jsonString);
-//        saveNotification(factsNotificationJSONArray);
+        Log.d(TAG, "getJsonArray: default" + jsonString);
         return factsNotificationJSONArray;
     }
 
+    long count;
 
     public synchronized long getNotificationCount() throws JSONException {
-        long count = 0;
-
-        if(updateData) {
-            JSONArray jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
-//            for ( int i = 0 ; i< jsonArray.length(); i++ ) {
-//                if(!jsonArray.getJSONObject(i).getBoolean("isRead")){
-//                    count = count++;
-//                    Log.d(TAG, "getNotificationCount: "+jsonArray.length());
-//                    Log.d(TAG, "getJsonArray: " +jsonArray.toString());
-
-//                }
-//            }
-            count = jsonArray.length();
+        count = 0;
+        if (sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, "").equals("")) {
             return count;
-        }else {
-            count = getJsonArray().length();
+
+        } else {
+            JSONArray jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                if (!jsonArray.getJSONObject(i).getBoolean("isRead")) {
+                    count = count + 1;
+                }
+            }
             return count;
         }
     }
 
 
-public static boolean updateData = false;
     public void saveNotification(JSONArray jsonArray) throws JSONException {
 
-        if((sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, "")).equals("")){
+        if ((sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, "")).equals("")) {
             sharedPreferenceUtils.setValue(KEY_NOTIFICATION_LIST, getJsonArray().toString());
-        }else {
+        } else {
             try {
                 JSONArray jsonArrayOld = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
-                Observable.range(0,jsonArray.length())
+                Observable.range(0, jsonArray.length())
                         .map(jsonArray::get)
                         .subscribe(e -> {
-                            JSONObject jsonObject = (JSONObject)e;
-                            jsonArrayOld.put((JSONObject) e);
+                            jsonArrayOld.put(addFieldsToJsonObj((JSONObject) e));
                             sharedPreferenceUtils.setValue(KEY_NOTIFICATION_LIST, jsonArrayOld.toString());
-                            updateData = true;
 
                         });
 
@@ -83,6 +83,24 @@ public static boolean updateData = false;
                 e.printStackTrace();
             }
         }
+
+    }
+
+    private JSONObject addFieldsToJsonObj (@NonNull JSONObject jsonObject) throws JSONException {
+
+        jsonObject.remove("time");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 1);
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String formatted = format1.format(cal.getTime());
+        jsonObject.put("time", formatted);
+
+
+        jsonObject.remove("isRead");
+        jsonObject.put("isRead", false);
+
+
+        return jsonObject;
 
     }
 }
