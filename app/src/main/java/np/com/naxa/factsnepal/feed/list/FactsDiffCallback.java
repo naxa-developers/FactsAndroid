@@ -5,14 +5,15 @@ import android.support.v7.util.DiffUtil;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import np.com.naxa.factsnepal.feed.Fact;
 
 public class FactsDiffCallback extends DiffUtil.Callback {
-    private ArrayList<Fact> oldFacts;
-    private ArrayList<Fact> newFacts;
+    private List<Fact> oldFacts;
+    private List<Fact> newFacts;
 
-    public FactsDiffCallback(ArrayList<Fact> oldFacts, ArrayList<Fact> newFacts) {
+    public FactsDiffCallback(List<Fact> oldFacts, List<Fact> newFacts) {
         this.oldFacts = oldFacts;
         this.newFacts = newFacts;
     }

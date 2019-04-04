@@ -10,5 +10,7 @@ public interface BaseLocalDataSourceRX<T> {
 
     Completable saveCompletable(List<T> items);
 
+    void saveAsync(List<T> items);
+
 
 }

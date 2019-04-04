@@ -91,6 +91,9 @@
         <activity
             android:exported="true"
             android:name=".notification.NotificationActivity" />
+        <activity
+            android:exported="true"
+            android:name=".feed.bookmarkedfacts.BookmarkedFactsActivity" />
     </application>
 
 </manifest>

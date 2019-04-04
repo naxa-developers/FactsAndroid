@@ -1,5 +1,8 @@
 package np.com.naxa.factsnepal.feed;
 
+import android.arch.lifecycle.LiveData;
+import android.os.AsyncTask;
+
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -22,6 +25,16 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
 
     private FactsLocalSource() {
         this.factsDAO = FactsNepalDatabase.getDatabase(FactsNepal.getInstance()).getFactsDAO();
+    }
+
+
+    public Completable toggleBookMark(Fact fact) {
+        if (fact.isBookmarked()) {
+            return markFactAsNotBookmarked(fact);
+        } else {
+            return markFactAsBookmarked(fact);
+        }
+
     }
 
     private Completable markFactAsBookmarked(Fact fact) {
@@ -47,5 +60,20 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
     @Override
     public Completable saveCompletable(List<Fact> items) {
         return Completable.fromAction(() -> factsDAO.insert(items));
+    }
+
+    @Override
+    public void saveAsync(List<Fact> items) {
+        AsyncTask.execute(() -> {
+            factsDAO.insert(items);
+        });
+    }
+
+    public LiveData<List<Fact>> getAll() {
+        return factsDAO.getAll();
+    }
+
+    public LiveData<List<Fact>> getAllBookmarked() {
+        return factsDAO.getAllBookmarked();
     }
 }

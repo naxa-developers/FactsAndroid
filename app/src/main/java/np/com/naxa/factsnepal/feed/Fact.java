@@ -22,6 +22,9 @@ public class Fact implements Serializable {
     private String category;
     private boolean isBookmarked;
 
+    public Fact(){
+
+    }
 
     private Fact(String title, String imagePath, String category) {
         this.title = title;
@@ -45,6 +48,13 @@ public class Fact implements Serializable {
         return imagePath;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;

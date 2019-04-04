@@ -17,6 +17,11 @@
             android:icon="@drawable/ic_poll_24dp"
             android:title="Survey" />
 
+        <item
+            android:id="@+id/nav_bookmarked"
+            android:icon="@drawable/ic_bookmark_border_black_24dp"
+            android:title="Bookmarked" />
+
     </group>
 
 
