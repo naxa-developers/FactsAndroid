@@ -23,7 +23,7 @@ class FactsNotificationVH extends RecyclerView.ViewHolder {
     void bindView(FactsNotification factsNotification) {
         tvNotificationTitle.setText(factsNotification.getTitle());
         tvNotificationTime.setText(factsNotification.getTime());
-        rootLayout.setEnabled(factsNotification.isRead());
+//        rootLayout.setEnabled(factsNotification.isRead());
 
     }
 }

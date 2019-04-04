@@ -32,7 +32,7 @@ public abstract class BaseRecyclerViewAdapter<L, VH extends RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        viewBinded(holder, l.get(position));
+        viewBinded(holder, l.get(position), position);
     }
 
     public List<L> getData() {
@@ -44,7 +44,7 @@ public abstract class BaseRecyclerViewAdapter<L, VH extends RecyclerView.ViewHol
         return l.size();
     }
 
-    public abstract void viewBinded(VH vh, L l);
+    public abstract void viewBinded(VH vh, L l, int position);
 
     public abstract VH attachViewHolder(View view);
 }

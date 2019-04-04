@@ -103,4 +103,11 @@ public class NotificationCount {
         return jsonObject;
 
     }
+
+
+    public static JSONObject changeNotificationStatus(JSONObject jsonObject) throws JSONException {
+        jsonObject.remove("isRead");
+        jsonObject.put("isRead", false);
+        return jsonObject;
+    }
 }

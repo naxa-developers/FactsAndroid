@@ -69,7 +69,7 @@ public class FactsNotification {
 
         list.add(new FactsNotification("Ncell survey in customer research", "", "Just now",false));
         list.add(new FactsNotification("Kantipur television survey on service", "", "12m ago",false));
-        list.add(new FactsNotification("Royal Singi age group survey", "", "1 day ago",true));
+        list.add(new FactsNotification("Royal Singi age group survey", "", "1 day ago",false));
         list.add(new FactsNotification("Ncell survey in customer research", "", "10 Feb, 2019",false));
 
         return list;
