@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,10 +27,19 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected void setupToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         centerToolbarTitle(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+
+    protected void setupToolbar(String title) {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        centerToolbarTitle(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(title);
     }
 
 

@@ -68,5 +68,6 @@
     <string name="location_accuracy">Accuracy is %f$s m</string>
     <string name="location_metadata">Satellites available: %1$d/24\n\nTime elapsed: %2$s</string>
     <string name="action_home">HOME</string>
+    <string name="toolbar_title_bookmarked">Bookmarked Fact(s)</string>
 
 </resources>

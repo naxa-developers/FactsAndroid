@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +16,9 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.notification.FactsNotification;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
@@ -33,8 +36,10 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
         this.listener = listener;
     }
 
-    void updateList(ArrayList<Fact> newList) {
+    public void updateList(List<Fact> newList) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FactsDiffCallback(this.facts, newList));
+        facts.clear();
+        facts.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -76,6 +81,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
         viewHolder.tvTitle.setText(fact.getTitle());
         viewHolder.tvCategory.setText(fact.getCategory());
+        viewHolder.tvSaved.setChecked(fact.isBookmarked());
     }
 
     @Override
@@ -90,10 +96,13 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
     class FeedCardVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvTitle, tvCategory, tvSaved;
+        TextView tvTitle, tvCategory;
         ImageView imageView;
         View root;
-        TextView btnShare;
+
+        CheckBox tvSaved;
+
+
 
         FeedCardVH(@NonNull View itemView) {
             super(itemView);
@@ -105,7 +114,9 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             btnShare = itemView.findViewById(R.id.btn_share);
             root.setOnClickListener(this);
             tvSaved.setOnClickListener(this);
+
             btnShare.setOnClickListener(this);
+
 
         }
 
@@ -113,10 +124,11 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_saved:
-                    tvSaved.getCompoundDrawables()[0].setState(new int[]{
-                            android.R.attr.checked
-                    });
-                    listener.onBookmarkButtonTap(facts.get(getAdapterPosition()));
+
+                    FactsLocalSource.getINSTANCE().toggleBookMark(facts.get(getAdapterPosition()))
+                            .subscribeOn(Schedulers.io())
+                            .subscribe();
+
                     break;
                 case R.id.root_item_facts_feed_card:
                     int pos = getAdapterPosition();
