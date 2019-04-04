@@ -4,22 +4,21 @@ package np.com.naxa.factsnepal.notification;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public class NotificationCount {
 
     private static final String TAG = "NotificationCount";
-    private static final String KEY_NOTIFICATION_LIST = "notification_list";
+    public static final String KEY_NOTIFICATION_LIST = "notification_list";
 
     SharedPreferenceUtils sharedPreferenceUtils;
 
@@ -29,30 +28,60 @@ public class NotificationCount {
         sharedPreferenceUtils = new SharedPreferenceUtils(context);
     }
 
-    public JSONArray getJsonArray(){
-
+    public JSONArray getJsonArray() throws JSONException {
+        Gson gson = new Gson();
         ArrayList<FactsNotification> factsNotificationArrayList = FactsNotification.getDemoItems();
-        JSONArray factsNotificationJSONArray = new JSONArray(factsNotificationArrayList);
-
-        Log.d(TAG, "getJsonArray: " +factsNotificationJSONArray.toString());
-
-//        return Observable.just(factsNotificationJSONArray);
+        String jsonString = gson.toJson(factsNotificationArrayList);
+        JSONArray factsNotificationJSONArray = new JSONArray(jsonString);
+        Log.d(TAG, "getJsonArray: default" +jsonString);
+//        saveNotification(factsNotificationJSONArray);
         return factsNotificationJSONArray;
     }
 
 
-    public long getNotificationCount(){
+    public synchronized long getNotificationCount() throws JSONException {
+        long count = 0;
 
-        long count = getJsonArray().length();
-        return count;
+        if(updateData) {
+            JSONArray jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
+//            for ( int i = 0 ; i< jsonArray.length(); i++ ) {
+//                if(!jsonArray.getJSONObject(i).getBoolean("isRead")){
+//                    count = count++;
+//                    Log.d(TAG, "getNotificationCount: "+jsonArray.length());
+//                    Log.d(TAG, "getJsonArray: " +jsonArray.toString());
+
+//                }
+//            }
+            count = jsonArray.length();
+            return count;
+        }else {
+            count = getJsonArray().length();
+            return count;
+        }
     }
 
 
-
-    public void saveNotification(){
+public static boolean updateData = false;
+    public void saveNotification(JSONArray jsonArray) throws JSONException {
 
         if((sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, "")).equals("")){
+            sharedPreferenceUtils.setValue(KEY_NOTIFICATION_LIST, getJsonArray().toString());
+        }else {
+            try {
+                JSONArray jsonArrayOld = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
+                Observable.range(0,jsonArray.length())
+                        .map(jsonArray::get)
+                        .subscribe(e -> {
+                            JSONObject jsonObject = (JSONObject)e;
+                            jsonArrayOld.put((JSONObject) e);
+                            sharedPreferenceUtils.setValue(KEY_NOTIFICATION_LIST, jsonArrayOld.toString());
+                            updateData = true;
 
+                        });
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
     }

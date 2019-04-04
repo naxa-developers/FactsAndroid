@@ -1,11 +1,26 @@
 package np.com.naxa.factsnepal.notification;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class FactsNotification {
+
+    @SerializedName("title")
+    @Expose
     private String title;
+
+    @SerializedName("icon")
+    @Expose
     private String icon;
+
+    @SerializedName("time")
+    @Expose
     private String time;
+
+    @SerializedName("isRead")
+    @Expose
     private boolean isRead;
 
     public FactsNotification(String title, String icon, String time, boolean isRead) {

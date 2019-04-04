@@ -29,6 +29,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +59,7 @@ import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact>, View.OnClickListener {
@@ -294,8 +297,12 @@ public class FeedListActivity extends BaseActivity
     }
 
 
+    Menu menu ;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
+        sharedPreferenceUtils.removeKey(NotificationCount.KEY_NOTIFICATION_LIST);
+        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -304,9 +311,18 @@ public class FeedListActivity extends BaseActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_notification:
-
                 ActivityUtil.openActivity(NotificationActivity.class, this);
                 break;
+
+            case R.id.action_profile:
+                try {
+                    notificationCount.saveNotification(notificationCount.getJsonArray());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                onPrepareOptionsMenu(menu);
+                break;
+
             case android.R.id.home:
 
                 break;
@@ -317,8 +333,12 @@ public class FeedListActivity extends BaseActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        setCount(FeedListActivity.this, notificationCount.getNotificationCount() + "", menu);
+//        getMenuInflater().inflate(R.menu.main, menu);
+        try {
+            setCount(FeedListActivity.this, notificationCount.getNotificationCount() + "", menu);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -340,6 +360,8 @@ public class FeedListActivity extends BaseActivity
         icon.mutate();
         icon.setDrawableByLayerId(R.id.ic_group_count, badge);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
