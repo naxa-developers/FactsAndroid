@@ -382,6 +382,9 @@ public class FeedListActivity extends BaseActivity
     @Override
     public void onBookmarkButtonTap(Fact fact) {
 
+        FactsLocalSource.getINSTANCE().toggleBookMark(fact)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     @Override
