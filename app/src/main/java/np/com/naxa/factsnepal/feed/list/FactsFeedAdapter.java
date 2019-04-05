@@ -96,7 +96,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
     class FeedCardVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvTitle, tvCategory;
+        TextView tvTitle, tvCategory,btnShare;
         ImageView imageView;
         View root;
 
@@ -114,7 +114,6 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             btnShare = itemView.findViewById(R.id.btn_share);
             root.setOnClickListener(this);
             tvSaved.setOnClickListener(this);
-
             btnShare.setOnClickListener(this);
 
 
@@ -124,11 +123,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_saved:
-
-                    FactsLocalSource.getINSTANCE().toggleBookMark(facts.get(getAdapterPosition()))
-                            .subscribeOn(Schedulers.io())
-                            .subscribe();
-
+                    listener.onBookmarkButtonTap(facts.get(getAdapterPosition()));
                     break;
                 case R.id.root_item_facts_feed_card:
                     int pos = getAdapterPosition();

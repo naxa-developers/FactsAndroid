@@ -1,32 +1,36 @@
 package np.com.naxa.factsnepal.feed.bookmarkedfacts;
 
-import android.arch.lifecycle.Observer;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
+import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 
-public class BookmarkedFactsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BookmarkedFactsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener {
 
     private RecyclerView recyclerViewFeed;
     private FactsFeedAdapter adapter;
@@ -43,12 +47,7 @@ public class BookmarkedFactsActivity extends BaseActivity implements NavigationV
 
 
         FactsLocalSource.getINSTANCE().getAllBookmarked()
-                .observe(this, new Observer<List<Fact>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Fact> facts) {
-                        adapter.updateList(facts);
-                    }
-                });
+                .observe(this, facts -> adapter.updateList(facts));
     }
 
     private void setupNavigationBar() {
@@ -60,13 +59,13 @@ public class BookmarkedFactsActivity extends BaseActivity implements NavigationV
 
     private void bindUI() {
         recyclerViewFeed = findViewById(R.id.rv_bookmarked_facts);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setupRecyclerView() {
-        adapter = new FactsFeedAdapter(new ArrayList<>(), null);
+        adapter = new FactsFeedAdapter(new ArrayList<>(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewFeed.setLayoutManager(layoutManager);
         recyclerViewFeed.addItemDecoration(new ListPaddingDecoration(this));
@@ -100,6 +99,30 @@ public class BookmarkedFactsActivity extends BaseActivity implements NavigationV
             drawer.openDrawer(GravityCompat.START);
         }
 
+    }
+
+    @Override
+    public void onCardTap(Fact fact, ImageView imageView) {
+        Intent intent = new Intent(this, FactDetailActivity.class);
+        intent.putExtra(Constant.EXTRA_IMAGE, fact);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, imageView, getString(R.string.transtion_fact_list_details));
+        startActivity(intent, options.toBundle());
+
+    }
+
+    @Override
+    public void onBookmarkButtonTap(Fact fact) {
+
+        FactsLocalSource.getINSTANCE().toggleBookMark(fact)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+    }
+
+    @Override
+    public void onShareButtonTap(Fact fact) {
+        ActivityUtil.openShareIntent(this, fact.getTitle());
     }
 
 }
