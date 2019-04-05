@@ -39,6 +39,10 @@ public class LoginActivity extends BaseLoginActivity {
 
     @Override
     public void onGoogleLoginSuccess(GoogleSignInAccount account) {
+
+        Log.d(TAG, "onGoogleLoginSuccess: "+account.getDisplayName());
+        Log.d(TAG, "onGoogleLoginSuccess: "+account.getEmail());
+        Log.d(TAG, "onGoogleLoginSuccess: "+account.getPhotoUrl());
         Utils.log(this.getClass(), account.getDisplayName());
         startActivity(new Intent(this, FeedListActivity.class));
     }
