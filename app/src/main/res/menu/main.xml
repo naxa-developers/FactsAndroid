@@ -16,7 +16,7 @@
         android:id="@+id/menu_notification"
         android:orderInCategory="80"
         android:title="@string/actions_notification"
-        android:icon="@drawable/ic_notifications_24dp"
+        android:icon="@drawable/actionbar_group_icon"
         app:showAsAction="ifRoom" />
     <item
         android:orderInCategory="90"

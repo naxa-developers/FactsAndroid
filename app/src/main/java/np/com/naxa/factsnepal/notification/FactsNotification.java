@@ -1,11 +1,26 @@
 package np.com.naxa.factsnepal.notification;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class FactsNotification {
+
+    @SerializedName("title")
+    @Expose
     private String title;
+
+    @SerializedName("icon")
+    @Expose
     private String icon;
+
+    @SerializedName("time")
+    @Expose
     private String time;
+
+    @SerializedName("isRead")
+    @Expose
     private boolean isRead;
 
     public FactsNotification(String title, String icon, String time, boolean isRead) {
@@ -14,6 +29,7 @@ public class FactsNotification {
         this.time = time;
         this.isRead = isRead;
     }
+
 
     public String getTitle() {
         return title;
@@ -53,8 +69,8 @@ public class FactsNotification {
 
         list.add(new FactsNotification("Ncell survey in customer research", "", "Just now",false));
         list.add(new FactsNotification("Kantipur television survey on service", "", "12m ago",false));
-        list.add(new FactsNotification("Royal Singi age group survey", "", "1 day ago",true));
-        list.add(new FactsNotification("Ncell survey in customer research", "", "10 Feb, 2019",true));
+        list.add(new FactsNotification("Royal Singi age group survey", "", "1 day ago",false));
+        list.add(new FactsNotification("Ncell survey in customer research", "", "10 Feb, 2019",false));
 
         return list;
     }

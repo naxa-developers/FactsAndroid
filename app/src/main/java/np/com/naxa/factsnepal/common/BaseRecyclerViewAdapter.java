@@ -14,11 +14,11 @@ import np.com.naxa.factsnepal.FactsNepal;
 //import com.rillmark.royalworldcup.MainApplication;
 
 public abstract class BaseRecyclerViewAdapter<L, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-    private List<L> l;
+    private List<L> itemList;
     private int layout;
 
-    protected BaseRecyclerViewAdapter(List<L> l, int layout) {
-        this.l = l;
+    protected BaseRecyclerViewAdapter(List<L> itemList, int layout) {
+        this.itemList = itemList;
         this.layout = layout;
 
     }
@@ -32,19 +32,19 @@ public abstract class BaseRecyclerViewAdapter<L, VH extends RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        viewBinded(holder, l.get(position));
+        viewBinded(holder, itemList.get(position), position);
     }
 
     public List<L> getData() {
-        return this.l;
+        return this.itemList;
     }
 
     @Override
     public int getItemCount() {
-        return l.size();
+        return itemList.size();
     }
 
-    public abstract void viewBinded(VH vh, L l);
+    public abstract void viewBinded(VH vh, L l, int position);
 
     public abstract VH attachViewHolder(View view);
 }

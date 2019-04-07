@@ -1,6 +1,12 @@
 package np.com.naxa.factsnepal.feed.list;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.AsyncTask;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +30,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -46,11 +54,15 @@ import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
+import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
+import np.com.naxa.factsnepal.notification.NotificationCount;
+
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
@@ -73,6 +85,7 @@ public class FeedListActivity extends BaseActivity
 
     private CardView cardSurvey;
 
+    NotificationCount notificationCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +93,9 @@ public class FeedListActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setupToolbar();
 
+        notificationCount = new NotificationCount(FeedListActivity.this);
+        
+        fetchFactsFromServer(null);
         FactsLocalSource.getINSTANCE()
                 .saveAsync(Fact.getDemoItems(NUMBER_OF_ITEMS, 0));
 
@@ -87,6 +103,7 @@ public class FeedListActivity extends BaseActivity
                 .observe(this, facts -> {
                     adapter.addAll(facts);
                 });
+
 
 
         fetchFactsFromServer(null);
@@ -244,8 +261,12 @@ public class FeedListActivity extends BaseActivity
     }
 
 
+    Menu menu ;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+//        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
+//        sharedPreferenceUtils.removeKey(NotificationCount.KEY_NOTIFICATION_LIST);
+        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -256,6 +277,16 @@ public class FeedListActivity extends BaseActivity
             case R.id.menu_notification:
                 ActivityUtil.openActivity(NotificationActivity.class, this);
                 break;
+
+            case R.id.action_profile:
+                try {
+                    notificationCount.saveNotification(notificationCount.getJsonArray());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                onPrepareOptionsMenu(menu);
+                break;
+
             case android.R.id.home:
 
                 break;
@@ -263,6 +294,39 @@ public class FeedListActivity extends BaseActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main, menu);
+        try {
+            long count = notificationCount.getNotificationCount();
+            setCount(FeedListActivity.this, count+ "", menu);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void setCount(Context context, String count, Menu defaultMenu) {
+        MenuItem menuItem = defaultMenu.findItem(R.id.menu_notification);
+        LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
+
+        CountDrawable badge;
+
+        // Reuse drawable if possible
+        Drawable reuse = icon.findDrawableByLayerId(R.id.ic_group_count);
+        if (reuse != null && reuse instanceof CountDrawable) {
+            badge = (CountDrawable) reuse;
+        } else {
+            badge = new CountDrawable(context);
+        }
+
+        badge.setCount(count);
+        icon.mutate();
+        icon.setDrawableByLayerId(R.id.ic_group_count, badge);
+    }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
