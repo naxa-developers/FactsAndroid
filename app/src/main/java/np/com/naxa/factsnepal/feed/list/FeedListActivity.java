@@ -61,6 +61,8 @@ import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
+
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact>, View.OnClickListener {
 
@@ -452,11 +454,10 @@ public class FeedListActivity extends BaseActivity
                         Log.d(TAG, "onNext: " + factsResponse.get(0).toString());
                         if (factsResponse.get(0).getCategory() != null) {
 
-//                            if (!hasCategories) {
-                            // TODO: 4/2/2019  set dynamic category chip
-//                                setupChips(factsResponse.get(0).getCategory());
-//                            }
-//                            hasCategories = true;
+                            if (!hasCategories) {
+                                setupChips(factsResponse.get(0).getCategory());
+                            }
+                            hasCategories = true;
                         }
                     }
 

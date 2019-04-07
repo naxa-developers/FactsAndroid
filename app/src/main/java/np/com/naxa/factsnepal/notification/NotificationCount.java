@@ -49,10 +49,6 @@ public class NotificationCount {
 
     public synchronized long getNotificationCount() throws JSONException {
         count = 0;
-        if (sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, "").equals("")) {
-            return count;
-
-        } else {
             JSONArray jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (!jsonArray.getJSONObject(i).getBoolean("isRead")) {
@@ -60,7 +56,7 @@ public class NotificationCount {
                 }
             }
             return count;
-        }
+
     }
 
 

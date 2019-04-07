@@ -49,10 +49,8 @@ public class BottomDialogFragment extends BottomSheetDialogFragment {
     public static ArrayList<Integer> categoryList = new ArrayList<Integer>();
 
     private void setupChips() {
-        if(Fact.getDemoCategories() == null){
-            return;
-        }
-        for (Pair p : Fact.getDemoCategories()) {
+
+        for (Pair p : Fact.getCategories()) {
             Chip chip = new Chip(new ContextThemeWrapper(requireActivity(), R.style.Feed_Widget_Chip));
             chip.setText(p.second.toString());
             chip.setTag(p);
