@@ -18,8 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.concurrent.Executor;
-
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 
