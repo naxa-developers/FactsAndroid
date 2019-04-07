@@ -18,6 +18,7 @@ import np.com.naxa.factsnepal.utils.Utils;
 public class LoginActivity extends BaseLoginActivity {
     private static final String TAG = "LoginActivity";
 
+
     @Override
     public void onFacebookLogiSuccess(LoginResult result) {
         Profile profile = Profile.getCurrentProfile();

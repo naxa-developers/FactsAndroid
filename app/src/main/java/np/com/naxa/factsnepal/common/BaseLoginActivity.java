@@ -53,7 +53,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+//                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         // [END config_signin]
@@ -165,6 +165,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
 //    public abstract void onTwitterLoginSuccess(Result<TwitterSession> twitterSessionResult);
 
     public abstract void onGoogleLoginSuccess(GoogleSignInAccount account);
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

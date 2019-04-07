@@ -22,6 +22,12 @@
             android:icon="@drawable/ic_bookmark_border_black_24dp"
             android:title="Bookmarked" />
 
+
+        <item
+            android:id="@+id/nav_user_logout"
+            android:icon="@drawable/ic_menu_profile_24dp"
+            android:title="Logout" />
+
     </group>
 
 

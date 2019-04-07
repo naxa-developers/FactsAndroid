@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.CoordinatorLayout;
@@ -29,6 +30,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 
@@ -334,14 +342,39 @@ public class FeedListActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-        } else if (id == R.id.nav_public_poll) {
-            ActivityUtil.openActivity(PublicPollActivity.class, this);
-        } else if (id == R.id.nav_survey) {
-            ActivityUtil.openActivity(SurveyStartActivity
-                    .class, this);
-        } else if (id == R.id.nav_bookmarked) {
-            ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+        switch (id){
+            case R.id.nav_home:
+                break;
+
+            case R.id.nav_public_poll:
+                ActivityUtil.openActivity(PublicPollActivity.class, this);
+                break;
+
+            case R.id.nav_survey:
+                ActivityUtil.openActivity(SurveyStartActivity
+                        .class, this);
+                break;
+
+            case R.id.nav_bookmarked:
+                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+                break;
+
+            case R.id.nav_user_logout:
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                mGoogleSignInClient.signOut()
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // ...
+                                if(task.isSuccessful()){
+                                    Toast.makeText(FeedListActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
