@@ -63,8 +63,6 @@ public abstract class BaseLogout {
 
 
     public void facebookLogout() {
-        onLogoutSuccess();
-
         GraphRequest delPermRequest = new GraphRequest(AccessToken.getCurrentAccessToken(), "/{user-id}/permissions/", null, HttpMethod.DELETE, new GraphRequest.Callback() {
             @Override
             public void onCompleted(GraphResponse graphResponse) {
