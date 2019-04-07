@@ -1,8 +1,15 @@
 package np.com.naxa.factsnepal.userprofile;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -31,10 +39,13 @@ import io.reactivex.subscribers.DisposableSubscriber;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
+import np.com.naxa.factsnepal.gps.GeoPointActivity;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
+
+import static np.com.naxa.factsnepal.gps.GeoPointActivity.LOCATION_RESULT;
 
 public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "UpdateProfileActivity";
@@ -56,6 +67,12 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     private ImageView ivProfilePhoto;
 
     private String facebookToken = "", fbProfileImage = "", provider = "", gender = "male";
+
+    public static final int GEOPOINT_RESULT_CODE = 1994;
+    double myLat = 0.0;
+    double myLong = 0.0;
+    String latitude, longitude;
+
 
 
     @Override
@@ -254,6 +271,11 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             case R.id.btn_next:
                 userRegistration();
                 break;
+
+            case R.id.btn_get_gps:
+                getGPSLocation();
+                break;
+
             case R.id.btn_skip:
                 ActivityUtil.openActivity(FeedListActivity.class, this, null, false);
                 break;
@@ -262,6 +284,75 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+
+    private void getGPSLocation(){
+        ActivityCompat.requestPermissions(UpdateProfileActivity.this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                1);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    if (!statusOfGPS) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    } else {
+
+                        Intent toGeoPointActivity = new Intent(this, GeoPointActivity.class);
+                        startActivityForResult(toGeoPointActivity, GEOPOINT_RESULT_CODE);
+
+                    }
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(UpdateProfileActivity.this, "Permission denied to access your GPS Location", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GEOPOINT_RESULT_CODE) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    String location = data.getStringExtra(LOCATION_RESULT);
+
+                    Log.d(TAG, "onActivityResult: " + location.toString());
+
+                    String string = location;
+                    String[] parts = string.split(" ");
+                    String split_lat = parts[0]; // 004
+                    String split_lon = parts[1]; // 034556
+
+                    if (!split_lat.equals("") && !split_lon.equals("")) {
+                        myLat = Double.parseDouble(split_lat);
+                        myLong = Double.parseDouble(split_lon);
+                        btnGetGPS.setText("Location Recorded");
+//                        showLoading("Please wait ... \nCalculating distance");
+                    } else {
+//                        showInfoToast("Cannot calculate distance");
+                        Toast.makeText(this, "Cannot get location", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+            }
+        }
+    }
 
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();

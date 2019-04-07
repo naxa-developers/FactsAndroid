@@ -160,7 +160,7 @@
                 android:layout_gravity="center"
                 android:text="GET LOCATION"
                 app:icon="@drawable/ic_bookmark_black_24dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
 
 
