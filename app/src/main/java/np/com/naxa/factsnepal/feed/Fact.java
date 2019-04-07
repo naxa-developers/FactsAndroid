@@ -1,5 +1,7 @@
 package np.com.naxa.factsnepal.feed;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 
@@ -10,16 +12,19 @@ import java.util.Random;
 
 import np.com.naxa.factsnepal.network.facts.Category;
 
+@Entity(tableName = "facts")
 public class Fact implements Serializable {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String title;
     private String imagePath;
     private String category;
+    private boolean isBookmarked;
 
-    public Fact(String title, String imagePath) {
-        this.title = title;
-        this.imagePath = imagePath;
+    public Fact(){
+
     }
-
 
     private Fact(String title, String imagePath, String category) {
         this.title = title;
@@ -30,11 +35,6 @@ public class Fact implements Serializable {
     public String getCategory() {
         return category;
     }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
 
     public String getTitle() {
         return title;
@@ -48,20 +48,28 @@ public class Fact implements Serializable {
         return imagePath;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
-    public static ArrayList<Fact> getDemoItems(int numbers, int offset) {
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-        Fact fact;
-        ArrayList<Fact> facts = new ArrayList<>();
-        for (int i = offset; i <= numbers; i++) {
-            Pair p = getRandom();
-            facts.add(new Fact(p.first.toString(), p.second.toString(), getRandomCategoryName()));
-        }
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
 
-        return facts;
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
     }
 
     @Override
@@ -85,7 +93,7 @@ public class Fact implements Serializable {
         return result;
     }
 
-
+    @Deprecated
     private static ArrayList<Pair> getFacts() {
 
         ArrayList<Pair> list = new ArrayList<Pair>();
@@ -110,19 +118,22 @@ public class Fact implements Serializable {
         return list;
     }
 
+    @Deprecated
     private static Pair getRandom() {
         ArrayList<Pair> list = getFacts();
         int rnd = new Random().nextInt(list.size());
         return list.get(rnd);
     }
 
-    private static String getRandomCategoryName(){
+    @Deprecated
+    private static String getRandomCategoryName() {
 
         return (String) getDemoCategories().get(new Random().nextInt(getDemoCategories().size())).second;
     }
 
-    public static ArrayList<Pair> arrayList ;
-    public static ArrayList<Pair> getDemoCategories() {
+    private static ArrayList<Pair> arrayList;
+
+    private static ArrayList<Pair> getDemoCategories() {
         arrayList = new ArrayList<>();
         arrayList.add(Pair.create(2, "Education"));
         arrayList.add(Pair.create(3, "Health"));
@@ -134,14 +145,30 @@ public class Fact implements Serializable {
 
 
     public static boolean hasCategories = false;
-    public static void setCategories(@NonNull List<Category> categoryList){
+
+    public static void setCategories(@NonNull List<Category> categoryList) {
         arrayList = new ArrayList<>();
-        for (Category category : categoryList){
+        for (Category category : categoryList) {
             arrayList.add(Pair.create(category.getId(), category.getTitle()));
         }
     }
 
-    public static ArrayList<Pair> getCategories(){
+    @Deprecated
+    public static ArrayList<Pair> getCategories() {
         return arrayList;
+    }
+
+    @Deprecated
+    public static ArrayList<Fact> getDemoItems(int numbers, int offset) {
+
+        Fact fact;
+        ArrayList<Fact> facts = new ArrayList<>();
+        for (int i = offset; i <= numbers; i++) {
+            Pair p = getRandom();
+            facts.add(new Fact(p.first.toString(), p.second.toString(), getRandomCategoryName()));
+        }
+
+        return facts;
+
     }
 }

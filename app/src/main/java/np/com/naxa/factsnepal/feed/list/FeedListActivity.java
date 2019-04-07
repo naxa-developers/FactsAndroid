@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,6 +48,8 @@ import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.feed.EndlessScrollListener;
 import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.FactsLocalSource;
+import np.com.naxa.factsnepal.feed.bookmarkedfacts.BookmarkedFactsActivity;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.network.facts.Category;
@@ -54,9 +57,9 @@ import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.notification.NotificationCount;
+
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
-
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -64,7 +67,7 @@ import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnCardItemClickListener<Fact>, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
 
     private static final String TAG = "FeedListActivity";
 
@@ -76,10 +79,10 @@ public class FeedListActivity extends BaseActivity
     private ChipGroup chipGroup;
 
     private static final int MAX_ITEMS_PER_REQUEST = 10;
-    private static final int NUMBER_OF_ITEMS = 20;
+    private static final int NUMBER_OF_ITEMS = 5;
     private static final int SIMULATED_LOADING_TIME = (int) TimeUnit.SECONDS.toMillis(10);
     private int page;
-    private List<Fact> facts;
+
     private CardView cardSurvey;
 
     NotificationCount notificationCount;
@@ -91,12 +94,19 @@ public class FeedListActivity extends BaseActivity
         setupToolbar();
 
         notificationCount = new NotificationCount(FeedListActivity.this);
-
-
-        this.facts = Fact.getDemoItems(NUMBER_OF_ITEMS, 0);
+        
         fetchFactsFromServer(null);
+        FactsLocalSource.getINSTANCE()
+                .saveAsync(Fact.getDemoItems(NUMBER_OF_ITEMS, 0));
+
+        FactsLocalSource.getINSTANCE().getAll()
+                .observe(this, facts -> {
+                    adapter.addAll(facts);
+                });
 
 
+
+        fetchFactsFromServer(null);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -122,6 +132,7 @@ public class FeedListActivity extends BaseActivity
                 ActivityUtil.openActivity(PublicPollActivity.class, FeedListActivity.this, null, false);
             }
         });
+
 
     }
 
@@ -216,7 +227,7 @@ public class FeedListActivity extends BaseActivity
     }
 
     private void setupRecyclerView() {
-        adapter = new FactsFeedAdapter(new ArrayList<>(this.facts.subList(page, MAX_ITEMS_PER_REQUEST)), this);
+        adapter = new FactsFeedAdapter(new ArrayList<>(), this);
 
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewFeed.setLayoutManager(layoutManager);
@@ -238,55 +249,6 @@ public class FeedListActivity extends BaseActivity
         };
     }
 
-
-    @SuppressLint("StaticFieldLeak")
-    private void simulateLoading() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    Thread.sleep(SIMULATED_LOADING_TIME);
-                } catch (InterruptedException ignored) {
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void param) {
-                int start = ++page * MAX_ITEMS_PER_REQUEST;
-                final boolean allItemsLoaded = start >= facts.size();
-                if (allItemsLoaded) {
-                    showToast("End of list");
-                } else {
-                    int end = start + MAX_ITEMS_PER_REQUEST;
-                    final ArrayList<Fact> itemsLocal = getItemsToBeLoaded(start, end);
-                    adapter.addAll(itemsLocal);
-                }
-
-                progressBar.setVisibility(View.GONE);
-
-            }
-        }.execute();
-    }
-
-    private void loadNextPage() {
-        adapter.addAll(Fact.getDemoItems(10, adapter.getItemCount()));
-    }
-
-
-    private ArrayList<Fact> getItemsToBeLoaded(int start, int end) {
-        List<Fact> newItems = facts.subList(start, end);
-        final ArrayList<Fact> oldItems = ((FactsFeedAdapter) recyclerViewFeed.getAdapter()).getItems();
-        final ArrayList<Fact> itemsLocal = new ArrayList<>();
-        itemsLocal.addAll(oldItems);
-        itemsLocal.addAll(newItems);
-        return itemsLocal;
-    }
 
     @Override
     public void onBackPressed() {
@@ -378,6 +340,8 @@ public class FeedListActivity extends BaseActivity
         } else if (id == R.id.nav_survey) {
             ActivityUtil.openActivity(SurveyStartActivity
                     .class, this);
+        } else if (id == R.id.nav_bookmarked) {
+            ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -385,27 +349,6 @@ public class FeedListActivity extends BaseActivity
         return true;
     }
 
-    @Override
-    public void onCardItemClicked(Fact fact, int position) {
-
-    }
-
-    @Override
-    public void onCardItemLongClicked(Fact fact) {
-
-    }
-
-    @Override
-    public void onCardItemClicked(Fact fact, View view) {
-        Intent intent = new Intent(this, FactDetailActivity.class);
-        intent.putExtra(Constant.EXTRA_IMAGE, fact);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this, (ImageView) view, getString(R.string.transtion_fact_list_details));
-        startActivity(intent, options.toBundle());
-
-
-    }
 
     private void mockSurveyCard() {
         surveyCardView.setVisibility(View.GONE);
@@ -487,5 +430,29 @@ public class FeedListActivity extends BaseActivity
             case R.id.footer_item_instagram:
                 break;
         }
+    }
+
+    @Override
+    public void onCardTap(Fact fact, ImageView imageView) {
+        Intent intent = new Intent(this, FactDetailActivity.class);
+        intent.putExtra(Constant.EXTRA_IMAGE, fact);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, imageView, getString(R.string.transtion_fact_list_details));
+        startActivity(intent, options.toBundle());
+
+    }
+
+    @Override
+    public void onBookmarkButtonTap(Fact fact) {
+
+        FactsLocalSource.getINSTANCE().toggleBookMark(fact)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+    }
+
+    @Override
+    public void onShareButtonTap(Fact fact) {
+        ActivityUtil.openShareIntent(this, fact.getTitle());
     }
 }
