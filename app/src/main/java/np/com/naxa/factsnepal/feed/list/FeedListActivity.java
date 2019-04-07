@@ -51,6 +51,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.BaseLogout;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
@@ -360,20 +361,12 @@ public class FeedListActivity extends BaseActivity
                 break;
 
             case R.id.nav_user_logout:
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .build();
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-                mGoogleSignInClient.signOut()
-                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                // ...
-                                if(task.isSuccessful()){
-                                    Toast.makeText(FeedListActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                BaseLogout baseLogout = new BaseLogout(FeedListActivity.this) {
+                    @Override
+                    public void onLogoutSuccess() {
+
+                    }
+                };
                 break;
         }
 

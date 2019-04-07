@@ -29,6 +29,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import np.com.naxa.factsnepal.utils.Utils;
 
 public abstract class BaseLoginActivity extends BaseActivity implements View.OnClickListener {
@@ -39,10 +40,16 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "BaseLoginActivity";
 //    TwitterAuthClient mTwitterAuthClient;
+    SharedPreferenceUtils sharedPreferenceUtils ;
+
+    public static final int FACEBOOK_LOG_IN = 1;
+    public static final int GMAIL_LOG_IN = 2;
+    public static final String KEY_LOGGED_IN_TYPE = "logged_in_type";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferenceUtils = new SharedPreferenceUtils(this);
         initView();
         init();
     }
@@ -101,6 +108,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
                             public void onSuccess(LoginResult loginResult) {
                                 // App code
                                 onFacebookLogiSuccess(loginResult);
+                                sharedPreferenceUtils.setValue(KEY_LOGGED_IN_TYPE, FACEBOOK_LOG_IN);
                             }
 
                             @Override
@@ -177,6 +185,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 onGoogleLoginSuccess(account);
+                sharedPreferenceUtils.setValue(KEY_LOGGED_IN_TYPE, GMAIL_LOG_IN);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("BaseLoginActivity", "Google sign in failed", e);
