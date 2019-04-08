@@ -83,7 +83,7 @@
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:id="@+id/btn_add_more_chips"
         android:layout_centerVertical="true"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
