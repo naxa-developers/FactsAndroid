@@ -4,12 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.demotxt.droidsrce.profileui.MainActivity"
     android:background="@color/silver_grey_windows_background"
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="405dp">
+        android:layout_height="match_parent">
         <LinearLayout
             android:background="@drawable/profile_info_gradient_background"
             android:layout_width="match_parent"
@@ -41,13 +40,80 @@
                 android:text="samirdangal123@gmail.com"/>
         </LinearLayout>
         <android.support.v7.widget.CardView
-            android:layout_width="400dp"
-            android:layout_height="120dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="275dp">
+            android:layout_marginTop="275dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin">
 
-            <include layout="@layout/user_earning_table_item_layout">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                >
+
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:text="Survey Name"
+                        android:textSize="20sp"
+                        android:textColor="@color/colorAccent"
+                        />
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:text="Survey Date"
+                        android:textSize="20sp"
+                        android:textColor="@color/colorAccent"
+                        />
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:text="Earned"
+                        android:textSize="20sp"
+                        android:textColor="@color/colorAccent"
+                        />
+
+            </LinearLayout>
+
+
+            <include layout="@layout/user_earning_table_item_layout"
+                >
             </include>
+            <include layout="@layout/user_earning_table_item_layout"
+                >
+            </include>
+            <include layout="@layout/user_earning_table_item_layout"
+                >
+            </include>
+            <include layout="@layout/user_earning_table_item_layout"
+                >
+            </include>
+            <include layout="@layout/user_earning_table_item_layout"
+                >
+            </include>
+            <include layout="@layout/user_earning_table_item_layout"
+                >
+            </include>
+            <include layout="@layout/user_earning_table_item_layout"
+                >
+            </include>
+
+            </LinearLayout>
 
         </android.support.v7.widget.CardView>
     </RelativeLayout>
