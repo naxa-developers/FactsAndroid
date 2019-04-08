@@ -63,25 +63,10 @@ public abstract class BaseLogout {
 
 
     public void facebookLogout() {
-        GraphRequest delPermRequest = new GraphRequest(AccessToken.getCurrentAccessToken(), "/{user-id}/permissions/", null, HttpMethod.DELETE, new GraphRequest.Callback() {
-            @Override
-            public void onCompleted(GraphResponse graphResponse) {
-                if (graphResponse != null) {
-                    FacebookRequestError error = graphResponse.getError();
-                    if (error != null) {
-                        Log.e(TAG, error.toString());
                         LoginManager.getInstance().logOut();
                         Toast.makeText(context, "Facebook Logout Successfully", Toast.LENGTH_SHORT).show();
                         onLogoutSuccess();
 
-                    } else {
-                        Toast.makeText(context, "Logout error facebook", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-        Log.d(TAG, "Executing revoke permissions with graph path" + delPermRequest.getGraphPath());
-        delPermRequest.executeAsync();
     }
 
 }

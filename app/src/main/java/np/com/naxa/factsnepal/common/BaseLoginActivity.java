@@ -45,6 +45,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
     public static final int FACEBOOK_LOG_IN = 1;
     public static final int GMAIL_LOG_IN = 2;
     public static final String KEY_LOGGED_IN_TYPE = "logged_in_type";
+    public static final String KEY_USER_SOCIAL_LOGGED_IN_DETAILS = "social_logged_in_details";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -196,5 +197,65 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
         callbackManager.onActivityResult(requestCode, resultCode, data);
 //        if (mTwitterAuthClient != null)
 //            mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
+
+
     }
+
+    public static class UserLoginDetails {
+        String user_access_token;
+        int user_login_type;
+        String user_name;
+        String user_email;
+        String user_image_url;
+
+        public UserLoginDetails(String user_access_token, int user_login_type, String user_name, String user_email, String user_image_url) {
+            this.user_access_token = user_access_token;
+            this.user_login_type = user_login_type;
+            this.user_name = user_name;
+            this.user_email = user_email;
+            this.user_image_url = user_image_url;
+        }
+
+
+        public String getUser_name() {
+            return user_name;
+        }
+
+        public void setUser_name(String user_name) {
+            this.user_name = user_name;
+        }
+
+        public String getUser_email() {
+            return user_email;
+        }
+
+        public void setUser_email(String user_email) {
+            this.user_email = user_email;
+        }
+
+        public String getUser_image_url() {
+            return user_image_url;
+        }
+
+        public void setUser_image_url(String user_image_url) {
+            this.user_image_url = user_image_url;
+        }
+
+        public String getUser_access_token() {
+            return user_access_token;
+        }
+
+        public void setUser_access_token(String user_access_token) {
+            this.user_access_token = user_access_token;
+        }
+
+        public int getUser_login_type() {
+            return user_login_type;
+        }
+
+        public void setUser_login_type(int user_login_type) {
+            this.user_login_type = user_login_type;
+        }
+    }
+
 }

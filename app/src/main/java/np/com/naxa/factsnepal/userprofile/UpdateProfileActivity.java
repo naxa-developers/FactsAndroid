@@ -333,7 +333,10 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                 case RESULT_OK:
                     String location = data.getStringExtra(LOCATION_RESULT);
 
-                    Log.d(TAG, "onActivityResult: " + location.toString());
+                    if(location == null){
+                        Toast.makeText(this, "Cannot get location", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     String string = location;
                     String[] parts = string.split(" ");

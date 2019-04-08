@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -116,17 +117,7 @@ public class FeedListActivity extends BaseActivity
 
 
         fetchFactsFromServer(null);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getHeaderView(0).setOnClickListener(view -> {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-        });
         bindUI();
         setupRecyclerView();
         setupSurveyCard();
@@ -147,6 +138,27 @@ public class FeedListActivity extends BaseActivity
 
 
     private void setupNavigationDrawer() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        ImageView profileIageView = (ImageView) navigationView.getHeaderView(R.id.nav_user_profile_image_view);
+        TextView tvUserName = (TextView) navigationView.getHeaderView(R.id.nav_user_username);
+        TextView tvUserEmail = (TextView) navigationView.getHeaderView(R.id.nav_user_email);
+
+
+
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getHeaderView(0).setOnClickListener(view -> {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        });
+
+
+
         findViewById(R.id.footer_item_facebook).setOnClickListener(this);
         findViewById(R.id.footer_item_instagram).setOnClickListener(this);
         findViewById(R.id.footer_item_twitter).setOnClickListener(this);

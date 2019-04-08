@@ -14,7 +14,7 @@
 
     <ImageView
         android:scaleType="center"
-        android:id="@+id/imageView"
+        android:id="@+id/nav_user_profile_image_view"
         style="@style/HeaderImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +26,7 @@
         app:srcCompat="@drawable/ic_menu_profile_24dp" />
 
     <TextView
+        android:id="@+id/nav_user_username"
         style="@style/Text.Title.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +35,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/nav_user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nav_header_subtitle" />
