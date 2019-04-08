@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
@@ -21,7 +20,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Do something after 100ms
-                startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+                startActivity(new Intent(SplashScreenActivity.this, FeedListActivity.class));
+                finish();
             }
         }, 2000);
     }
