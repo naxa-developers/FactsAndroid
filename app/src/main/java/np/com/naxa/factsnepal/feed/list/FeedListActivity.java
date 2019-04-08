@@ -155,21 +155,22 @@ public class FeedListActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) drawer.findViewById(R.id.nav_view);
 
-        View headerLayout =
-                navigationView.inflateHeaderView(R.layout.nav_header_main);
-
-
+        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         ImageView profileIageView = (ImageView) headerLayout.findViewById(R.id.nav_user_profile_image_view);
         TextView tvUserName = (TextView)  headerLayout.findViewById(R.id.nav_user_username);
         TextView tvUserEmail = (TextView)  headerLayout.findViewById(R.id.nav_user_email);
 
         BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
-
         ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
                 .fitCenter()
                 .into(profileIageView);
         tvUserName.setText(userLoginDetails.getUser_name());
         tvUserEmail.setText(userLoginDetails.getUser_email());
+
+        if(sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2){
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_user_logout).setVisible(true);
+        }
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getHeaderView(0).setOnClickListener(view -> {
