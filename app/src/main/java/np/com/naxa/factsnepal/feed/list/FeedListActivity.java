@@ -38,6 +38,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
@@ -52,6 +53,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.BaseLoginActivity;
 import np.com.naxa.factsnepal.common.BaseLogout;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ListPaddingDecoration;
@@ -72,6 +74,7 @@ import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
+import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
@@ -97,6 +100,9 @@ public class FeedListActivity extends BaseActivity
 
     NotificationCount notificationCount;
 
+    SharedPreferenceUtils sharedPreferenceUtils ;
+    Gson gson;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +110,9 @@ public class FeedListActivity extends BaseActivity
         setupToolbar();
 
         notificationCount = new NotificationCount(FeedListActivity.this);
+        sharedPreferenceUtils = new SharedPreferenceUtils(this);
+        gson = new Gson();
+
         
         fetchFactsFromServer(null);
         FactsLocalSource.getINSTANCE()
@@ -144,13 +153,23 @@ public class FeedListActivity extends BaseActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) drawer.findViewById(R.id.nav_view);
 
-        ImageView profileIageView = (ImageView) navigationView.getHeaderView(R.id.nav_user_profile_image_view);
-        TextView tvUserName = (TextView) navigationView.getHeaderView(R.id.nav_user_username);
-        TextView tvUserEmail = (TextView) navigationView.getHeaderView(R.id.nav_user_email);
+        View headerLayout =
+                navigationView.inflateHeaderView(R.layout.nav_header_main);
 
 
+        ImageView profileIageView = (ImageView) headerLayout.findViewById(R.id.nav_user_profile_image_view);
+        TextView tvUserName = (TextView)  headerLayout.findViewById(R.id.nav_user_username);
+        TextView tvUserEmail = (TextView)  headerLayout.findViewById(R.id.nav_user_email);
+
+        BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
+
+        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
+                .fitCenter()
+                .into(profileIageView);
+        tvUserName.setText(userLoginDetails.getUser_name());
+        tvUserEmail.setText(userLoginDetails.getUser_email());
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getHeaderView(0).setOnClickListener(view -> {
