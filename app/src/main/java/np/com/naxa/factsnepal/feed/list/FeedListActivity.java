@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.CoordinatorLayout;
@@ -29,6 +30,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
@@ -43,6 +53,8 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.BaseLoginActivity;
+import np.com.naxa.factsnepal.common.BaseLogout;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.common.OnCardItemClickListener;
@@ -62,6 +74,7 @@ import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
+import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
@@ -87,6 +100,9 @@ public class FeedListActivity extends BaseActivity
 
     NotificationCount notificationCount;
 
+    SharedPreferenceUtils sharedPreferenceUtils ;
+    Gson gson;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +110,9 @@ public class FeedListActivity extends BaseActivity
         setupToolbar();
 
         notificationCount = new NotificationCount(FeedListActivity.this);
+        sharedPreferenceUtils = new SharedPreferenceUtils(this);
+        gson = new Gson();
+
         
         fetchFactsFromServer(null);
         FactsLocalSource.getINSTANCE()
@@ -107,17 +126,7 @@ public class FeedListActivity extends BaseActivity
 
 
         fetchFactsFromServer(null);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getHeaderView(0).setOnClickListener(view -> {
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-        });
         bindUI();
         setupRecyclerView();
         setupSurveyCard();
@@ -138,6 +147,38 @@ public class FeedListActivity extends BaseActivity
 
 
     private void setupNavigationDrawer() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) drawer.findViewById(R.id.nav_view);
+
+        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        ImageView profileIageView = (ImageView) headerLayout.findViewById(R.id.nav_user_profile_image_view);
+        TextView tvUserName = (TextView)  headerLayout.findViewById(R.id.nav_user_username);
+        TextView tvUserEmail = (TextView)  headerLayout.findViewById(R.id.nav_user_email);
+
+        BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
+        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
+                .fitCenter()
+                .into(profileIageView);
+        tvUserName.setText(userLoginDetails.getUser_name());
+        tvUserEmail.setText(userLoginDetails.getUser_email());
+
+        if(sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2){
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_user_logout).setVisible(true);
+        }
+
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getHeaderView(0).setOnClickListener(view -> {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        });
+
+
+
         findViewById(R.id.footer_item_facebook).setOnClickListener(this);
         findViewById(R.id.footer_item_instagram).setOnClickListener(this);
         findViewById(R.id.footer_item_twitter).setOnClickListener(this);
@@ -334,14 +375,31 @@ public class FeedListActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-        } else if (id == R.id.nav_public_poll) {
-            ActivityUtil.openActivity(PublicPollActivity.class, this);
-        } else if (id == R.id.nav_survey) {
-            ActivityUtil.openActivity(SurveyStartActivity
-                    .class, this);
-        } else if (id == R.id.nav_bookmarked) {
-            ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+        switch (id){
+            case R.id.nav_home:
+                break;
+
+            case R.id.nav_public_poll:
+                ActivityUtil.openActivity(PublicPollActivity.class, this);
+                break;
+
+            case R.id.nav_survey:
+                ActivityUtil.openActivity(SurveyStartActivity
+                        .class, this);
+                break;
+
+            case R.id.nav_bookmarked:
+                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+                break;
+
+            case R.id.nav_user_logout:
+                BaseLogout baseLogout = new BaseLogout(FeedListActivity.this) {
+                    @Override
+                    public void onLogoutSuccess() {
+
+                    }
+                };
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

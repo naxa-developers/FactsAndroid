@@ -94,6 +94,10 @@
         <activity
             android:exported="true"
             android:name=".feed.bookmarkedfacts.BookmarkedFactsActivity" />
+
+        <activity
+            android:name=".gps.GeoPointActivity">
+        </activity>
     </application>
 
 </manifest>
