@@ -4,18 +4,15 @@
     package="np.com.naxa.factsnepal">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission. ACCESS_COARSE_LOCATION" />
 
     <uses-feature android:name="android.hardware.location.gps" />
-
     <!--
     Allows Glide to monitor connectivity status and restart failed requests if users go from a
     a disconnected to a connected network state.
     -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:name=".FactsNepal"
@@ -26,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".userprofile.UserProfileInfoActivity"></activity>
         <activity
             android:name=".userprofile.UpdateProfileActivity"
             android:exported="true"
@@ -34,8 +32,8 @@
             android:name=".feed.detail.FactDetailActivity"
             android:label="@string/app_name" />
         <activity
-            android:exported="true"
             android:name=".feed.list.FeedListActivity"
+            android:exported="true"
             android:label="@string/app_name" />
         <activity
             android:name=".splashscreen.SplashScreenActivity"
@@ -76,28 +74,25 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme" />
         <activity
-            android:exported="true"
-            android:name=".publicpoll.PublicPollActivity" />
+            android:name=".publicpoll.PublicPollActivity"
+            android:exported="true" />
         <activity
-            android:exported="true"
-            android:name=".publicpoll.PublicPollResultActivity" />
+            android:name=".publicpoll.PublicPollResultActivity"
+            android:exported="true" />
         <activity
-            android:label="@string/app_name"
+            android:name=".surveys.SurveyStartActivity"
             android:exported="true"
-            android:name=".surveys.SurveyStartActivity" />
+            android:label="@string/app_name" />
         <activity
-            android:exported="true"
-            android:name=".surveys.SurveyActivity" />
+            android:name=".surveys.SurveyActivity"
+            android:exported="true" />
         <activity
-            android:exported="true"
-            android:name=".notification.NotificationActivity" />
+            android:name=".notification.NotificationActivity"
+            android:exported="true" />
         <activity
-            android:exported="true"
-            android:name=".feed.bookmarkedfacts.BookmarkedFactsActivity" />
-
-        <activity
-            android:name=".gps.GeoPointActivity">
-        </activity>
+            android:name=".feed.bookmarkedfacts.BookmarkedFactsActivity"
+            android:exported="true" />
+        <activity android:name=".gps.GeoPointActivity"></activity>
     </application>
 
 </manifest>
