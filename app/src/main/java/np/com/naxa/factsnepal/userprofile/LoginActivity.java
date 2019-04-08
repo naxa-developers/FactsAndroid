@@ -72,7 +72,6 @@ public class LoginActivity extends BaseLoginActivity {
     @Override
     public void onGoogleLoginSuccess(GoogleSignInAccount account) {
         sharedPreferenceUtils = new SharedPreferenceUtils(this);
-
         Utils.log(this.getClass(), account.getDisplayName());
         sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, gson.toJson(new UserLoginDetails(account.getIdToken(), 2,
                 account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString())));

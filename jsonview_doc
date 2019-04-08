@@ -1,0 +1,35 @@
+   String json = "{\n" +
+                "\t\"id\": 1,\n" +
+                "\t\"question\": \"Weather condition in Nepal ?\",\n" +
+                "\t\"public_date\": 1,\n" +
+                "\t\"question_type\": \"radio\",\n" +
+                "\t\"active\": 1,\n" +
+                "\t\"options\": [{\n" +
+                "\t\t\"id\": 1,\n" +
+                "\t\t\"question\": \"Too Good\",\n" +
+                "\t\t\"question_id\": 1\n" +
+                "\t}, {\n" +
+                "\t\t\"id\": 2,\n" +
+                "\t\t\"question\": \"Not Bad\",\n" +
+                "\t\t\"question_id\": 1\n" +
+                "\t}, {\n" +
+                "\t\t\"id\": 3,\n" +
+                "\t\t\"question\": \"Good\",\n" +
+                "\t\t\"question_id\": 1\n" +
+                "\t}]\n" +
+                "}";
+
+        JsonView jsonView = new JsonView(getApplicationContext());
+        try{
+            // need the Viewparams
+            // styles adding dynamically however need test
+
+            JsonView.ViewParams viewParams = JsonView.ViewParams.instancefromString(json);
+            viewParams.addTitleStyle(R.style.Text_Title_Bold);
+
+            // create the view
+            // callback denotes the view rendering is complete
+
+            jsonView.init(viewParams, isSuccess -> setContentView(jsonView)).create();
+
+        }catch (Exception e){e.printStackTrace();}
