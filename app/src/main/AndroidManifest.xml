@@ -23,7 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".userprofile.UserProfileInfoActivity"></activity>
+        <activity android:name=".userprofile.UserProfileInfoActivity"
+            android:exported="true">
+        </activity>
         <activity
             android:name=".userprofile.UpdateProfileActivity"
             android:exported="true"
