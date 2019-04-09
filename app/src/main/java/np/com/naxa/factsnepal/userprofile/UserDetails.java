@@ -8,6 +8,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserDetails implements Parcelable {
 
+    @SerializedName("user_name")
+    @Expose
+    private String user_name;
+    @SerializedName("user_email")
+    @Expose
+    private String user_email;
     @SerializedName("photo_url")
     @Expose
     private String photo_url;
@@ -39,7 +45,17 @@ public class UserDetails implements Parcelable {
     @Expose
     private String token;
 
-    public UserDetails(String photo_url, String ward, String district, String province, String municipality, String street, String birth_year, String gender, String provoder, String token) {
+    @SerializedName("latitude")
+    @Expose
+    private String latitude;
+    @SerializedName("longitude")
+    @Expose
+    private String longitude;
+
+
+
+    public UserDetails(String user_name, String user_email, String photo_url, String ward, String district, String province, String municipality,
+                       String street, String birth_year, String gender, String provoder, String token, String latitude, String longitude) {
         this.photo_url = photo_url;
         this.ward = ward;
         this.district = district;
@@ -50,6 +66,8 @@ public class UserDetails implements Parcelable {
         this.gender = gender;
         this.provoder = provoder;
         this.token = token;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getWard() {
@@ -139,6 +157,8 @@ public class UserDetails implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.user_name);
+        dest.writeString(this.user_email);
         dest.writeString(this.photo_url);
         dest.writeString(this.ward);
         dest.writeString(this.district);
@@ -149,9 +169,13 @@ public class UserDetails implements Parcelable {
         dest.writeString(this.gender);
         dest.writeString(this.provoder);
         dest.writeString(this.token);
+        dest.writeString(this.latitude);
+        dest.writeString(this.longitude);
     }
 
     protected UserDetails(Parcel in) {
+        this.user_name = in.readString();
+        this.user_email = in.readString();
         this.photo_url = in.readString();
         this.ward = in.readString();
         this.district = in.readString();
@@ -162,6 +186,8 @@ public class UserDetails implements Parcelable {
         this.gender = in.readString();
         this.provoder = in.readString();
         this.token = in.readString();
+        this.latitude = in.readString();
+        this.longitude = in.readString();
     }
 
     public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {
@@ -175,4 +201,36 @@ public class UserDetails implements Parcelable {
             return new UserDetails[size];
         }
     };
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getUser_email() {
+        return user_email;
+    }
+
+    public void setUser_email(String user_email) {
+        this.user_email = user_email;
+    }
 }

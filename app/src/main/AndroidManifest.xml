@@ -23,6 +23,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".surveys.SurveyQuestionListActivity"></activity>
+        <activity android:name=".surveys.SurveyCompanyListActivity" />
         <activity android:name=".userprofile.UserProfileInfoActivity"
             android:exported="true">
         </activity>
@@ -92,8 +94,9 @@
             android:name=".notification.NotificationActivity"
             android:exported="true" />
         <activity
-            android:name=".gps.GeoPointActivity">
-        </activity>
+            android:name=".feed.bookmarkedfacts.BookmarkedFactsActivity"
+            android:exported="true" />
+        <activity android:name=".gps.GeoPointActivity" />
         <activity
             android:exported="true"
             android:name=".preferences.PreferencesActivity" />
