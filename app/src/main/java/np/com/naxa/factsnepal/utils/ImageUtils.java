@@ -2,6 +2,7 @@ package np.com.naxa.factsnepal.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -24,7 +25,7 @@ public class ImageUtils {
 
 
 
-    public static GlideRequest<Drawable> loadRemoteImage(Context context, String path) {
+    public static GlideRequest<Drawable> loadRemoteImage(Context context,@NonNull String path) {
         return GlideApp.with(context)
                 .load(path.trim())
                 .placeholder(R.color.colorPrimaryDark)
