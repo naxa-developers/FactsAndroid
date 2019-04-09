@@ -98,15 +98,6 @@
             android:exported="true" />
         <activity android:name=".gps.GeoPointActivity" />
         <activity
-            android:name=".surveys.SurveyActivity"
-            android:exported="true" />
-        <activity
-            android:name=".notification.NotificationActivity"
-            android:exported="true" />
-        <activity
-            android:name=".gps.GeoPointActivity">
-        </activity>
-        <activity
             android:exported="true"
             android:name=".preferences.PreferencesActivity" />
             android:name=".feed.bookmarkedfacts.BookmarkedFactsActivity"
