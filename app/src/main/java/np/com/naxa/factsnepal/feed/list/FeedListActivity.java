@@ -70,6 +70,7 @@ import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.notification.NotificationCount;
 
+import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
@@ -100,7 +101,7 @@ public class FeedListActivity extends BaseActivity
 
     NotificationCount notificationCount;
 
-    SharedPreferenceUtils sharedPreferenceUtils ;
+    SharedPreferenceUtils sharedPreferenceUtils;
     Gson gson;
 
     @Override
@@ -113,7 +114,7 @@ public class FeedListActivity extends BaseActivity
         sharedPreferenceUtils = new SharedPreferenceUtils(this);
         gson = new Gson();
 
-        
+
         fetchFactsFromServer(null);
         FactsLocalSource.getINSTANCE()
                 .saveAsync(Fact.getDemoItems(NUMBER_OF_ITEMS, 0));
@@ -122,7 +123,6 @@ public class FeedListActivity extends BaseActivity
                 .observe(this, facts -> {
                     adapter.addAll(facts);
                 });
-
 
 
         fetchFactsFromServer(null);
@@ -157,17 +157,17 @@ public class FeedListActivity extends BaseActivity
 
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
         ImageView profileIageView = (ImageView) headerLayout.findViewById(R.id.nav_user_profile_image_view);
-        TextView tvUserName = (TextView)  headerLayout.findViewById(R.id.nav_user_username);
-        TextView tvUserEmail = (TextView)  headerLayout.findViewById(R.id.nav_user_email);
+        TextView tvUserName = (TextView) headerLayout.findViewById(R.id.nav_user_username);
+        TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
 
         BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
-        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
-                .fitCenter()
-                .into(profileIageView);
-        tvUserName.setText(userLoginDetails.getUser_name());
-        tvUserEmail.setText(userLoginDetails.getUser_email());
+//        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
+//                .fitCenter()
+//                .into(profileIageView);
+//        tvUserName.setText(userLoginDetails.getUser_name());
+//        tvUserEmail.setText(userLoginDetails.getUser_email());
 
-        if(sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2){
+        if (sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2) {
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_user_logout).setVisible(true);
         }
@@ -176,7 +176,6 @@ public class FeedListActivity extends BaseActivity
         navigationView.getHeaderView(0).setOnClickListener(view -> {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         });
-
 
 
         findViewById(R.id.footer_item_facebook).setOnClickListener(this);
@@ -302,7 +301,8 @@ public class FeedListActivity extends BaseActivity
     }
 
 
-    Menu menu ;
+    Menu menu;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 //        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
@@ -341,7 +341,7 @@ public class FeedListActivity extends BaseActivity
 //        getMenuInflater().inflate(R.menu.main, menu);
         try {
             long count = notificationCount.getNotificationCount();
-            setCount(FeedListActivity.this, count+ "", menu);
+            setCount(FeedListActivity.this, count + "", menu);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -368,14 +368,13 @@ public class FeedListActivity extends BaseActivity
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.nav_home:
                 break;
 
@@ -399,6 +398,8 @@ public class FeedListActivity extends BaseActivity
 
                     }
                 };
+            case R.id.nav_settings:
+                ActivityUtil.openActivity(PreferencesActivity.class, this);
                 break;
         }
 

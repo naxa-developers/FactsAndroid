@@ -98,6 +98,9 @@
         <activity
             android:name=".gps.GeoPointActivity">
         </activity>
+        <activity
+            android:exported="true"
+            android:name=".preferences.PreferencesActivity" />
     </application>
 
 </manifest>
