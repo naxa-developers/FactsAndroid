@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.google.gson.Gson;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import org.json.JSONException;
@@ -72,6 +73,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     double myLat = 0.0;
     double myLong = 0.0;
     String latitude, longitude;
+    String location;
 
 
 
@@ -173,6 +175,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         Flowable<CharSequence> municipalityChangeObservable = RxTextView.textChanges(etMunicipality).skip(1).toFlowable(BackpressureStrategy.LATEST);
         Flowable<CharSequence> streetChangeObservable = RxTextView.textChanges(etStreet).skip(1).toFlowable(BackpressureStrategy.LATEST);
 
+
         disposableObserver = Flowable.combineLatest(dobChangeObservable, wardChangeObservable, districtChangeObservable, provinceChangeObservable, municipalityChangeObservable, streetChangeObservable,
                 this::isValidForm)
                 .subscribeWith(new DisposableSubscriber<Boolean>() {
@@ -231,7 +234,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             showError(etStreet, getString(R.string.msg_invalid_input, "street"));
         }
 
-        return validDob && validWard && validDistrict && validProvince && validMunicipality && validStreet;
+
+        return validDob && validWard && validDistrict && validProvince && validMunicipality && validStreet ;
 
     }
 
@@ -269,7 +273,11 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
+                if(location != null){
                 userRegistration();
+                }else {
+                    Toast.makeText(this, "GPS Co-ordinate is required", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.btn_get_gps:
@@ -331,7 +339,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         if (requestCode == GEOPOINT_RESULT_CODE) {
             switch (resultCode) {
                 case RESULT_OK:
-                    String location = data.getStringExtra(LOCATION_RESULT);
+                    location = data.getStringExtra(LOCATION_RESULT);
 
                     if(location == null){
                         Toast.makeText(this, "Cannot get location", Toast.LENGTH_SHORT).show();
@@ -374,7 +382,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
     private void userRegistration(){
         UserDetails userDetails = new UserDetails(fbProfileImage, etWard.getText().toString(), etDistrict.getText().toString(), etProvience.getText().toString(),
-                etMunicipality.getText().toString(), etStreet.getText().toString(), etDob.getText().toString(), gender, provider, facebookToken);
+                etMunicipality.getText().toString(), etStreet.getText().toString(), etDob.getText().toString(), gender, provider, facebookToken, myLat+"", myLong+"");
 
         Gson gson = new Gson();
         String jsonInString = gson.toJson(userDetails);

@@ -71,6 +71,7 @@ import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.notification.NotificationCount;
 
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
+import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
@@ -384,8 +385,8 @@ public class FeedListActivity extends BaseActivity
                 break;
 
             case R.id.nav_survey:
-                ActivityUtil.openActivity(SurveyStartActivity
-                        .class, this);
+                ActivityUtil.openActivity(SurveyCompanyListActivity
+                    .class, this);
                 break;
 
             case R.id.nav_bookmarked:
