@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:weightSum="3">
 
 
                 <TextView
+                    android:id="@+id/tv_survey_name"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:layout_width="0dp"
@@ -20,9 +21,11 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/text_table_body"
                     android:paddingTop="10dp"
+                    android:paddingLeft="@dimen/margin_small"
                     />
 
             <TextView
+                android:id="@+id/tv_survey_date"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:layout_width="0dp"
@@ -34,6 +37,7 @@
                 />
 
             <TextView
+                android:id="@+id/tv_earning_from_survey"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:layout_width="0dp"
@@ -42,7 +46,8 @@
                 android:text="Rs.50"
                 android:textSize="@dimen/text_table_body"
                 android:paddingTop="10dp"
-                android:textColor="@color/light_green"/>
+                android:textColor="@color/light_green"
+                />
 
         </LinearLayout>
 

@@ -102,27 +102,12 @@
             </LinearLayout>
 
 
-            <include layout="@layout/user_earning_table_item_layout"
-                >
-            </include>
-            <include layout="@layout/user_earning_table_item_layout"
-                >
-            </include>
-            <include layout="@layout/user_earning_table_item_layout"
-                >
-            </include>
-            <include layout="@layout/user_earning_table_item_layout"
-                >
-            </include>
-            <include layout="@layout/user_earning_table_item_layout"
-                >
-            </include>
-            <include layout="@layout/user_earning_table_item_layout"
-                >
-            </include>
-            <include layout="@layout/user_earning_table_item_layout"
-                >
-            </include>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_survey_earning_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
 
             </LinearLayout>
 
