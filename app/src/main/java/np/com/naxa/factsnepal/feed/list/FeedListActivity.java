@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -155,7 +156,8 @@ public class FeedListActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) drawer.findViewById(R.id.nav_view);
 
-        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
+
+        View headerLayout =  navigationView.getHeaderView(0);
         ImageView profileIageView = (ImageView) headerLayout.findViewById(R.id.nav_user_profile_image_view);
         TextView tvUserName = (TextView) headerLayout.findViewById(R.id.nav_user_username);
         TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
