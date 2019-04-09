@@ -25,7 +25,7 @@ public interface NetworkApiInterface {
     Observable<UserDetailsResponse> getUserDetailsResponse(@Body UserDetails userDetails);
 
     @GET(UrlConstant.GET_SURVEY_QUESTION_URL)
-    Observable<SurveyQuestionDetails> getUserDetailsResponse();
+    Observable<SurveyQuestionDetails> getSurveyQuestionDetailsResponse();
 
 
 

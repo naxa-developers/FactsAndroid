@@ -38,14 +38,14 @@ public class UserDetails implements Parcelable {
     @SerializedName("gender")
     @Expose
     private String gender;
-    @SerializedName("provider")
+    @SerializedName("type")
     @Expose
     private String provoder;
     @SerializedName("token")
     @Expose
     private String token;
 
-    @SerializedName("latitude")
+    @SerializedName("lat")
     @Expose
     private String latitude;
     @SerializedName("longitude")

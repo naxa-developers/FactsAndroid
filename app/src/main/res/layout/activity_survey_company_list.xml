@@ -6,4 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".surveys.SurveyCompanyListActivity">
 
+    <include layout="@layout/toolbar">
+    </include>
+
 </android.support.constraint.ConstraintLayout>
