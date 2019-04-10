@@ -76,4 +76,8 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
     public LiveData<List<Fact>> getAllBookmarked() {
         return factsDAO.getAllBookmarked();
     }
+
+    public LiveData<Fact> getById(String id) {
+        return factsDAO.getById(id);
+    }
 }

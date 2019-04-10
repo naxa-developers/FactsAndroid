@@ -17,4 +17,6 @@ public abstract class FactsDAO implements BaseDAO<Fact> {
     @Query("SELECT * from facts WHERE isBookmarked=1")
     public abstract LiveData<List<Fact>> getAllBookmarked();
 
+    @Query("SELECT * FROM facts WHERE id=:id")
+    public abstract LiveData<Fact> getById(String id);
 }

@@ -1,6 +1,9 @@
 package np.com.naxa.factsnepal.feed.detail;
 
+import android.arch.lifecycle.Observer;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +12,7 @@ import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.Fade;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -20,10 +24,13 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.List;
+
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 
 public class FactDetailActivity extends BaseActivity {
@@ -38,26 +45,26 @@ public class FactDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_fact_detail);
         setupToolbar();
         bindUI();
+        onNewIntent(getIntent());
+    }
 
-        Fact fact = (Fact) getIntent().getSerializableExtra(Constant.EXTRA_IMAGE);
-        tvTitle.setText(fact.getTitle());
-        setupImageLoad(fact);
+    protected void onNewIntent(Intent intent) {
+        Uri data = intent.getData();
+        if (data != null && data.getQueryParameterNames().contains("id")) {
+            String factsId = data.getQueryParameter("id");
+            FactsLocalSource.getINSTANCE().getById(factsId)
+                    .observe(this, this::setFactInUI);
+        }
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().setEnterTransition(new Fade());
-//            getWindow().setSharedElementExitTransition(new TransitionSet()
-//                    .addTransition(new ChangeBounds())
-//                    .addTransition(new Fade())
-//
-//            );
-//            getWindow().setSharedElementEnterTransition(
-//                    new TransitionSet()
-//                            .addTransition(new ChangeBounds())
-//                            .addTransition(new Fade())
-//
-//            );
-//        }
+        Fact fact = (Fact) intent.getSerializableExtra(Constant.EXTRA_IMAGE);
+        setFactInUI(fact);
+    }
 
+    private void setFactInUI(Fact fact) {
+        if (fact != null) {
+            tvTitle.setText(fact.getTitle());
+            setupImageLoad(fact);
+        }
     }
 
     private void setupImageLoad(Fact fact) {

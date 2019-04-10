@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="App">
+        <Preference
+            android:icon="@mipmap/ic_launcher"
+            android:key="app_update"
+            android:summary="Check for update"
+            android:title="App name" />
+
+        <Preference
+            android:key="about_us"
+            android:title="About developer" />
+
+        <Preference
+            android:key="privacy_policy"
+            android:title="Privacy policy" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Notifications">
+        <SwitchPreference
+
+            android:key="notification"
+            android:title="Subscribe to notifications" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Data">
+        <Preference
+            android:key="data_sync_all"
+            android:title="Sync all" />
+
+        <Preference
+            android:key="data_clear_and_all"
+            android:title="Clear and Sync all" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
