@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    >
+
+    <ImageView
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:id="@+id/iv_survey_list_item_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/com_facebook_profile_picture_blank_square"/>
+
+    <LinearLayout
+        android:layout_toRightOf="@+id/iv_survey_list_item_image"
+        android:layout_toEndOf="@id/iv_survey_list_item_image"
+        android:layout_toLeftOf="@id/right_imageview_layout"
+        android:layout_toStartOf="@id/right_imageview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_survey_list_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_table_title"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:text="Title"/>
+        <TextView
+            android:id="@+id/tv_survey_list_item_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_table_title"
+            android:text="date"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/right_imageview_layout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_arrow_right_grey_24dp"/>
+</RelativeLayout>
