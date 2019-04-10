@@ -1,11 +1,9 @@
 package np.com.naxa.factsnepal.surveys;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -13,25 +11,32 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
-import np.com.naxa.factsnepal.userprofile.SurveyEarningHistoryVH;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public class SurveyCompanyListActivity extends BaseActivity {
     private static final String TAG = "SurveyCompanyListActivity";
+    public static final String KEY_SURVEY_QUESTION_DETAILS_JSON = "survey_question_json";
     private BaseRecyclerViewAdapter<SurveyCompany, SurveyItemListVH> adapter;
+    List<SurveyCompany> surveyCompanies;
 
     private RecyclerView recyclerView;
+    Gson gson;
+    protected SharedPreferenceUtils sharedPreferenceUtils;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_company_list);
+        gson = new Gson();
+        sharedPreferenceUtils = new SharedPreferenceUtils(this);
 
         setupToolbar("Survey Company List");
 
@@ -39,20 +44,17 @@ public class SurveyCompanyListActivity extends BaseActivity {
 
     }
 
-    private void getSurveyListData(){
+    private void getSurveyListData() {
+        createProgressDialog("fetching data.\nPlease wait..");
         if (isNetworkAvailable()) {
-            createProgressDialog("fetching data.\nPlease wait..");
-            getSurveyWuestionDetailsResponse();
-        }else {
-
+            getSurveyQuestionDetailsResponseFromServer();
+        } else {
+            getSurveyQuestionDetailsResponseFromSharedPref();
         }
     }
 
-    List<SurveyCompany> surveyCompanies;
-    private void getSurveyWuestionDetailsResponse(){
+    private void getSurveyQuestionDetailsResponseFromServer() {
         final String[] jsonInString = {""};
-        Gson gson = new Gson();
-
         surveyCompanies = new ArrayList<SurveyCompany>();
 
         apiInterface.getSurveyQuestionDetailsResponse()
@@ -62,28 +64,54 @@ public class SurveyCompanyListActivity extends BaseActivity {
                     @Override
                     public void onNext(SurveyQuestionDetails surveyQuestionDetails) {
                         jsonInString[0] = gson.toJson(surveyQuestionDetails);
+                        sharedPreferenceUtils.setValue(KEY_SURVEY_QUESTION_DETAILS_JSON, jsonInString[0]);
                         surveyCompanies = surveyQuestionDetails.getSurveyCompany();
-                        Log.d(TAG, "onComplete: company list size "+surveyQuestionDetails.getSurveyCompany().size());
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        showToast(e.getMessage());
+                        hideProgressDialog();
                     }
 
                     @Override
                     public void onComplete() {
                         hideProgressDialog();
                         setupRecyclerView(surveyCompanies);
-                        Log.d(TAG, "onComplete: "+jsonInString[0]);
-                        Log.d(TAG, "onComplete: company list size "+surveyCompanies.size());
+                    }
+                });
+    }
+
+    private void getSurveyQuestionDetailsResponseFromSharedPref() {
+        surveyCompanies = new ArrayList<SurveyCompany>();
+
+        SurveyQuestionDetails surveyQuestionDetails = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_SURVEY_QUESTION_DETAILS_JSON, ""), SurveyQuestionDetails.class);
+
+        Observable.just(surveyQuestionDetails)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<SurveyQuestionDetails>() {
+                    @Override
+                    public void onNext(SurveyQuestionDetails surveyQuestionDetails) {
+                        surveyCompanies = surveyQuestionDetails.getSurveyCompany();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showToast(e.getMessage());
+                        hideProgressDialog();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        hideProgressDialog();
+                        setupRecyclerView(surveyCompanies);
                     }
                 });
     }
 
 
-    private void setupRecyclerView (List<SurveyCompany> surveyCompanyList){
+    private void setupRecyclerView(List<SurveyCompany> surveyCompanyList) {
         recyclerView = findViewById(R.id.rv_survey_company_list);
 
 
@@ -110,8 +138,6 @@ public class SurveyCompanyListActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
 
     }
-
-
 
 
 }

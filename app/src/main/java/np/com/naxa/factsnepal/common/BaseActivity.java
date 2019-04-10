@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -29,7 +30,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
 
     protected NetworkApiInterface apiInterface = NetworkApiClient.getAPIClient().create(NetworkApiInterface.class);
-
 
     protected void setupToolbar() {
         toolbar = findViewById(R.id.toolbar);
