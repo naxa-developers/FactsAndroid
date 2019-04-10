@@ -66,7 +66,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     @NonNull
     @Override
     public FeedCardVH onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_facts_feed_card_animated, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_facts_feed_card, parent, false);
         return new FeedCardVH(view);
     }
 
