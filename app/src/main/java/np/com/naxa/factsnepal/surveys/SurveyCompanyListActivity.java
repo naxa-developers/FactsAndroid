@@ -22,9 +22,18 @@ public class SurveyCompanyListActivity extends BaseActivity {
 
         setupToolbar("Survey Company List");
 
-        getSurveyWuestionDetailsResponse();
+        getSurveyListData();
+
     }
 
+    private void getSurveyListData(){
+        if (isNetworkAvailable()) {
+            createProgressDialog("fetching data.\nPlease wait..");
+            getSurveyWuestionDetailsResponse();
+        }else {
+
+        }
+    }
 
     private void getSurveyWuestionDetailsResponse(){
         final String[] jsonInString = {""};
@@ -47,7 +56,7 @@ public class SurveyCompanyListActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
-
+                        hideProgressDialog();
                         Log.d(TAG, "onComplete: "+jsonInString[0]);
                     }
                 });
