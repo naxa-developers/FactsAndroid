@@ -40,4 +40,10 @@ public class SurveyItemListVH extends RecyclerView.ViewHolder {
         }
 
     }
+
+    void bindView(SurevyForms surevyForms) {
+        tvSurveyName.setText(surevyForms.getQuestion());
+        tvSurveyDate.setText(surevyForms.getPublicDate());
+
+    }
 }

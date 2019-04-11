@@ -29,7 +29,6 @@ public class SurveyStartActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_survey_start);
 
         Intent intent = getIntent();
-        companyId = intent.getIntExtra(SurveyCompanyListActivity.KEY_COMPANY_ID, 0);
         surveyCompany = intent.getParcelableExtra(KEY_OBJECT);
         setupToolbar(surveyCompany.getTitle());
 
@@ -54,7 +53,9 @@ public class SurveyStartActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_start_survey:
-                ActivityUtil.openActivity(SurveyActivity.class,this,null,false);
+                Intent intent = new Intent(SurveyStartActivity.this, SurveyFormListActivity.class);
+                intent.putExtra(KEY_OBJECT, surveyCompany);
+                startActivity(intent);
                 break;
         }
     }

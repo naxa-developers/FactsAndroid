@@ -133,7 +133,6 @@ public class SurveyCompanyListActivity extends BaseActivity {
                 surveyItemListVH.bindView(surveyCompany);
                 surveyItemListVH.itemView.setOnClickListener((v -> {
                     Intent intent  = new Intent(SurveyCompanyListActivity.this, SurveyStartActivity.class);
-                    intent.putExtra(KEY_COMPANY_ID, surveyCompany.getId());
                     intent.putExtra(KEY_OBJECT, surveyCompany);
                     startActivity(intent);
                 }));
