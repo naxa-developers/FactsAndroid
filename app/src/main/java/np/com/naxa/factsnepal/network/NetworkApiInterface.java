@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
-import np.com.naxa.factsnepal.surveys.SurveyQuestionDetails;
+import np.com.naxa.factsnepal.surveys.SurveyCompanyDetails;
 import np.com.naxa.factsnepal.userprofile.UserDetails;
 import np.com.naxa.factsnepal.userprofile.UserDetailsResponse;
 import retrofit2.http.Body;
@@ -25,7 +25,7 @@ public interface NetworkApiInterface {
     Observable<UserDetailsResponse> getUserDetailsResponse(@Body UserDetails userDetails);
 
     @GET(UrlConstant.GET_SURVEY_QUESTION_URL)
-    Observable<SurveyQuestionDetails> getSurveyQuestionDetailsResponse();
+    Observable<SurveyCompanyDetails> getSurveyQuestionDetailsResponse();
 
 
 

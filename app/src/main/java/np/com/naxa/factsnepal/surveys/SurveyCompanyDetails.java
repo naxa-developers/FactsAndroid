@@ -5,14 +5,14 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SurveyQuestionDetails {
+public class SurveyCompanyDetails {
 
     @SerializedName("survey_company")
     @Expose
     private List<SurveyCompany> surveyCompany = null;
-    @SerializedName("surevy_fro")
+    @SerializedName("forms")
     @Expose
-    private List<SurevyFro> surevyFro = null;
+    private List<SurevyForms> surevyForms = null;
 
     public List<SurveyCompany> getSurveyCompany() {
         return surveyCompany;
@@ -22,12 +22,12 @@ public class SurveyQuestionDetails {
         this.surveyCompany = surveyCompany;
     }
 
-    public List<SurevyFro> getSurevyFro() {
-        return surevyFro;
+    public List<SurevyForms> getSurevyForms() {
+        return surevyForms;
     }
 
-    public void setSurevyFro(List<SurevyFro> surevyFro) {
-        this.surevyFro = surevyFro;
+    public void setSurevyForms(List<SurevyForms> surevyForms) {
+        this.surevyForms = surevyForms;
     }
 
 }

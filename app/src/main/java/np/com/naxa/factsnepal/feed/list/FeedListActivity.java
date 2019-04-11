@@ -1,16 +1,12 @@
 package np.com.naxa.factsnepal.feed.list;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.CoordinatorLayout;
@@ -28,21 +24,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +49,6 @@ import np.com.naxa.factsnepal.common.BaseLoginActivity;
 import np.com.naxa.factsnepal.common.BaseLogout;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ListPaddingDecoration;
-import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.feed.EndlessScrollListener;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
@@ -70,11 +60,9 @@ import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.notification.NotificationCount;
-
 import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
-import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
@@ -86,6 +74,7 @@ public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
 
     private static final String TAG = "FeedListActivity";
+    private static final String KEY_FEED_LIST_DETAILS_JSON = "feed_list_details_json";
 
     private RecyclerView recyclerViewFeed;
     private FactsFeedAdapter adapter;
@@ -105,6 +94,7 @@ public class FeedListActivity extends BaseActivity
 
     SharedPreferenceUtils sharedPreferenceUtils;
     Gson gson;
+    String jsonInStringFeed = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +116,6 @@ public class FeedListActivity extends BaseActivity
                     adapter.addAll(facts);
                 });
 
-
-        fetchFactsFromServer(null);
 
         bindUI();
         setupRecyclerView();
@@ -463,6 +451,8 @@ public class FeedListActivity extends BaseActivity
                                 setupChips(factsResponse.get(0).getCategory());
                             }
                             hasCategories = true;
+
+                            jsonInStringFeed = gson.toJson(factsResponse);
                         }
                     }
 
@@ -474,8 +464,34 @@ public class FeedListActivity extends BaseActivity
 
                     @Override
                     public void onComplete() {
+                        sharedPreferenceUtils.setValue(KEY_FEED_LIST_DETAILS_JSON , jsonInStringFeed);
                         Log.d(TAG, "onComplete: ");
 
+
+                    }
+                });
+    }
+
+    private void fetchFactsFromSharedPrefs(){
+
+        List<FactsResponse> factsResponses = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_FEED_LIST_DETAILS_JSON, null),new TypeToken<List<FactsResponse>>(){}.getType());
+
+        Observable.just(factsResponses)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<List<FactsResponse>>() {
+                    @Override
+                    public void onNext(List<FactsResponse> factsResponses) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });

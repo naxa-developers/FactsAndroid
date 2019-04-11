@@ -23,8 +23,11 @@ import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 public class SurveyCompanyListActivity extends BaseActivity {
     private static final String TAG = "SurveyCompanyListActivity";
     public static final String KEY_SURVEY_QUESTION_DETAILS_JSON = "survey_question_json";
+    public static final int KEY_COMPANY_TYPE = 001;
+    public static final int KEY_FORM_TYPE = 002;
     private BaseRecyclerViewAdapter<SurveyCompany, SurveyItemListVH> adapter;
     List<SurveyCompany> surveyCompanies;
+
 
     private RecyclerView recyclerView;
     Gson gson;
@@ -60,12 +63,12 @@ public class SurveyCompanyListActivity extends BaseActivity {
         apiInterface.getSurveyQuestionDetailsResponse()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<SurveyQuestionDetails>() {
+                .subscribe(new DisposableObserver<SurveyCompanyDetails>() {
                     @Override
-                    public void onNext(SurveyQuestionDetails surveyQuestionDetails) {
-                        jsonInString[0] = gson.toJson(surveyQuestionDetails);
+                    public void onNext(SurveyCompanyDetails surveyCompanyDetails) {
+                        jsonInString[0] = gson.toJson(surveyCompanyDetails);
                         sharedPreferenceUtils.setValue(KEY_SURVEY_QUESTION_DETAILS_JSON, jsonInString[0]);
-                        surveyCompanies = surveyQuestionDetails.getSurveyCompany();
+                        surveyCompanies = surveyCompanyDetails.getSurveyCompany();
                     }
 
                     @Override
@@ -85,15 +88,15 @@ public class SurveyCompanyListActivity extends BaseActivity {
     private void getSurveyQuestionDetailsResponseFromSharedPref() {
         surveyCompanies = new ArrayList<SurveyCompany>();
 
-        SurveyQuestionDetails surveyQuestionDetails = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_SURVEY_QUESTION_DETAILS_JSON, ""), SurveyQuestionDetails.class);
+        SurveyCompanyDetails surveyCompanyDetails = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_SURVEY_QUESTION_DETAILS_JSON, ""), SurveyCompanyDetails.class);
 
-        Observable.just(surveyQuestionDetails)
+        Observable.just(surveyCompanyDetails)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<SurveyQuestionDetails>() {
+                .subscribe(new DisposableObserver<SurveyCompanyDetails>() {
                     @Override
-                    public void onNext(SurveyQuestionDetails surveyQuestionDetails) {
-                        surveyCompanies = surveyQuestionDetails.getSurveyCompany();
+                    public void onNext(SurveyCompanyDetails surveyCompanyDetails) {
+                        surveyCompanies = surveyCompanyDetails.getSurveyCompany();
                     }
 
                     @Override
@@ -131,7 +134,7 @@ public class SurveyCompanyListActivity extends BaseActivity {
 
             @Override
             public SurveyItemListVH attachViewHolder(View view) {
-                return new SurveyItemListVH(view);
+                return new SurveyItemListVH(view, KEY_COMPANY_TYPE);
             }
         };
 

@@ -13,13 +13,20 @@ import np.com.naxa.factsnepal.utils.ImageUtils;
 public class SurveyItemListVH extends RecyclerView.ViewHolder {
     private TextView tvSurveyName, tvSurveyDate;
     ImageView ivSurveyImage;
+    int type;
 
 
-    public SurveyItemListVH(@NonNull View itemView) {
+    public SurveyItemListVH(@NonNull View itemView, int type) {
         super(itemView);
+        this.type = type;
+
         tvSurveyName = itemView.findViewById(R.id.tv_survey_list_item_title);
         tvSurveyDate = itemView.findViewById(R.id.tv_survey_list_item_date);
         ivSurveyImage = itemView.findViewById(R.id.iv_survey_list_item_image);
+
+        if(type == SurveyCompanyListActivity.KEY_FORM_TYPE){
+            ivSurveyImage.setVisibility(View.GONE);
+        }
 
     }
 
@@ -27,8 +34,10 @@ public class SurveyItemListVH extends RecyclerView.ViewHolder {
         tvSurveyName.setText(surveyCompany.getTitle());
         tvSurveyDate.setText(surveyCompany.getShortdesc());
 
-        ImageUtils.loadRemoteImage(FactsNepal.getInstance(), surveyCompany.getImage())
-                .into(ivSurveyImage);
+        if(type == SurveyCompanyListActivity.KEY_COMPANY_TYPE) {
+            ImageUtils.loadRemoteImage(FactsNepal.getInstance(), surveyCompany.getImage())
+                    .into(ivSurveyImage);
+        }
 
     }
 }

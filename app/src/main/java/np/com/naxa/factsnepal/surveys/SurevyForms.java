@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SurevyFro {
+public class SurevyForms {
 
     @SerializedName("id")
     @Expose
@@ -25,9 +25,6 @@ public class SurevyFro {
     @SerializedName("active")
     @Expose
     private Integer active;
-    @SerializedName("options")
-    @Expose
-    private List<Option> options = null;
 
     public Integer getId() {
         return id;
@@ -77,12 +74,5 @@ public class SurevyFro {
         this.active = active;
     }
 
-    public List<Option> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<Option> options) {
-        this.options = options;
-    }
 
 }
