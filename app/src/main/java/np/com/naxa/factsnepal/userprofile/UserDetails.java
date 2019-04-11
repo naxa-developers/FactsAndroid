@@ -8,10 +8,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserDetails implements Parcelable {
 
-    @SerializedName("user_name")
+    @SerializedName("name")
     @Expose
     private String user_name;
-    @SerializedName("user_email")
+    @SerializedName("email")
     @Expose
     private String user_email;
     @SerializedName("photo_url")
@@ -56,6 +56,8 @@ public class UserDetails implements Parcelable {
 
     public UserDetails(String user_name, String user_email, String photo_url, String ward, String district, String province, String municipality,
                        String street, String birth_year, String gender, String provoder, String token, String latitude, String longitude) {
+        this.user_name = user_name;
+        this.user_email = user_email;
         this.photo_url = photo_url;
         this.ward = ward;
         this.district = district;

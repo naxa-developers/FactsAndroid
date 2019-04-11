@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import np.com.naxa.factsnepal.R;
 
-public class SurveyQuestionListActivity extends AppCompatActivity {
+public class SurveyFormListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_survey_question_list);
+        setContentView(R.layout.activity_survey_form_list);
     }
 }

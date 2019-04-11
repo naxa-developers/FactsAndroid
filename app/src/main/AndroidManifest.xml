@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".surveys.SurveyQuestionListActivity"></activity>
+        <activity android:name=".surveys.SurveyFormListActivity"></activity>
         <activity android:name=".surveys.SurveyCompanyListActivity" />
         <activity android:name=".userprofile.UserProfileInfoActivity"
             android:exported="true">

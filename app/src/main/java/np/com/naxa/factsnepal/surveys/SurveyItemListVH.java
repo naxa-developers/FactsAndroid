@@ -27,7 +27,8 @@ public class SurveyItemListVH extends RecyclerView.ViewHolder {
         tvSurveyName.setText(surveyCompany.getTitle());
         tvSurveyDate.setText(surveyCompany.getShortdesc());
 
-        ImageUtils.loadRemoteImage(FactsNepal.getInstance(), surveyCompany.getImage());
+        ImageUtils.loadRemoteImage(FactsNepal.getInstance(), surveyCompany.getImage())
+                .into(ivSurveyImage);
 
     }
 }
