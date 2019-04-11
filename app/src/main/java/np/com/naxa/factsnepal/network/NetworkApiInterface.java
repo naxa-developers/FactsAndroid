@@ -24,7 +24,7 @@ public interface NetworkApiInterface {
     @POST(UrlConstant.POST_USER_DETAILS_URL)
     Observable<UserDetailsResponse> getUserDetailsResponse(@Body UserDetails userDetails);
 
-    @GET(UrlConstant.GET_SURVEY_QUESTION_URL)
+    @GET(UrlConstant.GET_SURVEY_COMPANY_DETAILS_URL)
     Observable<SurveyCompanyDetails> getSurveyQuestionDetailsResponse();
 
 

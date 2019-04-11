@@ -28,7 +28,7 @@ public class ImageUtils {
     public static GlideRequest<Drawable> loadRemoteImage(Context context,@NonNull String path) {
         return GlideApp.with(context)
                 .load(path.trim())
-                .placeholder(R.color.colorPrimaryDark)
+//                .placeholder(R.color.colorPrimaryDark)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .thumbnail(0.5f)
                 .centerInside()

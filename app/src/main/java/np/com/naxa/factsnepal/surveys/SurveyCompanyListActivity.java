@@ -1,5 +1,6 @@
 package np.com.naxa.factsnepal.surveys;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,9 +21,12 @@ import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
+
 public class SurveyCompanyListActivity extends BaseActivity {
     private static final String TAG = "SurveyCompanyListActivity";
     public static final String KEY_SURVEY_QUESTION_DETAILS_JSON = "survey_question_json";
+    public static final String KEY_COMPANY_ID = "company_id";
     public static final int KEY_COMPANY_TYPE = 001;
     public static final int KEY_FORM_TYPE = 002;
     private BaseRecyclerViewAdapter<SurveyCompany, SurveyItemListVH> adapter;
@@ -128,7 +132,10 @@ public class SurveyCompanyListActivity extends BaseActivity {
             public void viewBinded(SurveyItemListVH surveyItemListVH, SurveyCompany surveyCompany, int position) {
                 surveyItemListVH.bindView(surveyCompany);
                 surveyItemListVH.itemView.setOnClickListener((v -> {
-
+                    Intent intent  = new Intent(SurveyCompanyListActivity.this, SurveyStartActivity.class);
+                    intent.putExtra(KEY_COMPANY_ID, surveyCompany.getId());
+                    intent.putExtra(KEY_OBJECT, surveyCompany);
+                    startActivity(intent);
                 }));
             }
 

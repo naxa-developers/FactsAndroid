@@ -11,5 +11,6 @@ public class UrlConstant {
 
         public static final String FETCH_CONFIG_URL = "api/config";
         public static final String POST_USER_DETAILS_URL = "api/register";
-        public static final String GET_SURVEY_QUESTION_URL = "api/surveyapi";
+        public static final String GET_SURVEY_COMPANY_DETAILS_URL = "api/surveyapi";
+        public static final String GET_SURVEY_QUESTION_DETAILS_URL = "api/questionapi";
 }
