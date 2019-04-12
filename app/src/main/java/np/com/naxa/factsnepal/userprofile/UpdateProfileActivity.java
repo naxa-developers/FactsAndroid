@@ -381,7 +381,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void userRegistration(){
-        UserDetails userDetails = new UserDetails("", "",fbProfileImage, etWard.getText().toString(), etDistrict.getText().toString(), etProvience.getText().toString(),
+        UserDetails userDetails = new UserDetails("Samir Dangal", "samir12@gmail.com",fbProfileImage, etWard.getText().toString(), etDistrict.getText().toString(), etProvience.getText().toString(),
                 etMunicipality.getText().toString(), etStreet.getText().toString(), etDob.getText().toString(), gender, provider, facebookToken, myLat+"", myLong+"");
 
         Gson gson = new Gson();

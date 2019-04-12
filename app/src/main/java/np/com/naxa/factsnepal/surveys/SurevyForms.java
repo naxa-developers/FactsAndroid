@@ -4,7 +4,6 @@ package np.com.naxa.factsnepal.surveys;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,8 +20,8 @@ public class SurevyForms implements Parcelable {
     private Integer publicDate;
     @SerializedName("survey_id")
     @Expose
-    private Integer surveyId;
-    @SerializedName("question_type")
+    private Integer surveyCompanyId;
+    @SerializedName("survey_company_id")
     @Expose
     private String questionType;
     @SerializedName("active")
@@ -53,12 +52,12 @@ public class SurevyForms implements Parcelable {
         this.publicDate = publicDate;
     }
 
-    public Integer getSurveyId() {
-        return surveyId;
+    public Integer getSurveyCompanyId() {
+        return surveyCompanyId;
     }
 
-    public void setSurveyId(Integer surveyId) {
-        this.surveyId = surveyId;
+    public void setSurveyCompanyId(Integer surveyCompanyId) {
+        this.surveyCompanyId = surveyCompanyId;
     }
 
     public String getQuestionType() {
@@ -88,7 +87,7 @@ public class SurevyForms implements Parcelable {
         dest.writeValue(this.id);
         dest.writeString(this.question);
         dest.writeValue(this.publicDate);
-        dest.writeValue(this.surveyId);
+        dest.writeValue(this.surveyCompanyId);
         dest.writeString(this.questionType);
         dest.writeValue(this.active);
     }
@@ -100,7 +99,7 @@ public class SurevyForms implements Parcelable {
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.question = in.readString();
         this.publicDate = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.surveyId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.surveyCompanyId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.questionType = in.readString();
         this.active = (Integer) in.readValue(Integer.class.getClassLoader());
     }

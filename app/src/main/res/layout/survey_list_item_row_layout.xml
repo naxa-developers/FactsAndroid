@@ -50,6 +50,7 @@
 
     <ImageView
         android:layout_below="@id/iv_survey_list_item_image"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/silver_grey_windows_background"
