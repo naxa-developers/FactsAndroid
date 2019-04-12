@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import np.com.naxa.factsnepal.common.BaseLoginActivity;
+
 
 public class SharedPreferenceUtils {
     private static SharedPreferenceUtils mSharedPreferenceUtils;
@@ -89,12 +91,11 @@ public class SharedPreferenceUtils {
 
     /**
      * Retrieves String value from preference
-     *
-     * @param key          key of preference
+     *  @param key          key of preference
      * @param defaultValue default value if no key found
      */
     public String getStringValue(String key, String defaultValue) {
-        return mSharedPreferences.getString(key, defaultValue);
+        return mSharedPreferences.getString(key, null);
     }
 
     /**

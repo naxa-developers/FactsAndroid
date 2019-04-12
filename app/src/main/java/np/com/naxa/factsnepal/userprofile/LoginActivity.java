@@ -77,6 +77,11 @@ public class LoginActivity extends BaseLoginActivity {
                 account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString())));
 
         startActivity(new Intent(this, FeedListActivity.class));
+
+        Log.d(TAG, "onGoogleLoginSuccess: "+account.getEmail());
+        ActivityUtil.openActivity(UpdateProfileActivity.class, this, null, false);
+
+
     }
 
 
