@@ -158,7 +158,7 @@ public class FeedListActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) drawer.findViewById(R.id.nav_view);
 
 
-        View headerLayout =  navigationView.getHeaderView(0);
+        View headerLayout = navigationView.getHeaderView(0);
         ImageView profileIageView = (ImageView) headerLayout.findViewById(R.id.nav_user_profile_image_view);
         TextView tvUserName = (TextView) headerLayout.findViewById(R.id.nav_user_username);
         TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
@@ -387,7 +387,7 @@ public class FeedListActivity extends BaseActivity
 
             case R.id.nav_survey:
                 ActivityUtil.openActivity(SurveyCompanyListActivity
-                    .class, this);
+                        .class, this);
                 break;
 
             case R.id.nav_bookmarked:
@@ -423,23 +423,14 @@ public class FeedListActivity extends BaseActivity
     }
 
     private void setupSurveyCard() {
-        SwipeDismissBehavior swipeDismissBehavior = new SwipeDismissBehavior();
-        swipeDismissBehavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_ANY);
+        surveyCardView.setOnClickListener(v -> {
 
-        CoordinatorLayout.LayoutParams layoutParams =
-                (CoordinatorLayout.LayoutParams) surveyCardView.getLayoutParams();
-        swipeDismissBehavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
-            @Override
-            public void onDismiss(View view) {
-                surveyCardView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onDragStateChanged(int i) {
-
-            }
         });
-        layoutParams.setBehavior(swipeDismissBehavior);
+
+        findViewById(R.id.iv_close_survey_card)
+                .setOnClickListener(v -> {
+                    surveyCardView.setVisibility(View.INVISIBLE);
+                });
 
     }
 
