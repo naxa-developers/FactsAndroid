@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,7 +31,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -333,7 +330,7 @@ public class FeedListActivity extends BaseActivity
         try {
             long count = notificationCount.getNotificationCount();
             setCount(FeedListActivity.this, count + "", menu);
-        } catch (JSONException e) {
+        } catch (NullPointerException | JSONException e) {
             e.printStackTrace();
         }
         return super.onPrepareOptionsMenu(menu);
@@ -455,7 +452,7 @@ public class FeedListActivity extends BaseActivity
 
                     @Override
                     public void onComplete() {
-                        sharedPreferenceUtils.setValue(KEY_FEED_LIST_DETAILS_JSON , jsonInStringFeed);
+                        sharedPreferenceUtils.setValue(KEY_FEED_LIST_DETAILS_JSON, jsonInStringFeed);
                         Log.d(TAG, "onComplete: ");
 
 
@@ -463,9 +460,10 @@ public class FeedListActivity extends BaseActivity
                 });
     }
 
-    private void fetchFactsFromSharedPrefs(){
+    private void fetchFactsFromSharedPrefs() {
 
-        List<FactsResponse> factsResponses = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_FEED_LIST_DETAILS_JSON, null),new TypeToken<List<FactsResponse>>(){}.getType());
+        List<FactsResponse> factsResponses = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_FEED_LIST_DETAILS_JSON, null), new TypeToken<List<FactsResponse>>() {
+        }.getType());
 
         Observable.just(factsResponses)
                 .subscribeOn(Schedulers.io())
