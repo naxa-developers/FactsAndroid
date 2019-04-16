@@ -12,5 +12,6 @@ public interface BaseLocalDataSourceRX<T> {
 
     void saveAsync(List<T> items);
 
+    void save(List<T> items);
 
 }

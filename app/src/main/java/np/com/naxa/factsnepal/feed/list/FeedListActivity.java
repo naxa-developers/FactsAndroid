@@ -65,7 +65,6 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
@@ -92,6 +91,8 @@ public class FeedListActivity extends BaseActivity
     SharedPreferenceUtils sharedPreferenceUtils;
     Gson gson;
     String jsonInStringFeed = "";
+    private boolean hasCategories = false;
+    private DisposableObserver<List<Fact>> factsDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,10 +104,26 @@ public class FeedListActivity extends BaseActivity
         sharedPreferenceUtils = new SharedPreferenceUtils(this);
         gson = new Gson();
 
+        factsDisposable = FactsRemoteSource.getINSTANCE()
+                .getAllFacts()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<List<Fact>>() {
+                    @Override
+                    public void onNext(List<Fact> facts) {
 
-        fetchFactsFromServer(null);
-        FactsLocalSource.getINSTANCE()
-                .saveAsync(Fact.getDemoItems(NUMBER_OF_ITEMS, 0));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
 
         FactsLocalSource.getINSTANCE().getAll()
                 .observe(this, facts -> {
@@ -149,11 +166,11 @@ public class FeedListActivity extends BaseActivity
         TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
 
         BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
-        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
-                .fitCenter()
-                .into(profileIageView);
-        tvUserName.setText(userLoginDetails.getUser_name());
-        tvUserEmail.setText(userLoginDetails.getUser_email());
+//        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
+//                .fitCenter()
+//                .into(profileIageView);
+//        tvUserName.setText(userLoginDetails.getUser_name());
+//        tvUserEmail.setText(userLoginDetails.getUser_email());
 
         if (sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2) {
             Menu nav_Menu = navigationView.getMenu();
@@ -202,7 +219,6 @@ public class FeedListActivity extends BaseActivity
                 .flatMapIterable(new Function<List<Category>, Iterable<Category>>() {
                     @Override
                     public Iterable<Category> apply(List<Category> categoryList) throws Exception {
-                        Fact.setCategories(categoryList);
 
                         return categoryList;
                     }
@@ -416,7 +432,6 @@ public class FeedListActivity extends BaseActivity
                 .setOnClickListener(v -> {
                     surveyCardView.setVisibility(View.INVISIBLE);
                 });
-
     }
 
     private void fetchFactsFromServer(ArrayList<Integer> categories) {

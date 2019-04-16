@@ -80,7 +80,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
                 .into(viewHolder.imageView);
 
         viewHolder.tvTitle.setText(fact.getTitle());
-        viewHolder.tvCategory.setText(fact.getCategory());
+        viewHolder.tvCategory.setText(fact.getCategoryName());
         viewHolder.tvSaved.setChecked(fact.isBookmarked());
     }
 
