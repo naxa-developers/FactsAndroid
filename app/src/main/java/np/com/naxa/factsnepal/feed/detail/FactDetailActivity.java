@@ -1,5 +1,6 @@
 package np.com.naxa.factsnepal.feed.detail;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,13 +46,11 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_fact_detail);
         setupToolbar();
         bindUI();
+        loadFact(savedInstanceState, getIntent());
+        setupFactUI();
+    }
 
-        if (savedInstanceState != null) {
-            fact = (Fact) savedInstanceState.getSerializable(FACT);
-        } else {
-            fact = (Fact) getIntent().getSerializableExtra(Constant.EXTRA_IMAGE);
-        }
-
+    private void setupFactUI() {
         if (fact == null) {
             finish();
             return;
@@ -62,8 +61,15 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
         tvLikeCount.setText(fact.getLikeCount());
         tvBookmark.setChecked(fact.isBookmarked());
         setupImageLoad(fact);
+    }
 
 
+    private void loadFact(Bundle savedInstanceState, Intent intent) {
+        if (savedInstanceState != null) {
+            fact = (Fact) savedInstanceState.getSerializable(FACT);
+        } else {
+            fact = (Fact) intent.getSerializableExtra(Constant.EXTRA_IMAGE);
+        }
     }
 
     private void setupImageLoad(Fact fact) {
@@ -91,7 +97,6 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
         tvDesc = findViewById(R.id.tv_fact_detail_desc);
         tvBookmark = findViewById(R.id.tv_saved);
         tvLikeCount = findViewById(R.id.three);
-
         tvBookmark.setOnClickListener(this);
 
     }
