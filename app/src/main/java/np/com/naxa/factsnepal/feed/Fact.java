@@ -44,6 +44,12 @@ public class Fact implements Serializable {
     @SerializedName("order")
     private String order;
 
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("short_desc")
+    private String shortDescription;
+
 
     private boolean isBookmarked;
 
@@ -131,6 +137,21 @@ public class Fact implements Serializable {
         isBookmarked = bookmarked;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -152,7 +173,10 @@ public class Fact implements Serializable {
         if (title != null ? !title.equals(fact.title) : fact.title != null) return false;
         if (slug != null ? !slug.equals(fact.slug) : fact.slug != null) return false;
         if (status != null ? !status.equals(fact.status) : fact.status != null) return false;
-        return order != null ? order.equals(fact.order) : fact.order == null;
+        if (order != null ? !order.equals(fact.order) : fact.order != null) return false;
+        if (description != null ? !description.equals(fact.description) : fact.description != null)
+            return false;
+        return shortDescription != null ? shortDescription.equals(fact.shortDescription) : fact.shortDescription == null;
     }
 
     @Override
@@ -166,6 +190,8 @@ public class Fact implements Serializable {
         result = 31 * result + (slug != null ? slug.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (order != null ? order.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (shortDescription != null ? shortDescription.hashCode() : 0);
         result = 31 * result + (isBookmarked ? 1 : 0);
         return result;
     }

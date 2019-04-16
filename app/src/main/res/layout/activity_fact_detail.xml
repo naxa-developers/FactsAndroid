@@ -39,23 +39,15 @@
             android:weightSum="3">
 
             <CheckBox
+                android:id="@+id/tv_saved"
                 style="@style/Text.Compound"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
                 android:layout_weight="1"
                 android:button="@drawable/ic_like_stateful"
                 android:text="@string/action_save"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:visibility="gone" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <TextView
-                style="@style/Text.Compound.Bookmark"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/demo_likes"
-                tools:text="240" />
 
             <TextView
                 android:id="@+id/three"
@@ -89,7 +81,7 @@
 
 
         <TextView
-
+            android:id="@+id/tv_fact_detail_desc"
             android:layout_margin="@dimen/margin_large"
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="match_parent"

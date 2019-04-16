@@ -73,15 +73,21 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     @Override
     public void onBindViewHolder(@NonNull FeedCardVH viewHolder, int i) {
         Context context = viewHolder.imageView.getContext();
-        int position = viewHolder.getAdapterPosition();
-        Fact fact = facts.get(position);
-        ImageUtils.loadRemoteImage(context, fact.getImagePath())
-                .fitCenter()
-                .into(viewHolder.imageView);
+        try {
+            int position = viewHolder.getAdapterPosition();
+            Fact fact = facts.get(position);
+            ImageUtils.loadRemoteImage(context, fact.getImagePath())
+                    .fitCenter()
+                    .into(viewHolder.imageView);
 
-        viewHolder.tvTitle.setText(fact.getTitle());
-        viewHolder.tvCategory.setText(fact.getCategoryName());
-        viewHolder.tvSaved.setChecked(fact.isBookmarked());
+            viewHolder.tvTitle.setText(fact.getTitle());
+            viewHolder.tvCategory.setText(fact.getCategoryName());
+            viewHolder.tvSaved.setChecked(fact.isBookmarked());
+            viewHolder.tvLikeCount.setText(fact.getLikeCount());
+        } catch (Exception e) {
+            //fail silently
+        }
+
     }
 
     @Override
@@ -96,12 +102,11 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
     class FeedCardVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvTitle, tvCategory,btnShare;
+        TextView tvTitle, tvCategory, btnShare, tvLikeCount;
         ImageView imageView;
         View root;
 
         CheckBox tvSaved;
-
 
 
         FeedCardVH(@NonNull View itemView) {
@@ -112,10 +117,11 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             root = itemView.findViewById(R.id.root_item_facts_feed_card);
             imageView = itemView.findViewById(R.id.iv_feed);
             btnShare = itemView.findViewById(R.id.btn_share);
+            tvLikeCount = itemView.findViewById(R.id.three);
+
             root.setOnClickListener(this);
             tvSaved.setOnClickListener(this);
             btnShare.setOnClickListener(this);
-
 
         }
 

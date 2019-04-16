@@ -10,7 +10,9 @@ import android.transition.ChangeImageTransform;
 import android.transition.Fade;
 import android.transition.TransitionSet;
 import android.view.Menu;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,17 +22,22 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 
-public class FactDetailActivity extends BaseActivity {
+public class FactDetailActivity extends BaseActivity implements View.OnClickListener {
 
     ImageView imageView;
     TextView tvTitle;
-
+    private TextView tvDesc, tvLikeCount;
+    private CheckBox tvBookmark;
+    private Fact fact;
+    private final String FACT = "fact";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,24 +46,23 @@ public class FactDetailActivity extends BaseActivity {
         setupToolbar();
         bindUI();
 
-        Fact fact = (Fact) getIntent().getSerializableExtra(Constant.EXTRA_IMAGE);
+        if (savedInstanceState != null) {
+            fact = (Fact) savedInstanceState.getSerializable(FACT);
+        } else {
+            fact = (Fact) getIntent().getSerializableExtra(Constant.EXTRA_IMAGE);
+        }
+
+        if (fact == null) {
+            finish();
+            return;
+        }
+
         tvTitle.setText(fact.getTitle());
+        tvDesc.setText(fact.getDescription());
+        tvLikeCount.setText(fact.getLikeCount());
+        tvBookmark.setChecked(fact.isBookmarked());
         setupImageLoad(fact);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().setEnterTransition(new Fade());
-//            getWindow().setSharedElementExitTransition(new TransitionSet()
-//                    .addTransition(new ChangeBounds())
-//                    .addTransition(new Fade())
-//
-//            );
-//            getWindow().setSharedElementEnterTransition(
-//                    new TransitionSet()
-//                            .addTransition(new ChangeBounds())
-//                            .addTransition(new Fade())
-//
-//            );
-//        }
 
     }
 
@@ -82,6 +88,12 @@ public class FactDetailActivity extends BaseActivity {
     private void bindUI() {
         imageView = findViewById(R.id.iv_fact_detail);
         tvTitle = findViewById(R.id.tv_fact_details_title);
+        tvDesc = findViewById(R.id.tv_fact_detail_desc);
+        tvBookmark = findViewById(R.id.tv_saved);
+        tvLikeCount = findViewById(R.id.three);
+
+        tvBookmark.setOnClickListener(this);
+
     }
 
 
@@ -89,5 +101,22 @@ public class FactDetailActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         supportFinishAfterTransition();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_saved:
+                FactsLocalSource.getINSTANCE().toggleBookMark(fact)
+                        .subscribeOn(Schedulers.io())
+                        .subscribe();
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(FACT, fact);
     }
 }
