@@ -72,6 +72,10 @@ public class UserDetails implements Parcelable {
         this.longitude = longitude;
     }
 
+    public UserDetails(String fbProfileImage, String toString, String toString1, String toString2, String toString3, String toString4, String toString5, String gender, String provider, String facebookToken, String s, String s1) {
+
+    }
+
     public String getWard() {
         return ward;
     }

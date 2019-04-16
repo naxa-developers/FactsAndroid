@@ -100,6 +100,7 @@
         <activity
             android:exported="true"
             android:name=".preferences.PreferencesActivity" />
+
     </application>
 
 </manifest>
