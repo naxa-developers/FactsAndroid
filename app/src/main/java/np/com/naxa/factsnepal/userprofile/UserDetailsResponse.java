@@ -14,6 +14,9 @@ public class UserDetailsResponse {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("token")
+    @Expose
+    private String token;
 
     public boolean getSuccess() {
         return success;
@@ -37,5 +40,17 @@ public class UserDetailsResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 }

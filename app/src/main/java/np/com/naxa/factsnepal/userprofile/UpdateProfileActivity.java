@@ -39,12 +39,14 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.BaseLoginActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.gps.GeoPointActivity;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.gps.GeoPointActivity.LOCATION_RESULT;
 
@@ -74,6 +76,9 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     double myLong = 0.0;
     String latitude, longitude;
     String location;
+    SharedPreferenceUtils sharedPreferenceUtils;
+    Gson gson;
+    BaseLoginActivity.UserLoginDetails userLoginDetails;
 
 
 
@@ -81,6 +86,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_information);
+        sharedPreferenceUtils = new SharedPreferenceUtils(this);
+        gson = new Gson();
         initView();
         setupToolbar();
         setupDistrictAutoComplete();
@@ -142,6 +149,18 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         btnGetGPS = (MaterialButton) findViewById(R.id.btn_get_gps);
         btnNext.setOnClickListener(this);
         btnGetGPS.setOnClickListener(this);
+
+        userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
+
+        if(userLoginDetails.getUser_login_type() == BaseLoginActivity.FACEBOOK_LOG_IN){
+            provider = "facebook";
+        }else  if(userLoginDetails.getUser_login_type() == BaseLoginActivity.GMAIL_LOG_IN){
+            provider = "google";
+        }
+
+
+        ImageUtils.loadRemoteImage(this,userLoginDetails.getUser_image_url()).circleCrop().into(ivProfilePhoto);
+
 
     }
 
@@ -381,7 +400,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void userRegistration(){
-        UserDetails userDetails = new UserDetails(fbProfileImage, etWard.getText().toString(), etDistrict.getText().toString(), etProvience.getText().toString(),
+        UserDetails userDetails = new UserDetails(userLoginDetails.getUser_name(), userLoginDetails.getUser_email(),fbProfileImage, etWard.getText().toString(), etDistrict.getText().toString(), etProvience.getText().toString(),
                 etMunicipality.getText().toString(), etStreet.getText().toString(), etDob.getText().toString(), gender, provider, facebookToken, myLat+"", myLong+"");
 
         Gson gson = new Gson();
@@ -395,19 +414,22 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onNext(UserDetailsResponse userDetailsResponse) {
                         if(userDetailsResponse.getSuccess()){
+                            sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEAR_ACCESS_TOKEN, userDetailsResponse.getToken());
+                            ActivityUtil.openActivity(FeedListActivity.class, UpdateProfileActivity.this, null, false);
 
                         }else {
-
+                            showToast(userDetailsResponse.getMessage());
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        showToast(e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
+
 
                     }
                 });
