@@ -167,11 +167,13 @@ public class FeedListActivity extends BaseActivity
         TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
 
         BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
-//        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
-//                .fitCenter()
-//                .into(profileIageView);
-//        tvUserName.setText(userLoginDetails.getUser_name());
-//        tvUserEmail.setText(userLoginDetails.getUser_email());
+
+        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
+                .fitCenter()
+                .circleCrop()
+                .into(profileIageView);
+        tvUserName.setText(userLoginDetails.getUser_name());
+        tvUserEmail.setText(userLoginDetails.getUser_email());
 
         if (sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2) {
             Menu nav_Menu = navigationView.getMenu();
@@ -400,7 +402,7 @@ public class FeedListActivity extends BaseActivity
                 BaseLogout baseLogout = new BaseLogout(FeedListActivity.this) {
                     @Override
                     public void onLogoutSuccess() {
-
+                        sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false);
                     }
                 };
             case R.id.nav_settings:

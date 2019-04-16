@@ -70,6 +70,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     private ImageView ivProfilePhoto;
 
     private String facebookToken = "", fbProfileImage = "", provider = "", gender = "male";
+    private String userTokenId = "";
 
     public static final int GEOPOINT_RESULT_CODE = 1994;
     double myLat = 0.0;
@@ -106,6 +107,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
             fbProfileImage = String.format("https://graph.facebook.com/%s/picture?type=large",token.getUserId());
             facebookToken = token.getToken();
+            userTokenId = token.getToken();
             provider = "facebook";
 
             Log.d(TAG, "onCreate: userID "+token.getUserId());
@@ -157,8 +159,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         }else  if(userLoginDetails.getUser_login_type() == BaseLoginActivity.GMAIL_LOG_IN){
             provider = "google";
         }
-
-
+        userTokenId = userLoginDetails.getUser_access_token();
         ImageUtils.loadRemoteImage(this,userLoginDetails.getUser_image_url()).circleCrop().into(ivProfilePhoto);
 
 
@@ -400,8 +401,21 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void userRegistration(){
-        UserDetails userDetails = new UserDetails(userLoginDetails.getUser_name(), userLoginDetails.getUser_email(),fbProfileImage, etWard.getText().toString(), etDistrict.getText().toString(), etProvience.getText().toString(),
-                etMunicipality.getText().toString(), etStreet.getText().toString(), etDob.getText().toString(), gender, provider, facebookToken, myLat+"", myLong+"");
+        UserDetails userDetails = new UserDetails.Builder()
+                .setUser_name(userLoginDetails.getUser_name())
+                .setUser_email(userLoginDetails.getUser_email())
+                .setWard(etWard.getText().toString())
+                .setDistrict(etDistrict.getText().toString())
+                .setProvince(etProvience.getText().toString())
+                .setMunicipality(etMunicipality.getText().toString())
+                .setStreet(etStreet.getText().toString())
+                .setBirth_year(etDob.getText().toString())
+                .setGender(gender)
+                .setProvoder(provider)
+                .setToken(userTokenId)
+                .setLatitude(myLat+"")
+                .setLongitude(myLong+"")
+                .build();
 
         Gson gson = new Gson();
         String jsonInString = gson.toJson(userDetails);
@@ -415,6 +429,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                     public void onNext(UserDetailsResponse userDetailsResponse) {
                         if(userDetailsResponse.getSuccess()){
                             sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEAR_ACCESS_TOKEN, userDetailsResponse.getToken());
+                            sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, true);
                             ActivityUtil.openActivity(FeedListActivity.class, UpdateProfileActivity.this, null, false);
 
                         }else {

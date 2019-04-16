@@ -239,4 +239,128 @@ public class UserDetails implements Parcelable {
     public void setUser_email(String user_email) {
         this.user_email = user_email;
     }
+
+    public static class Builder {
+        @SerializedName("name")
+        @Expose
+        private String user_name;
+        @SerializedName("email")
+        @Expose
+        private String user_email;
+        @SerializedName("photo_url")
+        @Expose
+        private String photo_url;
+        @SerializedName("ward")
+        @Expose
+        private String ward;
+        @SerializedName("district")
+        @Expose
+        private String district;
+        @SerializedName("province")
+        @Expose
+        private String province;
+        @SerializedName("municipality")
+        @Expose
+        private String municipality;
+        @SerializedName("street")
+        @Expose
+        private String street;
+        @SerializedName("birth_year")
+        @Expose
+        private String birth_year;
+        @SerializedName("gender")
+        @Expose
+        private String gender;
+        @SerializedName("type")
+        @Expose
+        private String provoder;
+        @SerializedName("token")
+        @Expose
+        private String token;
+
+        @SerializedName("lat")
+        @Expose
+        private String latitude;
+        @SerializedName("longitude")
+        @Expose
+        private String longitude;
+
+        public Builder() {
+        }
+
+        public Builder setUser_name(String user_name) {
+            this.user_name = user_name;
+            return this;
+        }
+
+        public Builder setUser_email(String user_email) {
+            this.user_email = user_email;
+            return this;
+        }
+
+        public Builder setPhoto_url(String photo_url) {
+            this.photo_url = photo_url;
+            return this;
+        }
+
+        public Builder setWard(String ward) {
+            this.ward = ward;
+            return this;
+        }
+
+        public Builder setDistrict(String district) {
+            this.district = district;
+            return this;
+        }
+
+        public Builder setProvince(String province) {
+            this.province = province;
+            return this;
+        }
+
+        public Builder setMunicipality(String municipality) {
+            this.municipality = municipality;
+            return this;
+        }
+
+        public Builder setStreet(String street) {
+            this.street = street;
+            return this;
+        }
+
+        public Builder setBirth_year(String birth_year) {
+            this.birth_year = birth_year;
+            return this;
+        }
+
+        public Builder setGender(String gender) {
+            this.gender = gender;
+            return this;
+        }
+
+        public Builder setProvoder(String provoder) {
+            this.provoder = provoder;
+            return this;
+        }
+
+        public Builder setToken(String token) {
+            this.token = token;
+            return this;
+        }
+
+        public Builder setLatitude(String latitude) {
+            this.latitude = latitude;
+            return this;
+        }
+
+        public Builder setLongitude(String longitude) {
+            this.longitude = longitude;
+            return this;
+        }
+
+
+        public UserDetails build() {
+            return new UserDetails(user_name, user_email, photo_url, ward, district, province, municipality, street, birth_year, gender, provoder, token, latitude, longitude);
+        }
+    }
 }

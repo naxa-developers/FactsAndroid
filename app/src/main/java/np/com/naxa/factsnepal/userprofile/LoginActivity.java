@@ -23,6 +23,7 @@ import np.com.naxa.factsnepal.utils.Utils;
 
 public class LoginActivity extends BaseLoginActivity {
     private static final String TAG = "LoginActivity";
+    public static final String KEY_IS_USER_LOGGED_IN = "is_user_logged_in";
 
     SharedPreferenceUtils sharedPreferenceUtils ;
     Gson gson = new Gson();
@@ -75,8 +76,6 @@ public class LoginActivity extends BaseLoginActivity {
         Utils.log(this.getClass(), account.getDisplayName());
         sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, gson.toJson(new UserLoginDetails(account.getIdToken(), 2,
                 account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString())));
-
-        startActivity(new Intent(this, FeedListActivity.class));
 
         Log.d(TAG, "onGoogleLoginSuccess: "+account.getEmail());
         ActivityUtil.openActivity(UpdateProfileActivity.class, this, null, false);
