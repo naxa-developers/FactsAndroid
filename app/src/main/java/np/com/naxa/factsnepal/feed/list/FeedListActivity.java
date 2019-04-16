@@ -196,7 +196,7 @@ public class FeedListActivity extends BaseActivity
             @Override
             public void onClick(ArrayList<Integer> categoriesList) {
                 Log.d(TAG, "onClick: chip selected" + categoriesList.size());
-                fetchFactsFromServer(categoriesList);
+
             }
         });
     }
@@ -435,6 +435,7 @@ public class FeedListActivity extends BaseActivity
                 });
     }
 
+    @Deprecated
     private void fetchFactsFromServer(ArrayList<Integer> categories) {
 
         if (categories != null) {
