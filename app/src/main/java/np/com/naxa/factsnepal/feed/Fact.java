@@ -130,4 +130,43 @@ public class Fact implements Serializable {
     public void setBookmarked(boolean bookmarked) {
         isBookmarked = bookmarked;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Fact fact = (Fact) o;
+
+        if (id != fact.id) return false;
+        if (isBookmarked != fact.isBookmarked) return false;
+        if (likeCount != null ? !likeCount.equals(fact.likeCount) : fact.likeCount != null)
+            return false;
+        if (catgoryId != null ? !catgoryId.equals(fact.catgoryId) : fact.catgoryId != null)
+            return false;
+        if (categoryName != null ? !categoryName.equals(fact.categoryName) : fact.categoryName != null)
+            return false;
+        if (imagePath != null ? !imagePath.equals(fact.imagePath) : fact.imagePath != null)
+            return false;
+        if (title != null ? !title.equals(fact.title) : fact.title != null) return false;
+        if (slug != null ? !slug.equals(fact.slug) : fact.slug != null) return false;
+        if (status != null ? !status.equals(fact.status) : fact.status != null) return false;
+        return order != null ? order.equals(fact.order) : fact.order == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (likeCount != null ? likeCount.hashCode() : 0);
+        result = 31 * result + (catgoryId != null ? catgoryId.hashCode() : 0);
+        result = 31 * result + (categoryName != null ? categoryName.hashCode() : 0);
+        result = 31 * result + (imagePath != null ? imagePath.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (slug != null ? slug.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (order != null ? order.hashCode() : 0);
+        result = 31 * result + (isBookmarked ? 1 : 0);
+        return result;
+    }
 }

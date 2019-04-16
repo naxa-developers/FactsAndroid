@@ -1,6 +1,9 @@
 package np.com.naxa.factsnepal.feed.list;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -10,11 +13,13 @@ import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
+import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
 
 class FactsRemoteSource {
 
     private static FactsRemoteSource INSTANCE = null;
+    private HashMap<String, String> categoriesIdsMap = new HashMap<>();
 
     static FactsRemoteSource getINSTANCE() {
         if (INSTANCE == null) {
@@ -28,8 +33,20 @@ class FactsRemoteSource {
                 .getFactsDetailsResponse(categoryIds)
                 .subscribeOn(Schedulers.io())
                 .map((Function<List<FactsResponse>, List<Fact>>) factsResponses -> {
+                    categoriesIdsMap.clear();
+
+                    for (FactsResponse factsResponse : factsResponses) {
+                        for (Category category : factsResponse.getCategory()) {
+                            categoriesIdsMap.put(String.valueOf(category.getId()), category.getTitle());
+                        }
+                    }
+
                     ArrayList<Fact> facts = new ArrayList<>();
                     for (FactsResponse factsResponse : factsResponses) {
+                        for (Fact fact : factsResponse.getHome()) {
+                            fact.setCategoryName(categoriesIdsMap.get(fact.getCatgoryId()));
+                        }
+
                         facts.addAll(factsResponse.getHome());
                     }
                     return facts;
@@ -42,4 +59,5 @@ class FactsRemoteSource {
     Observable<List<Fact>> getAllFacts() {
         return getFactsByCategoryId(null);
     }
+
 }

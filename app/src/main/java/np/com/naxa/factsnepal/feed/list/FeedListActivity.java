@@ -127,7 +127,8 @@ public class FeedListActivity extends BaseActivity
 
         FactsLocalSource.getINSTANCE().getAll()
                 .observe(this, facts -> {
-                    adapter.addAll(facts);
+                    adapter.updateList(facts);
+
                 });
 
 
