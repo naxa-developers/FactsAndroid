@@ -154,6 +154,7 @@ public class FeedListActivity extends BaseActivity
         BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
         ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
                 .fitCenter()
+                .circleCrop()
                 .into(profileIageView);
         tvUserName.setText(userLoginDetails.getUser_name());
         tvUserEmail.setText(userLoginDetails.getUser_email());
@@ -386,7 +387,7 @@ public class FeedListActivity extends BaseActivity
                 BaseLogout baseLogout = new BaseLogout(FeedListActivity.this) {
                     @Override
                     public void onLogoutSuccess() {
-
+                        sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false);
                     }
                 };
             case R.id.nav_settings:
