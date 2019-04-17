@@ -5,26 +5,23 @@ import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
-import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
-import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
 
 public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener {
 
@@ -33,9 +30,10 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     private RecyclerView recyclerViewFeed;
     private DisposableObserver<List<Fact>> factsDisposable;
     private LinearLayoutManager layoutManager;
+    private Toolbar toolbar;
 
 
-    String colors[] = new String[]{"#2E4A23", "#816655", "#37534D"};
+    String colors[] = new String[]{"#571821", "#5C3219", "#103B31"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +44,17 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         FactsLocalSource.getINSTANCE().getAll()
                 .observe(this, facts -> adapter.updateList(facts));
 
+        setSupportActionBar(toolbar);
+
+
+
+
     }
 
     private void bindUI() {
         recyclerViewFeed = findViewById(R.id.rv_facts);
         rootLayout = findViewById(R.id.root_activity_facts_feed);
+
     }
 
     private void setupRecyclerView() {
@@ -59,6 +63,9 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         recyclerViewFeed.setLayoutManager(layoutManager);
         recyclerViewFeed.setAdapter(adapter);
 
+        /**
+        s * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
+         */
         recyclerViewFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -70,7 +77,9 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
             }
         });
 
+
         SnapHelper snapHelper = new PagerSnapHelper();
+
         snapHelper.attachToRecyclerView(recyclerViewFeed);
     }
 
