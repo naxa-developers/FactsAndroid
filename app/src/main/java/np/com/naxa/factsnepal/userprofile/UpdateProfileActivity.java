@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.google.gson.Gson;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import org.json.JSONException;
@@ -38,12 +39,14 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.BaseLoginActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.gps.GeoPointActivity;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.gps.GeoPointActivity.LOCATION_RESULT;
 
@@ -67,11 +70,16 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     private ImageView ivProfilePhoto;
 
     private String facebookToken = "", fbProfileImage = "", provider = "", gender = "male";
+    private String userTokenId = "";
 
     public static final int GEOPOINT_RESULT_CODE = 1994;
     double myLat = 0.0;
     double myLong = 0.0;
     String latitude, longitude;
+    String location;
+    SharedPreferenceUtils sharedPreferenceUtils;
+    Gson gson;
+    BaseLoginActivity.UserLoginDetails userLoginDetails;
 
 
 
@@ -79,6 +87,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_information);
+        sharedPreferenceUtils = new SharedPreferenceUtils(this);
+        gson = new Gson();
         initView();
         setupToolbar();
         setupDistrictAutoComplete();
@@ -97,6 +107,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
             fbProfileImage = String.format("https://graph.facebook.com/%s/picture?type=large",token.getUserId());
             facebookToken = token.getToken();
+            userTokenId = token.getToken();
             provider = "facebook";
 
             Log.d(TAG, "onCreate: userID "+token.getUserId());
@@ -141,6 +152,17 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         btnNext.setOnClickListener(this);
         btnGetGPS.setOnClickListener(this);
 
+        userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
+
+        if(userLoginDetails.getUser_login_type() == BaseLoginActivity.FACEBOOK_LOG_IN){
+            provider = "facebook";
+        }else  if(userLoginDetails.getUser_login_type() == BaseLoginActivity.GMAIL_LOG_IN){
+            provider = "google";
+        }
+        userTokenId = userLoginDetails.getUser_access_token();
+        ImageUtils.loadRemoteImage(this,userLoginDetails.getUser_image_url()).circleCrop().into(ivProfilePhoto);
+
+
     }
 
     private void setupDistrictAutoComplete() {
@@ -172,6 +194,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         Flowable<CharSequence> provinceChangeObservable = RxTextView.textChanges(etProvience).skip(1).toFlowable(BackpressureStrategy.LATEST);
         Flowable<CharSequence> municipalityChangeObservable = RxTextView.textChanges(etMunicipality).skip(1).toFlowable(BackpressureStrategy.LATEST);
         Flowable<CharSequence> streetChangeObservable = RxTextView.textChanges(etStreet).skip(1).toFlowable(BackpressureStrategy.LATEST);
+
 
         disposableObserver = Flowable.combineLatest(dobChangeObservable, wardChangeObservable, districtChangeObservable, provinceChangeObservable, municipalityChangeObservable, streetChangeObservable,
                 this::isValidForm)
@@ -231,7 +254,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
             showError(etStreet, getString(R.string.msg_invalid_input, "street"));
         }
 
-        return validDob && validWard && validDistrict && validProvince && validMunicipality && validStreet;
+
+        return validDob && validWard && validDistrict && validProvince && validMunicipality && validStreet ;
 
     }
 
@@ -269,7 +293,11 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
+                if(location != null){
                 userRegistration();
+                }else {
+                    Toast.makeText(this, "GPS Co-ordinate is required", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.btn_get_gps:
@@ -331,7 +359,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         if (requestCode == GEOPOINT_RESULT_CODE) {
             switch (resultCode) {
                 case RESULT_OK:
-                    String location = data.getStringExtra(LOCATION_RESULT);
+                    location = data.getStringExtra(LOCATION_RESULT);
 
                     if(location == null){
                         Toast.makeText(this, "Cannot get location", Toast.LENGTH_SHORT).show();
@@ -373,8 +401,21 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void userRegistration(){
-        UserDetails userDetails = new UserDetails(fbProfileImage, etWard.getText().toString(), etDistrict.getText().toString(), etProvience.getText().toString(),
-                etMunicipality.getText().toString(), etStreet.getText().toString(), etDob.getText().toString(), gender, provider, facebookToken);
+        UserDetails userDetails = new UserDetails.Builder()
+                .setUser_name(userLoginDetails.getUser_name())
+                .setUser_email(userLoginDetails.getUser_email())
+                .setWard(etWard.getText().toString())
+                .setDistrict(etDistrict.getText().toString())
+                .setProvince(etProvience.getText().toString())
+                .setMunicipality(etMunicipality.getText().toString())
+                .setStreet(etStreet.getText().toString())
+                .setBirth_year(etDob.getText().toString())
+                .setGender(gender)
+                .setProvoder(provider)
+                .setToken(userTokenId)
+                .setLatitude(myLat+"")
+                .setLongitude(myLong+"")
+                .build();
 
         Gson gson = new Gson();
         String jsonInString = gson.toJson(userDetails);
@@ -387,19 +428,23 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onNext(UserDetailsResponse userDetailsResponse) {
                         if(userDetailsResponse.getSuccess()){
+                            sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEAR_ACCESS_TOKEN, userDetailsResponse.getToken());
+                            sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, true);
+                            ActivityUtil.openActivity(FeedListActivity.class, UpdateProfileActivity.this, null, false);
 
                         }else {
-
+                            showToast(userDetailsResponse.getMessage());
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        showToast(e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
+
 
                     }
                 });

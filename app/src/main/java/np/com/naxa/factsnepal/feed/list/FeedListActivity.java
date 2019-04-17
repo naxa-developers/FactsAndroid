@@ -1,21 +1,15 @@
 package np.com.naxa.factsnepal.feed.list;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,14 +25,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 
@@ -57,7 +46,6 @@ import np.com.naxa.factsnepal.common.BaseLoginActivity;
 import np.com.naxa.factsnepal.common.BaseLogout;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ListPaddingDecoration;
-import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.feed.EndlessScrollListener;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
@@ -69,20 +57,20 @@ import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.notification.NotificationCount;
-
+import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
-import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
+import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
 
     private static final String TAG = "FeedListActivity";
+    private static final String KEY_FEED_LIST_DETAILS_JSON = "feed_list_details_json";
 
     private RecyclerView recyclerViewFeed;
     private FactsFeedAdapter adapter;
@@ -100,8 +88,11 @@ public class FeedListActivity extends BaseActivity
 
     NotificationCount notificationCount;
 
-    SharedPreferenceUtils sharedPreferenceUtils ;
+    SharedPreferenceUtils sharedPreferenceUtils;
     Gson gson;
+    String jsonInStringFeed = "";
+    private boolean hasCategories = false;
+    private DisposableObserver<List<Fact>> factsDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,19 +104,33 @@ public class FeedListActivity extends BaseActivity
         sharedPreferenceUtils = new SharedPreferenceUtils(this);
         gson = new Gson();
 
-        
-        fetchFactsFromServer(null);
-        FactsLocalSource.getINSTANCE()
-                .saveAsync(Fact.getDemoItems(NUMBER_OF_ITEMS, 0));
+        factsDisposable = FactsRemoteSource.getINSTANCE()
+                .getAllFacts()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<List<Fact>>() {
+                    @Override
+                    public void onNext(List<Fact> facts) {
 
-        FactsLocalSource.getINSTANCE().getAll()
-                .observe(this, facts -> {
-                    adapter.addAll(facts);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
 
 
+        FactsLocalSource.getINSTANCE().getAll()
+                .observe(this, facts -> {
+                    adapter.updateList(facts);
 
-        fetchFactsFromServer(null);
+                });
+
 
         bindUI();
         setupRecyclerView();
@@ -155,19 +160,22 @@ public class FeedListActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) drawer.findViewById(R.id.nav_view);
 
-        View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
+
+        View headerLayout = navigationView.getHeaderView(0);
         ImageView profileIageView = (ImageView) headerLayout.findViewById(R.id.nav_user_profile_image_view);
-        TextView tvUserName = (TextView)  headerLayout.findViewById(R.id.nav_user_username);
-        TextView tvUserEmail = (TextView)  headerLayout.findViewById(R.id.nav_user_email);
+        TextView tvUserName = (TextView) headerLayout.findViewById(R.id.nav_user_username);
+        TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
 
         BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
+
         ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
                 .fitCenter()
+                .circleCrop()
                 .into(profileIageView);
         tvUserName.setText(userLoginDetails.getUser_name());
         tvUserEmail.setText(userLoginDetails.getUser_email());
 
-        if(sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2){
+        if (sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2) {
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_user_logout).setVisible(true);
         }
@@ -176,7 +184,6 @@ public class FeedListActivity extends BaseActivity
         navigationView.getHeaderView(0).setOnClickListener(view -> {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         });
-
 
 
         findViewById(R.id.footer_item_facebook).setOnClickListener(this);
@@ -191,7 +198,7 @@ public class FeedListActivity extends BaseActivity
             @Override
             public void onClick(ArrayList<Integer> categoriesList) {
                 Log.d(TAG, "onClick: chip selected" + categoriesList.size());
-                fetchFactsFromServer(categoriesList);
+
             }
         });
     }
@@ -215,7 +222,6 @@ public class FeedListActivity extends BaseActivity
                 .flatMapIterable(new Function<List<Category>, Iterable<Category>>() {
                     @Override
                     public Iterable<Category> apply(List<Category> categoryList) throws Exception {
-                        Fact.setCategories(categoryList);
 
                         return categoryList;
                     }
@@ -302,7 +308,8 @@ public class FeedListActivity extends BaseActivity
     }
 
 
-    Menu menu ;
+    Menu menu;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 //        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
@@ -341,8 +348,8 @@ public class FeedListActivity extends BaseActivity
 //        getMenuInflater().inflate(R.menu.main, menu);
         try {
             long count = notificationCount.getNotificationCount();
-            setCount(FeedListActivity.this, count+ "", menu);
-        } catch (JSONException e) {
+            setCount(FeedListActivity.this, count + "", menu);
+        } catch (NullPointerException | JSONException e) {
             e.printStackTrace();
         }
         return super.onPrepareOptionsMenu(menu);
@@ -368,14 +375,13 @@ public class FeedListActivity extends BaseActivity
     }
 
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.nav_home:
                 break;
 
@@ -384,7 +390,7 @@ public class FeedListActivity extends BaseActivity
                 break;
 
             case R.id.nav_survey:
-                ActivityUtil.openActivity(SurveyStartActivity
+                ActivityUtil.openActivity(SurveyCompanyListActivity
                         .class, this);
                 break;
 
@@ -396,9 +402,11 @@ public class FeedListActivity extends BaseActivity
                 BaseLogout baseLogout = new BaseLogout(FeedListActivity.this) {
                     @Override
                     public void onLogoutSuccess() {
-
+                        sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false);
                     }
                 };
+            case R.id.nav_settings:
+                ActivityUtil.openActivity(PreferencesActivity.class, this);
                 break;
         }
 
@@ -419,26 +427,17 @@ public class FeedListActivity extends BaseActivity
     }
 
     private void setupSurveyCard() {
-        SwipeDismissBehavior swipeDismissBehavior = new SwipeDismissBehavior();
-        swipeDismissBehavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_ANY);
+        surveyCardView.setOnClickListener(v -> {
 
-        CoordinatorLayout.LayoutParams layoutParams =
-                (CoordinatorLayout.LayoutParams) surveyCardView.getLayoutParams();
-        swipeDismissBehavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
-            @Override
-            public void onDismiss(View view) {
-                surveyCardView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onDragStateChanged(int i) {
-
-            }
         });
-        layoutParams.setBehavior(swipeDismissBehavior);
 
+        findViewById(R.id.iv_close_survey_card)
+                .setOnClickListener(v -> {
+                    surveyCardView.setVisibility(View.INVISIBLE);
+                });
     }
 
+    @Deprecated
     private void fetchFactsFromServer(ArrayList<Integer> categories) {
 
         if (categories != null) {
@@ -459,6 +458,8 @@ public class FeedListActivity extends BaseActivity
                                 setupChips(factsResponse.get(0).getCategory());
                             }
                             hasCategories = true;
+
+                            jsonInStringFeed = gson.toJson(factsResponse);
                         }
                     }
 
@@ -470,8 +471,35 @@ public class FeedListActivity extends BaseActivity
 
                     @Override
                     public void onComplete() {
+                        sharedPreferenceUtils.setValue(KEY_FEED_LIST_DETAILS_JSON, jsonInStringFeed);
                         Log.d(TAG, "onComplete: ");
 
+
+                    }
+                });
+    }
+
+    private void fetchFactsFromSharedPrefs() {
+
+        List<FactsResponse> factsResponses = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_FEED_LIST_DETAILS_JSON, null), new TypeToken<List<FactsResponse>>() {
+        }.getType());
+
+        Observable.just(factsResponses)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<List<FactsResponse>>() {
+                    @Override
+                    public void onNext(List<FactsResponse> factsResponses) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });

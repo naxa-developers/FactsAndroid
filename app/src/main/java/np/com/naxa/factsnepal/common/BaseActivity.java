@@ -1,5 +1,9 @@
 package np.com.naxa.factsnepal.common;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
@@ -18,13 +22,14 @@ import java.util.ArrayList;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
+    ProgressDialog progressDialog;
 
     protected NetworkApiInterface apiInterface = NetworkApiClient.getAPIClient().create(NetworkApiInterface.class);
-
 
     protected void setupToolbar() {
         toolbar = findViewById(R.id.toolbar);
@@ -86,4 +91,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    protected void createProgressDialog(String message) {
+         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+
+    protected void hideProgressDialog() {
+        if(progressDialog != null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+    }
 }

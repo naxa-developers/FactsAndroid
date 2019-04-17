@@ -45,6 +45,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
     public static final int FACEBOOK_LOG_IN = 1;
     public static final int GMAIL_LOG_IN = 2;
     public static final String KEY_LOGGED_IN_TYPE = "logged_in_type";
+    public static final String KEY_USER_BEAR_ACCESS_TOKEN = "bear_access_token";
     public static final String KEY_USER_SOCIAL_LOGGED_IN_DETAILS = "social_logged_in_details";
 
     @Override
@@ -214,6 +215,9 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
             this.user_name = user_name;
             this.user_email = user_email;
             this.user_image_url = user_image_url;
+        }
+
+        public UserLoginDetails() {
         }
 
 

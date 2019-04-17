@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
+import np.com.naxa.factsnepal.surveys.SurveyCompanyDetails;
 import np.com.naxa.factsnepal.userprofile.UserDetails;
 import np.com.naxa.factsnepal.userprofile.UserDetailsResponse;
 import retrofit2.http.Body;
@@ -22,5 +23,11 @@ public interface NetworkApiInterface {
     @Headers("Content-Type: application/json; charset=utf-8")
     @POST(UrlConstant.POST_USER_DETAILS_URL)
     Observable<UserDetailsResponse> getUserDetailsResponse(@Body UserDetails userDetails);
+
+    @GET(UrlConstant.GET_SURVEY_COMPANY_DETAILS_URL)
+    Observable<SurveyCompanyDetails> getSurveyQuestionDetailsResponse();
+
+
+
 
 }
