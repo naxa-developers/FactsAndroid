@@ -65,7 +65,6 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-import static np.com.naxa.factsnepal.feed.Fact.hasCategories;
 
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
@@ -92,6 +91,8 @@ public class FeedListActivity extends BaseActivity
     SharedPreferenceUtils sharedPreferenceUtils;
     Gson gson;
     String jsonInStringFeed = "";
+    private boolean hasCategories = false;
+    private DisposableObserver<List<Fact>> factsDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,14 +104,31 @@ public class FeedListActivity extends BaseActivity
         sharedPreferenceUtils = new SharedPreferenceUtils(this);
         gson = new Gson();
 
+        factsDisposable = FactsRemoteSource.getINSTANCE()
+                .getAllFacts()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<List<Fact>>() {
+                    @Override
+                    public void onNext(List<Fact> facts) {
 
-        fetchFactsFromServer(null);
-        FactsLocalSource.getINSTANCE()
-                .saveAsync(Fact.getDemoItems(NUMBER_OF_ITEMS, 0));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
 
         FactsLocalSource.getINSTANCE().getAll()
                 .observe(this, facts -> {
-                    adapter.addAll(facts);
+                    adapter.updateList(facts);
+
                 });
 
 
@@ -150,6 +168,7 @@ public class FeedListActivity extends BaseActivity
 
         BaseLoginActivity.UserSocialLoginDetails userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
         ImageUtils.loadRemoteImage(this, userSocialLoginDetails.getUser_image_url())
+
                 .fitCenter()
                 .circleCrop()
                 .into(profileIageView);
@@ -179,7 +198,7 @@ public class FeedListActivity extends BaseActivity
             @Override
             public void onClick(ArrayList<Integer> categoriesList) {
                 Log.d(TAG, "onClick: chip selected" + categoriesList.size());
-                fetchFactsFromServer(categoriesList);
+
             }
         });
     }
@@ -203,7 +222,6 @@ public class FeedListActivity extends BaseActivity
                 .flatMapIterable(new Function<List<Category>, Iterable<Category>>() {
                     @Override
                     public Iterable<Category> apply(List<Category> categoryList) throws Exception {
-                        Fact.setCategories(categoryList);
 
                         return categoryList;
                     }
@@ -332,6 +350,7 @@ public class FeedListActivity extends BaseActivity
             long count = notificationCount.getNotificationCount();
             setCount(FeedListActivity.this, count + "", menu);
         } catch (JSONException | NullPointerException e) {
+
             e.printStackTrace();
         }
         return super.onPrepareOptionsMenu(menu);
@@ -421,9 +440,9 @@ public class FeedListActivity extends BaseActivity
                 .setOnClickListener(v -> {
                     surveyCardView.setVisibility(View.INVISIBLE);
                 });
-
     }
 
+    @Deprecated
     private void fetchFactsFromServer(ArrayList<Integer> categories) {
 
         if (categories != null) {
@@ -457,7 +476,7 @@ public class FeedListActivity extends BaseActivity
 
                     @Override
                     public void onComplete() {
-                        sharedPreferenceUtils.setValue(KEY_FEED_LIST_DETAILS_JSON , jsonInStringFeed);
+                        sharedPreferenceUtils.setValue(KEY_FEED_LIST_DETAILS_JSON, jsonInStringFeed);
                         Log.d(TAG, "onComplete: ");
 
 
@@ -465,9 +484,10 @@ public class FeedListActivity extends BaseActivity
                 });
     }
 
-    private void fetchFactsFromSharedPrefs(){
+    private void fetchFactsFromSharedPrefs() {
 
-        List<FactsResponse> factsResponses = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_FEED_LIST_DETAILS_JSON, null),new TypeToken<List<FactsResponse>>(){}.getType());
+        List<FactsResponse> factsResponses = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_FEED_LIST_DETAILS_JSON, null), new TypeToken<List<FactsResponse>>() {
+        }.getType());
 
         Observable.just(factsResponses)
                 .subscribeOn(Schedulers.io())

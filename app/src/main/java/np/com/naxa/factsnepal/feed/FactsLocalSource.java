@@ -69,11 +69,20 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
         });
     }
 
+    @Override
+    public void save(List<Fact> items) {
+        factsDAO.insert(items);
+    }
+
     public LiveData<List<Fact>> getAll() {
         return factsDAO.getAll();
     }
 
     public LiveData<List<Fact>> getAllBookmarked() {
         return factsDAO.getAllBookmarked();
+    }
+
+    public LiveData<Fact> getById(String id) {
+        return factsDAO.getById(id);
     }
 }
