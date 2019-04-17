@@ -23,11 +23,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".surveys.SurveyFormListActivity"></activity>
+        <activity
+            android:exported="true"
+            android:name=".feed.feedv2.FactsFeedActivity"/>
+        <activity android:name=".surveys.SurveyFormListActivity" />
         <activity android:name=".surveys.SurveyCompanyListActivity" />
-        <activity android:name=".userprofile.UserProfileInfoActivity"
-            android:exported="true">
-        </activity>
+        <activity
+            android:name=".userprofile.UserProfileInfoActivity"
+            android:exported="true"></activity>
         <activity
             android:name=".userprofile.UpdateProfileActivity"
             android:exported="true"
@@ -98,9 +101,8 @@
             android:exported="true" />
         <activity android:name=".gps.GeoPointActivity" />
         <activity
-            android:exported="true"
-            android:name=".preferences.PreferencesActivity" />
-
+            android:name=".preferences.PreferencesActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

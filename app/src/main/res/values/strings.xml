@@ -71,7 +71,6 @@
     <string name="toolbar_title_bookmarked">Bookmarked Fact(s)</string>
 
 
-
     <string name="dialog_action_ok">OK</string>
     <string name="dialog_error_title">Unexpected Error Occurred.</string>
     <string name="dialog_error_title_sync_failed">Data Sync Failed (Code: %1$s)</string>
