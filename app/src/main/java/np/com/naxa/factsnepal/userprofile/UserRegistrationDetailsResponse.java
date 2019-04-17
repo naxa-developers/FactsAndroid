@@ -8,6 +8,9 @@ public class UserRegistrationDetailsResponse {
     @SerializedName("success")
     @Expose
     private boolean success;
+    @SerializedName("is_already_exist")
+    @Expose
+    private boolean isAlreadyExist;
     @SerializedName("data")
     @Expose
     private UserRegistrationDetails data;
@@ -52,5 +55,13 @@ public class UserRegistrationDetailsResponse {
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public boolean isAlreadyExist() {
+        return isAlreadyExist;
+    }
+
+    public void setAlreadyExist(boolean alreadyExist) {
+        isAlreadyExist = alreadyExist;
     }
 }

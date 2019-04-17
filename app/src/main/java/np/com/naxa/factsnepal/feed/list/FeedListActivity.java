@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,7 +31,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -151,13 +148,13 @@ public class FeedListActivity extends BaseActivity
         TextView tvUserName = (TextView) headerLayout.findViewById(R.id.nav_user_username);
         TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
 
-        BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
-        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
+        BaseLoginActivity.UserSocialLoginDetails userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
+        ImageUtils.loadRemoteImage(this, userSocialLoginDetails.getUser_image_url())
                 .fitCenter()
                 .circleCrop()
                 .into(profileIageView);
-        tvUserName.setText(userLoginDetails.getUser_name());
-        tvUserEmail.setText(userLoginDetails.getUser_email());
+        tvUserName.setText(userSocialLoginDetails.getUser_name());
+        tvUserEmail.setText(userSocialLoginDetails.getUser_email());
 
         if (sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2) {
             Menu nav_Menu = navigationView.getMenu();
@@ -334,7 +331,7 @@ public class FeedListActivity extends BaseActivity
         try {
             long count = notificationCount.getNotificationCount();
             setCount(FeedListActivity.this, count + "", menu);
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
         }
         return super.onPrepareOptionsMenu(menu);
@@ -388,8 +385,12 @@ public class FeedListActivity extends BaseActivity
                     @Override
                     public void onLogoutSuccess() {
                         sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false);
+                        sharedPreferenceUtils.clearAll();
+                        ActivityUtil.openActivity(LoginActivity.class, FeedListActivity.this);
+
                     }
                 };
+                break;
             case R.id.nav_settings:
                 ActivityUtil.openActivity(PreferencesActivity.class, this);
                 break;

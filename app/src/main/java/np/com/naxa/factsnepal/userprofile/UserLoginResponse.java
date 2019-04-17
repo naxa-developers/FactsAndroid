@@ -17,6 +17,10 @@ public class UserLoginResponse {
     @Expose
     private String error;
 
+    @SerializedName("userdetails")
+    @Expose
+    private UserLoginDetails userLoginDetails;
+
     public boolean isSuccess() {
         return success;
     }
@@ -39,5 +43,13 @@ public class UserLoginResponse {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public UserLoginDetails getUserLoginDetails() {
+        return userLoginDetails;
+    }
+
+    public void setUserLoginDetails(UserLoginDetails userLoginDetails) {
+        this.userLoginDetails = userLoginDetails;
     }
 }

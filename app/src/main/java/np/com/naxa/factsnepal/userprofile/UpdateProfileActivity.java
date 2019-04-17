@@ -76,7 +76,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     String location;
     SharedPreferenceUtils sharedPreferenceUtils;
     Gson gson;
-    BaseLoginActivity.UserLoginDetails userLoginDetails;
+    BaseLoginActivity.UserSocialLoginDetails userSocialLoginDetails;
 
 
 
@@ -149,15 +149,15 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         btnNext.setOnClickListener(this);
         btnGetGPS.setOnClickListener(this);
 
-        userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
+        userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
 
-        if(userLoginDetails.getUser_login_type() == BaseLoginActivity.FACEBOOK_LOG_IN){
+        if(userSocialLoginDetails.getUser_login_type() == BaseLoginActivity.FACEBOOK_LOG_IN){
             provider = "facebook";
-        }else  if(userLoginDetails.getUser_login_type() == BaseLoginActivity.GMAIL_LOG_IN){
+        }else  if(userSocialLoginDetails.getUser_login_type() == BaseLoginActivity.GMAIL_LOG_IN){
             provider = "google";
         }
-        userTokenId = userLoginDetails.getUser_access_token();
-        ImageUtils.loadRemoteImage(this,userLoginDetails.getUser_image_url()).circleCrop().into(ivProfilePhoto);
+        userTokenId = userSocialLoginDetails.getUser_access_token();
+        ImageUtils.loadRemoteImage(this, userSocialLoginDetails.getUser_image_url()).circleCrop().into(ivProfilePhoto);
 
 
     }
@@ -397,10 +397,11 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+    LoginActivity loginActivity = new LoginActivity();
     private void userRegistration(){
         UserRegistrationDetails userRegistrationDetails = new UserRegistrationDetails.Builder()
-                .setUser_name(userLoginDetails.getUser_name())
-                .setUser_email(userLoginDetails.getUser_email())
+                .setUser_name(userSocialLoginDetails.getUser_name())
+                .setUser_email(userSocialLoginDetails.getUser_email())
                 .setWard(etWard.getText().toString())
                 .setDistrict(etDistrict.getText().toString())
                 .setProvince(etProvience.getText().toString())
@@ -427,7 +428,9 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                         if(userRegistrationDetailsResponse.getSuccess()){
                             sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEARER_ACCESS_TOKEN, userRegistrationDetailsResponse.getToken());
                             sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, true);
-                            ActivityUtil.openActivity(FeedListActivity.class, UpdateProfileActivity.this, null, false);
+
+                            loginActivity.getUserDetails(userRegistrationDetailsResponse.getToken());
+//                            ActivityUtil.openActivity(FeedListActivity.class, UpdateProfileActivity.this, null, false);
 
                         }else {
                             showToast(userRegistrationDetailsResponse.getMessage());

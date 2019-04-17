@@ -35,9 +35,10 @@ public interface NetworkApiInterface {
     @Headers("Content-Type: application/json; charset=utf-8")
     @POST(UrlConstant.POST_USER_LOGIN_URL)
     Observable<UserLoginResponse> getUserLoginResponse(@Body LoginCredentials loginCredentials);
+//    Observable<UserLoginResponse> getUserLoginResponse(@Body String email, String password);
 
     @POST(UrlConstant.GET_USER_DETAILS_URL)
-    Observable<UserRegistrationDetailsResponse> getUserDetailsResponse(@HeaderMap Map<String, String> headers);
+    Observable<UserLoginResponse> getUserDetailsResponse(@HeaderMap Map<String, String> headers);
 
 
 }
