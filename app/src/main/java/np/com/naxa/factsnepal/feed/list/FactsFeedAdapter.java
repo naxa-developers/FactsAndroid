@@ -1,6 +1,8 @@
 package np.com.naxa.factsnepal.feed.list;
 
 import android.content.Context;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -66,19 +68,25 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     @NonNull
     @Override
     public FeedCardVH onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_facts_feed_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_facts_feed_card_v2, parent, false);
         return new FeedCardVH(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FeedCardVH viewHolder, int i) {
-        Context context = viewHolder.imageView.getContext();
+        Context context = viewHolder.itemView.getContext();
         try {
             int position = viewHolder.getAdapterPosition();
             Fact fact = facts.get(position);
             ImageUtils.loadRemoteImage(context, fact.getImagePath())
-                    .fitCenter()
+                    .centerInside()
                     .into(viewHolder.imageView);
+
+            ColorMatrix colorMatrix = new ColorMatrix();
+            colorMatrix.setSaturation(0.9f);
+
+            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
+            viewHolder.imageView.setColorFilter(filter);
 
             viewHolder.tvTitle.setText(fact.getTitle());
             viewHolder.tvCategory.setText(fact.getCategoryName());
@@ -86,6 +94,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             viewHolder.tvLikeCount.setText(fact.getLikeCount());
         } catch (Exception e) {
             //fail silently
+            e.printStackTrace();
         }
 
     }
@@ -104,7 +113,6 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
         TextView tvTitle, tvCategory, btnShare, tvLikeCount;
         ImageView imageView;
-        View root;
 
         CheckBox tvSaved;
 
@@ -113,13 +121,11 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tv_feed_card_title);
             tvCategory = itemView.findViewById(R.id.tv_feed_card_category);
-            tvSaved = itemView.findViewById(R.id.tv_saved);
-            root = itemView.findViewById(R.id.root_item_facts_feed_card);
+            tvSaved = itemView.findViewById(R.id.btn_bookmark);
             imageView = itemView.findViewById(R.id.iv_feed);
             btnShare = itemView.findViewById(R.id.btn_share);
-            tvLikeCount = itemView.findViewById(R.id.three);
+            tvLikeCount = itemView.findViewById(R.id.btn_like);
 
-            root.setOnClickListener(this);
             tvSaved.setOnClickListener(this);
             btnShare.setOnClickListener(this);
 

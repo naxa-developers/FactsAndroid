@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#252121"
+    android:id="@+id/root_activity_facts_feed"
+    android:orientation="vertical"
     tools:context=".feed.feedv2.FactsFeedActivity">
+
+
+    <include
+        android:id="@+id/feed_header"
+        layout="@layout/feed_date_header" />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_facts"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent" />
 
 
     <ProgressBar
+        android:visibility="gone"
+        android:layout_gravity="center"
         android:id="@+id/progress_bar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
@@ -23,8 +33,8 @@
         android:layout_marginRight="150dp"
         android:layout_marginBottom="8dp"
         android:indeterminate="true"
-        android:visibility="gone"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</LinearLayout>

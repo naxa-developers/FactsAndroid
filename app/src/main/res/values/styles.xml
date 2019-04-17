@@ -102,7 +102,7 @@
     </style>
 
     <style name="Text.Compound" parent="TextAppearance.AppCompat.Body1">
-
+        <item name="android:textColor">#fff</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:layout_marginBottom">13dp</item>
