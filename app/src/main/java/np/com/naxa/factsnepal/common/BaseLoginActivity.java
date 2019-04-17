@@ -45,8 +45,9 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
     public static final int FACEBOOK_LOG_IN = 1;
     public static final int GMAIL_LOG_IN = 2;
     public static final String KEY_LOGGED_IN_TYPE = "logged_in_type";
-    public static final String KEY_USER_BEAR_ACCESS_TOKEN = "bear_access_token";
+    public static final String KEY_USER_BEARER_ACCESS_TOKEN = "bear_access_token";
     public static final String KEY_USER_SOCIAL_LOGGED_IN_DETAILS = "social_logged_in_details";
+    public static final String KEY_USER_LOGGED_IN_DETAILS = "user_logged_in_details";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -202,14 +203,14 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
 
     }
 
-    public static class UserLoginDetails {
+    public static class UserSocialLoginDetails {
         String user_access_token;
         int user_login_type;
         String user_name;
         String user_email;
         String user_image_url;
 
-        public UserLoginDetails(String user_access_token, int user_login_type, String user_name, String user_email, String user_image_url) {
+        public UserSocialLoginDetails(String user_access_token, int user_login_type, String user_name, String user_email, String user_image_url) {
             this.user_access_token = user_access_token;
             this.user_login_type = user_login_type;
             this.user_name = user_name;
@@ -217,7 +218,7 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
             this.user_image_url = user_image_url;
         }
 
-        public UserLoginDetails() {
+        public UserSocialLoginDetails() {
         }
 
 

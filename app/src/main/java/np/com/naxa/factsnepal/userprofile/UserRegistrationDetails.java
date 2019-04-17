@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserDetails implements Parcelable {
+public class UserRegistrationDetails implements Parcelable {
 
     @SerializedName("name")
     @Expose
@@ -54,8 +54,8 @@ public class UserDetails implements Parcelable {
 
 
 
-    public UserDetails(String user_name, String user_email, String photo_url, String ward, String district, String province, String municipality,
-                       String street, String birth_year, String gender, String provoder, String token, String latitude, String longitude) {
+    public UserRegistrationDetails(String user_name, String user_email, String photo_url, String ward, String district, String province, String municipality,
+                                   String street, String birth_year, String gender, String provoder, String token, String latitude, String longitude) {
         this.user_name = user_name;
         this.user_email = user_email;
         this.photo_url = photo_url;
@@ -72,7 +72,7 @@ public class UserDetails implements Parcelable {
         this.longitude = longitude;
     }
 
-    public UserDetails(String fbProfileImage, String toString, String toString1, String toString2, String toString3, String toString4, String toString5, String gender, String provider, String facebookToken, String s, String s1) {
+    public UserRegistrationDetails(String fbProfileImage, String toString, String toString1, String toString2, String toString3, String toString4, String toString5, String gender, String provider, String facebookToken, String s, String s1) {
 
     }
 
@@ -179,7 +179,7 @@ public class UserDetails implements Parcelable {
         dest.writeString(this.longitude);
     }
 
-    protected UserDetails(Parcel in) {
+    protected UserRegistrationDetails(Parcel in) {
         this.user_name = in.readString();
         this.user_email = in.readString();
         this.photo_url = in.readString();
@@ -196,15 +196,15 @@ public class UserDetails implements Parcelable {
         this.longitude = in.readString();
     }
 
-    public static final Parcelable.Creator<UserDetails> CREATOR = new Parcelable.Creator<UserDetails>() {
+    public static final Parcelable.Creator<UserRegistrationDetails> CREATOR = new Parcelable.Creator<UserRegistrationDetails>() {
         @Override
-        public UserDetails createFromParcel(Parcel source) {
-            return new UserDetails(source);
+        public UserRegistrationDetails createFromParcel(Parcel source) {
+            return new UserRegistrationDetails(source);
         }
 
         @Override
-        public UserDetails[] newArray(int size) {
-            return new UserDetails[size];
+        public UserRegistrationDetails[] newArray(int size) {
+            return new UserRegistrationDetails[size];
         }
     };
 
@@ -359,8 +359,8 @@ public class UserDetails implements Parcelable {
         }
 
 
-        public UserDetails build() {
-            return new UserDetails(user_name, user_email, photo_url, ward, district, province, municipality, street, birth_year, gender, provoder, token, latitude, longitude);
+        public UserRegistrationDetails build() {
+            return new UserRegistrationDetails(user_name, user_email, photo_url, ward, district, province, municipality, street, birth_year, gender, provoder, token, latitude, longitude);
         }
     }
 }
