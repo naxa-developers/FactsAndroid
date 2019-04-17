@@ -183,8 +183,7 @@
     </style>
 
 
-
-    <style name="chip_button_style"  parent="@style/Feed.Widget.Chip">
+    <style name="chip_button_style" parent="@style/Feed.Widget.Chip">
         <item name="android:background">@drawable/button_state</item>
         <!--<item name="android:textSize">@dimen/text_size</item>-->
         <!--<item name="android:padding">@dimen/padding_button</item>-->
@@ -192,6 +191,19 @@
 
     </style>
 
+    <style name="Widget.Shrine.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="Widget.Shrine.Backdrop" parent="">
+        <item name="android:background">#252121</item>
+    </style>
+
+    <style name="Widget.Shrine.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">#252121</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="android:textColor">#fff</item>
+    </style>
 
 
     <color name="orange">#E67E22</color>

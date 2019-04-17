@@ -5,12 +5,14 @@ import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
 
-public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener {
+public class FactsFeedActivity extends AppCompatActivity implements FactsFeedAdapter.OnFeedCardItemClickListener {
 
     private View rootLayout;
     private FactsFeedAdapter adapter;
@@ -45,8 +47,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 .observe(this, facts -> adapter.updateList(facts));
 
         setSupportActionBar(toolbar);
-
-
+        setUpToolbar();
 
 
     }
@@ -54,6 +55,8 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     private void bindUI() {
         recyclerViewFeed = findViewById(R.id.rv_facts);
         rootLayout = findViewById(R.id.root_activity_facts_feed);
+        toolbar = findViewById(R.id.app_bar);
+
 
     }
 
@@ -62,9 +65,10 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         layoutManager = new LinearLayoutManager(this);
         recyclerViewFeed.setLayoutManager(layoutManager);
         recyclerViewFeed.setAdapter(adapter);
+        recyclerViewFeed.setNestedScrollingEnabled(false);
 
         /**
-        s * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
+         s * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
          */
         recyclerViewFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -116,5 +120,17 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     @Override
     public void onShareButtonTap(Fact fact) {
 
+    }
+
+    private void setUpToolbar() {
+
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new NavigationIconClickListener(
+                this,
+                findViewById(R.id.product_grid),
+                new AccelerateDecelerateInterpolator(),
+                getResources().getDrawable(R.drawable.ic_expand_more_24dp), // Menu open icon
+                getResources().getDrawable(R.drawable.ic_expand_less_24dp))); // Menu close icon
     }
 }
