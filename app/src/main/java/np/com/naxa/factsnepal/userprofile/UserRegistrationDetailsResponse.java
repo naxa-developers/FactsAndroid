@@ -3,14 +3,14 @@ package np.com.naxa.factsnepal.userprofile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserDetailsResponse {
+public class UserRegistrationDetailsResponse {
 
     @SerializedName("success")
     @Expose
     private boolean success;
     @SerializedName("data")
     @Expose
-    private UserDetails data;
+    private UserRegistrationDetails data;
     @SerializedName("message")
     @Expose
     private String message;
@@ -26,11 +26,11 @@ public class UserDetailsResponse {
         this.success = success;
     }
 
-    public UserDetails getData() {
+    public UserRegistrationDetails getData() {
         return data;
     }
 
-    public void setData(UserDetails data) {
+    public void setData(UserRegistrationDetails data) {
         this.data = data;
     }
 

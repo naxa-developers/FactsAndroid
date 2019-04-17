@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.google.gson.Gson;
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import org.json.JSONException;
@@ -42,8 +41,6 @@ import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseLoginActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.gps.GeoPointActivity;
-import np.com.naxa.factsnepal.network.NetworkApiClient;
-import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -401,7 +398,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void userRegistration(){
-        UserDetails userDetails = new UserDetails.Builder()
+        UserRegistrationDetails userRegistrationDetails = new UserRegistrationDetails.Builder()
                 .setUser_name(userLoginDetails.getUser_name())
                 .setUser_email(userLoginDetails.getUser_email())
                 .setWard(etWard.getText().toString())
@@ -418,22 +415,22 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                 .build();
 
         Gson gson = new Gson();
-        String jsonInString = gson.toJson(userDetails);
+        String jsonInString = gson.toJson(userRegistrationDetails);
         Log.d(TAG, "userRegistration: "+jsonInString);
 
-        apiInterface.getUserDetailsResponse(userDetails)
+        apiInterface.getUserDetailsResponse(userRegistrationDetails)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<UserDetailsResponse>() {
+                .subscribe(new DisposableObserver<UserRegistrationDetailsResponse>() {
                     @Override
-                    public void onNext(UserDetailsResponse userDetailsResponse) {
-                        if(userDetailsResponse.getSuccess()){
-                            sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEAR_ACCESS_TOKEN, userDetailsResponse.getToken());
+                    public void onNext(UserRegistrationDetailsResponse userRegistrationDetailsResponse) {
+                        if(userRegistrationDetailsResponse.getSuccess()){
+                            sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEARER_ACCESS_TOKEN, userRegistrationDetailsResponse.getToken());
                             sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, true);
                             ActivityUtil.openActivity(FeedListActivity.class, UpdateProfileActivity.this, null, false);
 
                         }else {
-                            showToast(userDetailsResponse.getMessage());
+                            showToast(userRegistrationDetailsResponse.getMessage());
                         }
                     }
 
