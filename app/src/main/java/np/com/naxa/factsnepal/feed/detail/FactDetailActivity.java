@@ -1,7 +1,10 @@
 package np.com.naxa.factsnepal.feed.detail;
 
+import android.arch.lifecycle.Observer;
+
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +13,7 @@ import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.Fade;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -23,6 +27,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.List;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
@@ -46,6 +51,26 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_fact_detail);
         setupToolbar();
         bindUI();
+
+        onNewIntent(getIntent());
+    }
+
+    protected void onNewIntent(Intent intent) {
+        Uri data = intent.getData();
+        if (data != null && data.getQueryParameterNames().contains("id")) {
+            String factsId = data.getQueryParameter("id");
+            FactsLocalSource.getINSTANCE().getById(factsId)
+                    .observe(this, this::setFactInUI);
+        }
+
+        Fact fact = (Fact) intent.getSerializableExtra(Constant.EXTRA_IMAGE);
+        setFactInUI(fact);
+    }
+
+    private void setFactInUI(Fact fact) {
+        if (fact != null) {
+            tvTitle.setText(fact.getTitle());
+            setupImageLoad(fact);
         loadFact(savedInstanceState, getIntent());
         setupFactUI();
     }
@@ -69,6 +94,7 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
             fact = (Fact) savedInstanceState.getSerializable(FACT);
         } else {
             fact = (Fact) intent.getSerializableExtra(Constant.EXTRA_IMAGE);
+
         }
     }
 
