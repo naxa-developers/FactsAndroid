@@ -79,14 +79,11 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             int position = viewHolder.getAdapterPosition();
             Fact fact = facts.get(position);
             ImageUtils.loadRemoteImage(context, fact.getImagePath())
+
                     .centerInside()
+
                     .into(viewHolder.imageView);
 
-            ColorMatrix colorMatrix = new ColorMatrix();
-            colorMatrix.setSaturation(0.9f);
-
-            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
-            viewHolder.imageView.setColorFilter(filter);
 
             viewHolder.tvTitle.setText(fact.getTitle());
             viewHolder.tvCategory.setText(fact.getCategoryName());
@@ -97,6 +94,14 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             e.printStackTrace();
         }
 
+    }
+
+    private void changeSaturation(ImageView imageView) {
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0.9f);
+
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
+        imageView.setColorFilter(filter);
     }
 
     @Override

@@ -47,8 +47,6 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         setSupportActionBar(toolbar);
 
 
-
-
     }
 
     private void bindUI() {
@@ -64,7 +62,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         recyclerViewFeed.setAdapter(adapter);
 
         /**
-        s * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
+         s * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
          */
         recyclerViewFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -72,7 +70,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     int position = getCurrentItem();
-                    onPageChanged(position);
+                    getColorPallete(position);
                 }
             }
         });
@@ -81,6 +79,14 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         SnapHelper snapHelper = new PagerSnapHelper();
 
         snapHelper.attachToRecyclerView(recyclerViewFeed);
+    }
+
+    private void getColorPallete(int position) {
+        Fact fact = adapter.getItems().get(position);
+        if (fact != null) {
+            String url = fact.getImagePath();
+
+        }
     }
 
     /*
