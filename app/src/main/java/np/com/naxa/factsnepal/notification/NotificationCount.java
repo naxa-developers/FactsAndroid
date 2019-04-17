@@ -49,10 +49,11 @@ public class NotificationCount {
 
     public synchronized long getNotificationCount() throws JSONException {
         count = 0;
-            JSONArray jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
+            JSONArray jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, null));
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (!jsonArray.getJSONObject(i).getBoolean("isRead")) {
                     count = count + 1;
+                    Log.d(TAG, "getNotificationCount: "+count);
                 }
             }
             return count;
@@ -62,11 +63,11 @@ public class NotificationCount {
 
     public void saveNotification(JSONArray jsonArray) throws JSONException {
 
-        if ((sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, "")).equals("")) {
+        if ((sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, null)) == null) {
             sharedPreferenceUtils.setValue(KEY_NOTIFICATION_LIST, getJsonArray().toString());
         } else {
             try {
-                JSONArray jsonArrayOld = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
+                JSONArray jsonArrayOld = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, null));
                 Observable.range(0, jsonArray.length())
                         .map(jsonArray::get)
                         .subscribe(e -> {
