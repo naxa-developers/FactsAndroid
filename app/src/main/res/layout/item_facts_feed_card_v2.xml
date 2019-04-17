@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:cardUseCompatPadding="true"
     android:layout_margin="@dimen/margin_large"
     app:cardBackgroundColor="#252525"
     app:cardCornerRadius="4dp">
@@ -18,16 +19,15 @@
         <ImageView
             android:id="@+id/iv_feed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/gradient_feed_image"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@id/view"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <ImageView
-
+            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:src="@drawable/gradient_feed_image"
             app:layout_constraintBottom_toTopOf="@id/view"
             app:layout_constraintTop_toTopOf="parent" />

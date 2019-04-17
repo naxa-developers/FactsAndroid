@@ -4,7 +4,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -13,12 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.littlemango.stacklayoutmanager.StackLayoutManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
@@ -46,7 +49,6 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
         setSupportActionBar(toolbar);
 
-
     }
 
     private void bindUI() {
@@ -57,28 +59,39 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
     private void setupRecyclerView() {
         adapter = new FactsFeedAdapter(new ArrayList<>(), this);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerViewFeed.setLayoutManager(layoutManager);
+        boolean useSnapLayout = true;
+
+        if (useSnapLayout) {
+            layoutManager = new LinearLayoutManager(this);
+            recyclerViewFeed.setLayoutManager(layoutManager);
+            /**
+             s * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
+             */
+            recyclerViewFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        int position = getCurrentItem();
+                        getColorPallete(position);
+                    }
+                }
+            });
+
+            SnapHelper snapHelper = new PagerSnapHelper();
+            snapHelper.attachToRecyclerView(recyclerViewFeed);
+        } else {
+            StackLayoutManager manager = new StackLayoutManager(StackLayoutManager.ScrollOrientation.TOP_TO_BOTTOM, 3);
+
+            recyclerViewFeed.setLayoutManager(manager);
+            ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.margin_large);
+            recyclerViewFeed.addItemDecoration(itemDecoration);
+        }
+
+
         recyclerViewFeed.setAdapter(adapter);
 
-        /**
-         s * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
-         */
-        recyclerViewFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    int position = getCurrentItem();
-                    getColorPallete(position);
-                }
-            }
-        });
 
-
-        SnapHelper snapHelper = new PagerSnapHelper();
-
-        snapHelper.attachToRecyclerView(recyclerViewFeed);
     }
 
     private void getColorPallete(int position) {
