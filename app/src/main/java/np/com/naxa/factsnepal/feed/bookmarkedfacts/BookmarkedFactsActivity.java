@@ -24,8 +24,8 @@ import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
-import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
@@ -78,7 +78,7 @@ public class BookmarkedFactsActivity extends BaseActivity implements NavigationV
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_home:
-                ActivityUtil.openActivity(FeedListActivity.class,this);
+                ActivityUtil.openActivity(FactsFeedActivity.class,this);
                 break;
             case R.id.nav_public_poll:
                 ActivityUtil.openActivity(PublicPollActivity.class, this);

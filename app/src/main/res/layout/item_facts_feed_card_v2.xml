@@ -128,7 +128,7 @@
             android:layout_height="56dp"
             android:text="OPEN FACT"
             app:cornerRadius="56dp"
-            app:icon="@drawable/com_facebook_button_icon"
+            app:icon="@drawable/ic_facebook"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.921"
             app:layout_constraintLeft_toLeftOf="parent"

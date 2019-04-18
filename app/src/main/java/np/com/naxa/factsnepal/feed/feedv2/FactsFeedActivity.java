@@ -14,6 +14,9 @@ import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
 import com.littlemango.stacklayoutmanager.StackLayoutManager;
@@ -33,7 +36,6 @@ import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.bookmarkedfacts.BookmarkedFactsActivity;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
-import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
 import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
@@ -59,8 +61,9 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         bindUI();
         setupRecyclerView();
         FactsLocalSource.getINSTANCE().getAll()
-                .observe(this, facts -> adapter.updateList(facts));
-        FactsRemoteSource.getINSTANCE().getAllFacts().subscribe();
+                .observe(this, facts -> {
+                    adapter.updateList(facts);
+                });
 
         setUpToolbar();
 
@@ -91,8 +94,8 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         if (useSnapLayout) {
             layoutManager = new LinearLayoutManager(this);
             recyclerViewFeed.setLayoutManager(layoutManager);
-            /**
-             s * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
+            /*
+             * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
              */
             recyclerViewFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -164,6 +167,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         FactsLocalSource.getINSTANCE().toggleBookMark(fact)
                 .subscribeOn(Schedulers.io())
                 .subscribe();
+        toast(getString(R.string.msg_bookmared));
     }
 
     @Override

@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.google.gson.Gson;
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import org.json.JSONException;
@@ -40,10 +39,8 @@ import io.reactivex.subscribers.DisposableSubscriber;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseLoginActivity;
-import np.com.naxa.factsnepal.feed.list.FeedListActivity;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.gps.GeoPointActivity;
-import np.com.naxa.factsnepal.network.NetworkApiClient;
-import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -305,7 +302,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.btn_skip:
-                ActivityUtil.openActivity(FeedListActivity.class, this, null, false);
+                ActivityUtil.openActivity(FactsFeedActivity.class, this, null, false);
                 break;
             default:
                 break;
@@ -430,7 +427,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                         if(userDetailsResponse.getSuccess()){
                             sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEAR_ACCESS_TOKEN, userDetailsResponse.getToken());
                             sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, true);
-                            ActivityUtil.openActivity(FeedListActivity.class, UpdateProfileActivity.this, null, false);
+                            ActivityUtil.openActivity(FactsFeedActivity.class, UpdateProfileActivity.this, null, false);
 
                         }else {
                             showToast(userDetailsResponse.getMessage());

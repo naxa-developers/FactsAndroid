@@ -1,6 +1,5 @@
 package np.com.naxa.factsnepal.userprofile;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -16,7 +15,6 @@ import org.json.JSONException;
 import java.util.HashMap;
 
 import np.com.naxa.factsnepal.common.BaseLoginActivity;
-import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import np.com.naxa.factsnepal.utils.Utils;

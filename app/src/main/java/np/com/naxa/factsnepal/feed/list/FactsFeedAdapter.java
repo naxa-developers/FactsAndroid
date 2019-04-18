@@ -149,6 +149,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             fab = itemView.findViewById(R.id.fab);
 
             tvSaved.setOnClickListener(this);
+
             btnShare.setOnClickListener(this);
             rootView.setOnClickListener(this);
             fab.setOnClickListener(this);
@@ -158,8 +159,9 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.tv_saved:
+            int id = v.getId();
+            switch (id) {
+                case R.id.btn_bookmark:
                     listener.onBookmarkButtonTap(facts.get(getAdapterPosition()));
                     break;
                 case R.id.fab:
