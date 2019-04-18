@@ -25,7 +25,7 @@ import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 
 public class SurveyCompanyListActivity extends BaseActivity {
     private static final String TAG = "SurveyCompanyListActivity";
-    public static final String KEY_SURVEY_QUESTION_DETAILS_JSON = "survey_question_json";
+    public static final String KEY_SURVEY_COMPANY_DETAILS_JSON = "survey_company_details_json";
     public static final String KEY_COMPANY_ID = "company_id";
     public static final int KEY_COMPANY_TYPE = 001;
     public static final int KEY_FORM_TYPE = 002;
@@ -64,14 +64,14 @@ public class SurveyCompanyListActivity extends BaseActivity {
         final String[] jsonInString = {""};
         surveyCompanies = new ArrayList<SurveyCompany>();
 
-        apiInterface.getSurveyQuestionDetailsResponse()
+        apiInterface.getSurveyCompanyDetailsResponse()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<SurveyCompanyDetails>() {
                     @Override
                     public void onNext(SurveyCompanyDetails surveyCompanyDetails) {
                         jsonInString[0] = gson.toJson(surveyCompanyDetails);
-                        sharedPreferenceUtils.setValue(KEY_SURVEY_QUESTION_DETAILS_JSON, jsonInString[0]);
+                        sharedPreferenceUtils.setValue(KEY_SURVEY_COMPANY_DETAILS_JSON, jsonInString[0]);
                         surveyCompanies = surveyCompanyDetails.getSurveyCompany();
                     }
 
@@ -92,7 +92,7 @@ public class SurveyCompanyListActivity extends BaseActivity {
     private void getSurveyQuestionDetailsResponseFromSharedPref() {
         surveyCompanies = new ArrayList<SurveyCompany>();
 
-        SurveyCompanyDetails surveyCompanyDetails = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_SURVEY_QUESTION_DETAILS_JSON, ""), SurveyCompanyDetails.class);
+        SurveyCompanyDetails surveyCompanyDetails = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_SURVEY_COMPANY_DETAILS_JSON, ""), SurveyCompanyDetails.class);
 
         Observable.just(surveyCompanyDetails)
                 .subscribeOn(Schedulers.io())

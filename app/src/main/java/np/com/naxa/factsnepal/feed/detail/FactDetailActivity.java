@@ -2,17 +2,10 @@ package np.com.naxa.factsnepal.feed.detail;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.ViewUtils;
-import android.transition.ChangeBounds;
-import android.transition.ChangeImageTransform;
-import android.transition.Fade;
-import android.transition.TransitionSet;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,8 +41,18 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
 
         setupToolbar();
         bindUI();
+
+        onNewIntent(getIntent());
         loadFact(savedInstanceState, getIntent());
-        setupFactUI();
+        setFactInUI(fact);
+    }
+
+    private void setFactInUI(Fact fact) {
+        if (fact != null) {
+            tvTitle.setText(fact.getTitle());
+            setupImageLoad(fact);
+            setupFactUI();
+        }
     }
 
     private void setupFactUI() {
@@ -67,10 +70,19 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
 
 
     private void loadFact(Bundle savedInstanceState, Intent intent) {
+
+        Uri data = intent.getData();
+        if (data != null && data.getQueryParameterNames().contains("id")) {
+            String factsId = data.getQueryParameter("id");
+            FactsLocalSource.getINSTANCE().getById(factsId)
+                    .observe(this, this::setFactInUI);
+        }
+
         if (savedInstanceState != null) {
             fact = (Fact) savedInstanceState.getSerializable(FACT);
         } else {
             fact = (Fact) intent.getSerializableExtra(Constant.EXTRA_IMAGE);
+
         }
     }
 

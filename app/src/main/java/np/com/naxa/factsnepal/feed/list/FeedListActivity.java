@@ -61,6 +61,7 @@ import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
+import np.com.naxa.factsnepal.userprofile.UserProfileInfoActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -166,14 +167,14 @@ public class FeedListActivity extends BaseActivity
         TextView tvUserName = (TextView) headerLayout.findViewById(R.id.nav_user_username);
         TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
 
-        BaseLoginActivity.UserLoginDetails userLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserLoginDetails.class);
+        BaseLoginActivity.UserSocialLoginDetails userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
+        ImageUtils.loadRemoteImage(this, userSocialLoginDetails.getUser_image_url())
 
-        ImageUtils.loadRemoteImage(this, userLoginDetails.getUser_image_url())
                 .fitCenter()
                 .circleCrop()
                 .into(profileIageView);
-        tvUserName.setText(userLoginDetails.getUser_name());
-        tvUserEmail.setText(userLoginDetails.getUser_email());
+        tvUserName.setText(userSocialLoginDetails.getUser_name());
+        tvUserEmail.setText(userSocialLoginDetails.getUser_email());
 
         if (sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2) {
             Menu nav_Menu = navigationView.getMenu();
@@ -309,11 +310,8 @@ public class FeedListActivity extends BaseActivity
 
 
     Menu menu;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
-//        sharedPreferenceUtils.removeKey(NotificationCount.KEY_NOTIFICATION_LIST);
         this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
@@ -327,6 +325,7 @@ public class FeedListActivity extends BaseActivity
                 break;
 
             case R.id.action_profile:
+                ActivityUtil.openActivity(UserProfileInfoActivity.class, FeedListActivity.this);
                 try {
                     notificationCount.saveNotification(notificationCount.getJsonArray());
                 } catch (JSONException e) {
@@ -349,7 +348,8 @@ public class FeedListActivity extends BaseActivity
         try {
             long count = notificationCount.getNotificationCount();
             setCount(FeedListActivity.this, count + "", menu);
-        } catch (NullPointerException | JSONException e) {
+        } catch (JSONException | NullPointerException e) {
+
             e.printStackTrace();
         }
         return super.onPrepareOptionsMenu(menu);
@@ -403,8 +403,12 @@ public class FeedListActivity extends BaseActivity
                     @Override
                     public void onLogoutSuccess() {
                         sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false);
+                        sharedPreferenceUtils.clearAll();
+                        ActivityUtil.openActivity(LoginActivity.class, FeedListActivity.this);
+
                     }
                 };
+                break;
             case R.id.nav_settings:
                 ActivityUtil.openActivity(PreferencesActivity.class, this);
                 break;
