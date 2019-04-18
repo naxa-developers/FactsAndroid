@@ -15,5 +15,5 @@ public class UrlConstant {
         public static final String GET_USER_DETAILS_URL = "api/getUser";
         public static final String GET_USER_EARNING_HISTORY_DETAILS_URL = "api/getEarningHistory";
         public static final String GET_SURVEY_COMPANY_DETAILS_URL = "api/surveyapi";
-        public static final String GET_SURVEY_QUESTION_DETAILS_URL = "api/questionapi";
+        public static final String GET_SURVEY_QUESTION_DETAILS_URL = "api/surveyapi/form/";
 }

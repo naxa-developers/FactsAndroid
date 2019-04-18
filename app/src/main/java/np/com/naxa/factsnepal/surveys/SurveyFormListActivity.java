@@ -1,7 +1,6 @@
 package np.com.naxa.factsnepal.surveys;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,14 +19,17 @@ import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
+import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
+import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_FORM_TYPE;
-import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_SURVEY_QUESTION_DETAILS_JSON;
+import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_SURVEY_COMPANY_DETAILS_JSON;
 
 public class SurveyFormListActivity extends BaseActivity {
+    private static final String TAG = "SurveyFormsListActivity";
+    public static final String KEY_RECENT_SURVEY_FORM_DETAILS = "recent_survey_form_details";
     private BaseRecyclerViewAdapter<SurevyForms, SurveyItemListVH> adapter;
     List<SurevyForms> surevyFormsList;
 
@@ -54,7 +56,7 @@ public class SurveyFormListActivity extends BaseActivity {
     private void getSurveyFormsFromSharedPref() {
         surevyFormsList = new ArrayList<SurevyForms>();
 
-        SurveyCompanyDetails surveyCompanyDetails = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_SURVEY_QUESTION_DETAILS_JSON, ""), SurveyCompanyDetails.class);
+        SurveyCompanyDetails surveyCompanyDetails = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_SURVEY_COMPANY_DETAILS_JSON, ""), SurveyCompanyDetails.class);
 
         Observable.just(surveyCompanyDetails)
                 .subscribeOn(Schedulers.io())
@@ -93,10 +95,7 @@ public class SurveyFormListActivity extends BaseActivity {
             public void viewBinded(SurveyItemListVH surveyItemListVH, SurevyForms surevyForms, int position) {
                 surveyItemListVH.bindView(surevyForms);
                 surveyItemListVH.itemView.setOnClickListener((v -> {
-                    Intent intent  = new Intent(SurveyFormListActivity.this, SurveyActivity.class);
-                    intent.putExtra(KEY_OBJECT, surveyCompany);
-                    intent.putExtra(KEY_EXTRA_OBJECT, surevyForms);
-                    startActivity(intent);
+                    fetctQuestioOptions(surevyForms);
                 }));
             }
 
@@ -108,5 +107,42 @@ public class SurveyFormListActivity extends BaseActivity {
 
         recyclerView.setAdapter(adapter);
 
+    }
+
+    boolean isQuestionNotNull = false;
+
+    private void fetctQuestioOptions(SurevyForms surevyForms) {
+        if (!isNetworkAvailable()) {
+            showToast("No Internet Connection");
+            return;
+        }
+            apiInterface.getSurveyQuestionDetailsResponse(surveyCompany.getId(), surevyForms.getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new DisposableObserver<SurveyQuestionDetailsResponse>() {
+                        @Override
+                        public void onNext(SurveyQuestionDetailsResponse surveyQuestionDetailsResponse) {
+
+                            if (surveyQuestionDetailsResponse == null) {
+                                showToast("Null response from the server.");
+                                isQuestionNotNull = false;
+                            } else {
+                                isQuestionNotNull = true;
+                                sharedPreferenceUtils.setValue(KEY_RECENT_SURVEY_FORM_DETAILS, gson.toJson(surveyQuestionDetailsResponse));
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            showToast(e.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            if (isQuestionNotNull) {
+                                ActivityUtil.openActivity(SurveyStartActivity.class, SurveyFormListActivity.this);
+                            }
+                        }
+                    });
     }
 }
