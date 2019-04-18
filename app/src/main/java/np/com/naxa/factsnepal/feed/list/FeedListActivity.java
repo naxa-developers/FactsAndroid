@@ -61,6 +61,7 @@ import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
+import np.com.naxa.factsnepal.userprofile.UserProfileInfoActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -309,11 +310,8 @@ public class FeedListActivity extends BaseActivity
 
 
     Menu menu;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
-//        sharedPreferenceUtils.removeKey(NotificationCount.KEY_NOTIFICATION_LIST);
         this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
@@ -327,6 +325,7 @@ public class FeedListActivity extends BaseActivity
                 break;
 
             case R.id.action_profile:
+                ActivityUtil.openActivity(UserProfileInfoActivity.class, FeedListActivity.this);
                 try {
                     notificationCount.saveNotification(notificationCount.getJsonArray());
                 } catch (JSONException e) {
