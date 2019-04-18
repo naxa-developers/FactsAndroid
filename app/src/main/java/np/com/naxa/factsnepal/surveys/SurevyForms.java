@@ -21,7 +21,7 @@ public class SurevyForms implements Parcelable {
     @SerializedName("survey_id")
     @Expose
     private Integer surveyCompanyId;
-    @SerializedName("survey_company_id")
+    @SerializedName("question_type")
     @Expose
     private String questionType;
     @SerializedName("active")
