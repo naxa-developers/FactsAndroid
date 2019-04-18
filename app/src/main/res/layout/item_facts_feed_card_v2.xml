@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/root_item_facts_feed_card"
     android:layout_height="match_parent"
-    app:cardUseCompatPadding="true"
     android:layout_margin="@dimen/margin_large"
     app:cardBackgroundColor="#252525"
     app:cardCornerRadius="4dp">
@@ -34,18 +34,36 @@
 
 
         <TextView
-            android:textSize="24sp"
             android:id="@+id/tv_feed_card_title"
             style="@style/Base.TextAppearance.AppCompat.Headline"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:padding="@dimen/default_activity_padding"
             android:text="@string/demo_fact"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/iv_feed"
+            android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="@id/iv_feed"
             app:layout_constraintRight_toRightOf="@id/iv_feed"
-            app:layout_constraintTop_toTopOf="@id/iv_feed" />
+            app:layout_constraintTop_toTopOf="@+id/iv_feed" />
+
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_feed_card_date"
+            style="@style/Base.TextAppearance.AppCompat.Subhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="@dimen/default_activity_padding"
+            android:text="@string/demo_fact"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="@id/iv_feed"
+            app:layout_constraintRight_toRightOf="@id/iv_feed"
+            app:layout_constraintTop_toTopOf="@+id/iv_feed" />
+
+
 
 
         <View

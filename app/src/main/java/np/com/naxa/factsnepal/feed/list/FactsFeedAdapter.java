@@ -1,41 +1,25 @@
 package np.com.naxa.factsnepal.feed.list;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.graphics.Palette;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.schedulers.Schedulers;
-import np.com.naxa.factsnepal.feed.Fact;
-import np.com.naxa.factsnepal.feed.FactsLocalSource;
-import np.com.naxa.factsnepal.notification.FactsNotification;
-import np.com.naxa.factsnepal.utils.ActivityUtil;
-import np.com.naxa.factsnepal.utils.ImageUtils;
-import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.utils.ImageUtils;
 
 public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.FeedCardVH> {
 
@@ -88,7 +72,8 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
         try {
             int position = viewHolder.getAdapterPosition();
             Fact fact = facts.get(position);
-            ImageUtils.loadRemoteImage(context, fact.getImagePath())
+//            http://paletton.com/#uid=75x0u0kjfdpbPiWdzeenjbwsi8E
+            ImageUtils.loadAsBitmap(context, fact.getImagePath())
                     .fitCenter()
 //                    .listener(new RequestListener<Bitmap>() {
 //                        @Override
@@ -115,6 +100,8 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             viewHolder.tvCategory.setText(fact.getCategoryName());
             viewHolder.tvSaved.setChecked(fact.isBookmarked());
             viewHolder.tvLikeCount.setText(fact.getLikeCount());
+
+
         } catch (Exception e) {
             //fail silently
             e.printStackTrace();
@@ -144,6 +131,8 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
         TextView tvTitle, tvCategory, btnShare, tvLikeCount;
         ImageView imageView;
+        View rootView;
+        Button fab;
 
         CheckBox tvSaved;
 
@@ -156,9 +145,14 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             imageView = itemView.findViewById(R.id.iv_feed);
             btnShare = itemView.findViewById(R.id.btn_share);
             tvLikeCount = itemView.findViewById(R.id.btn_like);
+            rootView = itemView.findViewById(R.id.root_item_facts_feed_card);
+            fab = itemView.findViewById(R.id.fab);
 
             tvSaved.setOnClickListener(this);
             btnShare.setOnClickListener(this);
+            rootView.setOnClickListener(this);
+            fab.setOnClickListener(this);
+
 
         }
 
@@ -168,7 +162,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
                 case R.id.tv_saved:
                     listener.onBookmarkButtonTap(facts.get(getAdapterPosition()));
                     break;
-                case R.id.root_item_facts_feed_card:
+                case R.id.fab:
                     int pos = getAdapterPosition();
                     listener.onCardTap(facts.get(pos), imageView);
                     break;
@@ -189,6 +183,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
         void onShareButtonTap(Fact fact);
     }
+
 
 
 }
