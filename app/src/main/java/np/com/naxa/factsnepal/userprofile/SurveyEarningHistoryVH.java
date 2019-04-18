@@ -6,8 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import np.com.naxa.factsnepal.R;
-import np.com.naxa.factsnepal.notification.FactsNotification;
-import np.com.naxa.factsnepal.surveys.SurveyEarningDetails;
+import np.com.naxa.factsnepal.userprofile.earninghistory.SurveyDetail;
 
 public class SurveyEarningHistoryVH extends RecyclerView.ViewHolder {
     private TextView tvSurveyName, tvSurveyDate, tvEarning;
@@ -23,10 +22,10 @@ public class SurveyEarningHistoryVH extends RecyclerView.ViewHolder {
 
         }
 
-        void bindView(SurveyEarningDetails surveyEarningDetails) {
-            tvSurveyName.setText(surveyEarningDetails.getSurvey_name());
-            tvSurveyDate.setText(surveyEarningDetails.getSurvey_date());
-            tvEarning.setText(surveyEarningDetails.getEarning_from_survey());
+        void bindView(SurveyDetail surveyDetail) {
+            tvSurveyName.setText(surveyDetail.getSurveyName());
+            tvSurveyDate.setText(surveyDetail.getSurveydate());
+            tvEarning.setText(surveyDetail.getTotal());
 //        rootLayout.setEnabled(factsNotification.isRead());
         }
 }

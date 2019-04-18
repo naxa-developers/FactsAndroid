@@ -71,7 +71,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
-
                 break;
         }
         return super.onOptionsItemSelected(item);
