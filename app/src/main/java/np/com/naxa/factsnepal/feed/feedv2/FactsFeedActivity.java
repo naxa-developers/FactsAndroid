@@ -40,6 +40,7 @@ import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.bookmarkedfacts.BookmarkedFactsActivity;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
+import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
 import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
 import np.com.naxa.factsnepal.notification.CountDrawable;
@@ -210,7 +211,8 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         FactsLocalSource.getINSTANCE().toggleBookMark(fact)
                 .subscribeOn(Schedulers.io())
                 .subscribe();
-        toast(getString(R.string.msg_bookmared));
+
+        toast(fact.isBookmarked() ? getString(R.string.msg_not_bookmarked) : getString(R.string.msg_bookmared));
     }
 
     @Override
@@ -264,7 +266,10 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 onPrepareOptionsMenu(menu);
                 break;
 
-            case android.R.id.home:
+            case R.id.action_categories:
+
+                BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance();
+                bottomSheetDialog.show(getSupportFragmentManager(), "Chips Dialog");
 
                 break;
         }

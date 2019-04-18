@@ -86,5 +86,6 @@
     <string name="dialog_unexpected_error_title">An unexpected error occurred.</string>
     <string name="dialog_action_dismiss">Cancel</string>
     <string name="msg_bookmared">Bookmarked</string>
+    <string name="msg_not_bookmarked">Not Bookmarked</string>
 
 </resources>
