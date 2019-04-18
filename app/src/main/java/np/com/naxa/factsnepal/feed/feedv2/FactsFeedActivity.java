@@ -2,8 +2,11 @@ package np.com.naxa.factsnepal.feed.feedv2;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -12,18 +15,20 @@ import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
 import com.littlemango.stacklayoutmanager.StackLayoutManager;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -36,6 +41,10 @@ import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.bookmarkedfacts.BookmarkedFactsActivity;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
+import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
+import np.com.naxa.factsnepal.notification.CountDrawable;
+import np.com.naxa.factsnepal.notification.NotificationActivity;
+import np.com.naxa.factsnepal.notification.NotificationCount;
 import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
@@ -50,14 +59,18 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     private LinearLayoutManager layoutManager;
     private Toolbar toolbar;
     private MaterialButton btnHome, btnPublicPoll, btnSurvey, btnBookmarked, btnAccount;
+    private NotificationCount notificationCount;
 
 
     String colors[] = new String[]{"#571821", "#5C3219", "#103B31"};
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facts_feed);
+        notificationCount = new NotificationCount(this);
+
         bindUI();
         setupRecyclerView();
         FactsLocalSource.getINSTANCE().getAll()
@@ -66,8 +79,38 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 });
 
         setUpToolbar();
+        loadFacts();
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        factsDisposable.dispose();
+    }
+
+    private void loadFacts() {
+        factsDisposable = FactsRemoteSource.getINSTANCE()
+                .getAllFacts()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<List<Fact>>() {
+                    @Override
+                    public void onNext(List<Fact> facts) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
 
     private void bindUI() {
         recyclerViewFeed = findViewById(R.id.rv_facts);
@@ -185,6 +228,65 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 new AccelerateDecelerateInterpolator(),
                 getResources().getDrawable(R.drawable.ic_expand_more_black_24dp), // Menu open icon
                 getResources().getDrawable(R.drawable.ic_expand_less_black_24dp))); // Menu close icon
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        try {
+            long count = notificationCount.getNotificationCount();
+            setNotificationCount(this, count + "", menu);
+        } catch (NullPointerException | JSONException e) {
+            e.printStackTrace();
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_notification:
+                ActivityUtil.openActivity(NotificationActivity.class, this);
+                break;
+
+            case R.id.action_profile:
+                try {
+                    notificationCount.saveNotification(notificationCount.getJsonArray());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                onPrepareOptionsMenu(menu);
+                break;
+
+            case android.R.id.home:
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void setNotificationCount(Context context, String count, Menu defaultMenu) {
+        MenuItem menuItem = defaultMenu.findItem(R.id.menu_notification);
+        LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
+        CountDrawable badge;
+
+        Drawable reuse = icon.findDrawableByLayerId(R.id.ic_group_count);
+        if (reuse instanceof CountDrawable) {
+            badge = (CountDrawable) reuse;
+        } else {
+            badge = new CountDrawable(context);
+        }
+
+        badge.setCount(count);
+        icon.mutate();
+        icon.setDrawableByLayerId(R.id.ic_group_count, badge);
     }
 
 
