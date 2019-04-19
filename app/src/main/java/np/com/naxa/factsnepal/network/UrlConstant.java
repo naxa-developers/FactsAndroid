@@ -8,6 +8,7 @@ public class UrlConstant {
 
 //        public static final String BASE_URL = "http://factsandroid.naxa.com.np/";
         public static final String BASE_URL = "http://139.59.67.104:8002/";
+        public static final String TEST_BASE_URL = "http://api.yubrajpoudel.com.np/";
 
         public static final String FETCH_CONFIG_URL = "api/config";
         public static final String POST_USER_DETAILS_URL = "api/register";
@@ -16,4 +17,5 @@ public class UrlConstant {
         public static final String GET_USER_EARNING_HISTORY_DETAILS_URL = "api/getEarningHistory";
         public static final String GET_SURVEY_COMPANY_DETAILS_URL = "api/surveyapi";
         public static final String GET_SURVEY_QUESTION_DETAILS_URL = "api/surveyapi/form/";
+        public static final String GET_SAMPLE_SURVEY_QUESTION_DETAILS_URL = "api";
 }
