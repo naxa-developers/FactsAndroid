@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.userprofile.UpdateProfileActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
@@ -25,7 +26,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 //Do something after 100ms
                 SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(SplashScreenActivity.this);
                 if (sharedPreferenceUtils.getBoolanValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false)) {
-                    ActivityUtil.openActivity(FeedListActivity.class, SplashScreenActivity.this);
+                    ActivityUtil.openActivity(FactsFeedActivity.class, SplashScreenActivity.this);
                 } else {
                     ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);
                 }
