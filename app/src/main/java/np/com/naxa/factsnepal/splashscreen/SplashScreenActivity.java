@@ -1,6 +1,5 @@
 package np.com.naxa.factsnepal.splashscreen;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
-import np.com.naxa.factsnepal.userprofile.UpdateProfileActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 

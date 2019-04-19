@@ -34,7 +34,7 @@ public class ChipDialog extends AlertDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_dialog_category_chips);
-        group = findViewById(R.id.cg_dialog_category);
+
 //        findAllChips(group);
     }
 
