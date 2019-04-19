@@ -16,7 +16,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.List;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
-import np.com.naxa.factsnepal.feed.list.FeedListActivity;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public class NotificationActivity extends BaseActivity {
@@ -53,7 +52,7 @@ public class NotificationActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                startActivity(new Intent(NotificationActivity.this, FeedListActivity.class));
+                startActivity(new Intent(NotificationActivity.this, FactsFeedActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

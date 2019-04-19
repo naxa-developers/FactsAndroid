@@ -1,6 +1,5 @@
 package np.com.naxa.factsnepal.firebase;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -18,15 +17,12 @@ import com.bumptech.glide.request.target.Target;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
 import np.com.naxa.factsnepal.R;
-import np.com.naxa.factsnepal.feed.list.FeedListActivity;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 
 
 public class FirebaseMessanging extends FirebaseMessagingService {
@@ -70,7 +66,7 @@ public class FirebaseMessanging extends FirebaseMessagingService {
         }
         Intent notificationIntent;
         if (data == null || data.length() == 0) {
-            notificationIntent = new Intent(context, FeedListActivity.class);
+            notificationIntent = new Intent(context, FactsFeedActivity.class);
             notificationIntent.putExtra("page", type);
         }/*else if(type.equals("youtube")) {
             notificationIntent = new Intent(context, PlayerActivity.class)

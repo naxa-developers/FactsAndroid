@@ -1,29 +1,25 @@
 package np.com.naxa.factsnepal.feed.list;
 
 import android.content.Context;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.schedulers.Schedulers;
-import np.com.naxa.factsnepal.feed.Fact;
-import np.com.naxa.factsnepal.feed.FactsLocalSource;
-import np.com.naxa.factsnepal.notification.FactsNotification;
-import np.com.naxa.factsnepal.utils.ActivityUtil;
-import np.com.naxa.factsnepal.utils.ImageUtils;
-import np.com.naxa.factsnepal.common.OnCardItemClickListener;
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.utils.ImageUtils;
 
 public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.FeedCardVH> {
 
@@ -66,28 +62,59 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     @NonNull
     @Override
     public FeedCardVH onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_facts_feed_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_facts_feed_card_v2, parent, false);
         return new FeedCardVH(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FeedCardVH viewHolder, int i) {
-        Context context = viewHolder.imageView.getContext();
+        Context context = viewHolder.itemView.getContext();
         try {
             int position = viewHolder.getAdapterPosition();
             Fact fact = facts.get(position);
-            ImageUtils.loadRemoteImage(context, fact.getImagePath())
+//            http://paletton.com/#uid=75x0u0kjfdpbPiWdzeenjbwsi8E
+            ImageUtils.loadAsBitmap(context, fact.getImagePath())
                     .fitCenter()
+//                    .listener(new RequestListener<Bitmap>() {
+//                        @Override
+//                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+//
+//                            if (resource != null) {
+//                                Palette p = Palette.from(resource).generate();
+//                                // Use generated instance
+//                                int bgColor = p.getDominantColor(Color.parseColor("#252121"));
+//                                viewHolder.imageView.setBackgroundColor(bgColor);
+//                            }
+//                            return false;
+//                        }
+//                    })
                     .into(viewHolder.imageView);
+
 
             viewHolder.tvTitle.setText(fact.getTitle());
             viewHolder.tvCategory.setText(fact.getCategoryName());
             viewHolder.tvSaved.setChecked(fact.isBookmarked());
             viewHolder.tvLikeCount.setText(fact.getLikeCount());
+
+
         } catch (Exception e) {
             //fail silently
+            e.printStackTrace();
         }
 
+    }
+
+    private void changeSaturation(ImageView imageView) {
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0.9f);
+
+        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
+        imageView.setColorFilter(filter);
     }
 
     @Override
@@ -104,7 +131,8 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
         TextView tvTitle, tvCategory, btnShare, tvLikeCount;
         ImageView imageView;
-        View root;
+        View rootView;
+        Button fab;
 
         CheckBox tvSaved;
 
@@ -113,25 +141,30 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tv_feed_card_title);
             tvCategory = itemView.findViewById(R.id.tv_feed_card_category);
-            tvSaved = itemView.findViewById(R.id.tv_saved);
-            root = itemView.findViewById(R.id.root_item_facts_feed_card);
+            tvSaved = itemView.findViewById(R.id.btn_bookmark);
             imageView = itemView.findViewById(R.id.iv_feed);
             btnShare = itemView.findViewById(R.id.btn_share);
-            tvLikeCount = itemView.findViewById(R.id.three);
+            tvLikeCount = itemView.findViewById(R.id.btn_like);
+            rootView = itemView.findViewById(R.id.root_item_facts_feed_card);
+            fab = itemView.findViewById(R.id.fab);
 
-            root.setOnClickListener(this);
             tvSaved.setOnClickListener(this);
+
             btnShare.setOnClickListener(this);
+            rootView.setOnClickListener(this);
+            fab.setOnClickListener(this);
+
 
         }
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.tv_saved:
+            int id = v.getId();
+            switch (id) {
+                case R.id.btn_bookmark:
                     listener.onBookmarkButtonTap(facts.get(getAdapterPosition()));
                     break;
-                case R.id.root_item_facts_feed_card:
+                case R.id.fab:
                     int pos = getAdapterPosition();
                     listener.onCardTap(facts.get(pos), imageView);
                     break;
@@ -152,6 +185,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 
         void onShareButtonTap(Fact fact);
     }
+
 
 
 }

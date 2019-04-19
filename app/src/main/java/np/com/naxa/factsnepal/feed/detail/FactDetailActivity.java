@@ -37,6 +37,8 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fact_detail);
+        supportPostponeEnterTransition();
+
         setupToolbar();
         bindUI();
 
@@ -85,12 +87,16 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setupImageLoad(Fact fact) {
+
         ImageUtils.loadRemoteImage(this, fact.getImagePath())
                 .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark).dontTransform())
+
                 .fitCenter()
+                .dontAnimate()
                 .addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        supportStartPostponedEnterTransition();
                         return false;
                     }
 
@@ -127,6 +133,7 @@ public class FactDetailActivity extends BaseActivity implements View.OnClickList
                 FactsLocalSource.getINSTANCE().toggleBookMark(fact)
                         .subscribeOn(Schedulers.io())
                         .subscribe();
+                break;
         }
 
     }
