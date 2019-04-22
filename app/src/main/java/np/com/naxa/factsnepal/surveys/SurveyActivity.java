@@ -28,7 +28,7 @@ public class SurveyActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey);
-//        setupToolbar();
+        setupToolbar("Survey Activity");
         RecyclerView recyclerView = findViewById(R.id.rv_survey);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new SurveyAdapter(buildUi()));
@@ -68,12 +68,12 @@ public class SurveyActivity extends BaseActivity {
                     "           \"options\": [\n" +
                     "               {\n" +
                     "                   \"id\": 3,\n" +
-                    "                   \"question\": \"No\",\n" +
+                    "                   \"question\": \"Yes\",\n" +
                     "                   \"question_id\": 2\n" +
                     "               },\n" +
                     "               {\n" +
                     "                   \"id\": 4,\n" +
-                    "                   \"question\": \"New Party\",\n" +
+                    "                   \"question\": \"No\",\n" +
                     "                   \"question_id\": 2\n" +
                     "               }\n" +
                     "           ]\n" +
@@ -122,11 +122,14 @@ public class SurveyActivity extends BaseActivity {
 
 class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
     JSONArray surveyArray;
+    Context context ;
+    int arrayCounter = -1 ;
     public SurveyAdapter(JSONArray surveyArray) {
         this.surveyArray = surveyArray;
     }
 
     private LinearLayout convert(JSONObject jsonObject, Context context) {
+        this.context = context;
         try {
             JsonView.ViewParams params = JsonView.ViewParams.instanceFromJSON(jsonObject);
             JsonView jsonView = new JsonView(context);
@@ -140,7 +143,9 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
     @NonNull
     @Override
     public SurveyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new SurveyViewHolder(convert(surveyArray.optJSONObject(i), viewGroup.getContext()));
+        arrayCounter++;
+        Log.d("SurveyAdapter", "onCreateViewHolder: optJSON "+surveyArray.optJSONObject(arrayCounter)+" position : "+arrayCounter);
+        return new SurveyViewHolder(convert(surveyArray.optJSONObject(arrayCounter), viewGroup.getContext()));
     }
 
     @Override
@@ -150,13 +155,19 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
     @Override
     public int getItemCount() {
+        Log.d("SurveyRecycler", "getItemCount: "+surveyArray.length());
         return surveyArray.length();
     }
+
+
 }
+
+
 
 class SurveyViewHolder extends RecyclerView.ViewHolder {
     public SurveyViewHolder(View view) {
         super(view);
     }
+
 
 }
