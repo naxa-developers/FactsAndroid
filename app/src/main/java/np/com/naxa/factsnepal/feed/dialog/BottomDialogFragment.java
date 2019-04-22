@@ -1,35 +1,21 @@
 package np.com.naxa.factsnepal.feed.dialog;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.text.TextUtils;
-import android.util.Log;
-import android.util.Pair;
-import android.util.SparseArray;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-
-import com.facebook.login.LoginResult;
 
 import java.util.ArrayList;
 
 import np.com.naxa.factsnepal.R;
-import np.com.naxa.factsnepal.feed.Fact;
-import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 
 @SuppressLint("ValidFragment")
 public class BottomDialogFragment extends BottomSheetDialogFragment {
-    FeedListActivity feedListActivity = new FeedListActivity();
 
     public static BottomDialogFragment getInstance() {
         return new BottomDialogFragment();

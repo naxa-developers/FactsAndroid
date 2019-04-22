@@ -14,12 +14,12 @@ import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
 
-class FactsRemoteSource {
+public class FactsRemoteSource {
 
     private static FactsRemoteSource INSTANCE = null;
     private HashMap<String, String> categoriesIdsMap = new HashMap<>();
 
-    static FactsRemoteSource getINSTANCE() {
+    public static FactsRemoteSource getINSTANCE() {
         if (INSTANCE == null) {
             INSTANCE = new FactsRemoteSource();
         }
@@ -54,7 +54,7 @@ class FactsRemoteSource {
                 });
     }
 
-    Observable<List<Fact>> getAllFacts() {
+    public Observable<List<Fact>> getAllFacts() {
         return getFactsByCategoryId(null);
     }
 

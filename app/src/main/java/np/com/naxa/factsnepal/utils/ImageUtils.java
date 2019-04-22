@@ -1,6 +1,7 @@
 package np.com.naxa.factsnepal.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
@@ -8,7 +9,6 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
-import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.GlideApp;
 import np.com.naxa.factsnepal.common.GlideRequest;
 
@@ -24,8 +24,7 @@ public class ImageUtils {
     }
 
 
-
-    public static GlideRequest<Drawable> loadRemoteImage(Context context,@NonNull String path) {
+    public static GlideRequest<Drawable> loadRemoteImage(Context context, @NonNull String path) {
         return GlideApp.with(context)
                 .load(path.trim())
 //                .placeholder(R.color.colorPrimaryDark)
@@ -35,6 +34,14 @@ public class ImageUtils {
                 .skipMemoryCache(false)
                 .priority(Priority.LOW)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+    }
+
+
+    public static GlideRequest<Bitmap> loadAsBitmap(Context context, @NonNull String path){
+        return GlideApp.with(context)
+                .asBitmap()
+                .load(path)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
     }
 
 }
