@@ -115,15 +115,28 @@ public class SurveyActivity extends BaseActivity {
                     "           ]\n" +
                     "       },\n" +
                     "       {\n" +
-                    "           \"id\": 4,\n" +
+                    "           \"id\": 5,\n" +
                     "           \"question\": \"Rate out of five.\",\n" +
                     "           \"survey_id\": 7,\n" +
                     "           \"question_type\": \"rating\",\n" +
                     "           \"options\": [\n" +
                     "               {\n" +
-                    "                   \"id\": 5,\n" +
+                    "                   \"id\": 6,\n" +
                     "                   \"question\": \"5\",\n" +
-                    "                   \"question_id\": 4\n" +
+                    "                   \"question_id\": 5\n" +
+                    "               }"+
+                    "           ]\n" +
+                    "       },\n" +
+                    "       {\n" +
+                    "           \"id\": 7,\n" +
+                    "           \"question\": \"Full Name.\",\n" +
+                    "           \"survey_id\": 7,\n" +
+                    "           \"question_type\": \"edittext\",\n" +
+                    "           \"options\": [\n" +
+                    "               {\n" +
+                    "                   \"id\": 6,\n" +
+                    "                   \"question\": \"Please enter your name\",\n" +
+                    "                   \"question_id\": 7\n" +
                     "               }"+
                     "           ]\n" +
                     "       }\n" +

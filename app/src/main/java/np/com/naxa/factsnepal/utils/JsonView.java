@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -43,7 +44,7 @@ public class JsonView extends LinearLayout {
     }
 
     enum Type {
-        CHECKBOX, RADIO, RATING
+        CHECKBOX, RADIO, RATING, EDITTEXT
     }
 
     public static class ViewParams {
@@ -57,6 +58,7 @@ public class JsonView extends LinearLayout {
             put("checkbox", Type.CHECKBOX);
             put("radio", Type.RADIO);
             put("rating", Type.RATING);
+            put("edittext", Type.EDITTEXT);
         }};
 
         private ViewParams(String title, JSONArray options, Type type) {
@@ -199,6 +201,29 @@ public class JsonView extends LinearLayout {
         return textView;
     }
 
+    private synchronized LinearLayout getEditTextView() {
+        LinearLayout ll = new LinearLayout(getApplicationContext());
+        EditText editText;
+
+            Log.d("getText", "titleRes = " + params.titleStyleRes);
+            if (params.titleStyleRes != 0) {
+                editText = new EditText(getContext(), null, params.titleStyleRes);
+            } else {
+                editText = new EditText(getContext());
+            }
+        for (int i = 0; i < params.options.length(); i++) {
+            JSONObject option = params.options.optJSONObject(i);
+
+//        textView.setTextAppearance(params.titleStyleRes);
+            editText.setHint(Html.fromHtml(option.optString("question")));
+            editText.setTag(option.optString("id"));
+            editText.setTextColor(Color.parseColor("#212121"));
+            editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        }
+        ll.addView(editText);
+        return ll;
+    }
+
     private synchronized LinearLayout getRatingBar(){
         // first create a layout
         LinearLayout ll = new LinearLayout(getApplicationContext());
@@ -250,6 +275,9 @@ public class JsonView extends LinearLayout {
                             break;
                         case RATING:
                             optionGroup = getRatingBar();
+                            break;
+                        case EDITTEXT:
+                            optionGroup = getEditTextView();
                             break;
                     }
                     if (optionGroup != null) {
