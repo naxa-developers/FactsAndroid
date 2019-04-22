@@ -31,7 +31,7 @@ public class FactsRemoteSource {
         return INSTANCE;
     }
 
-    public Observable<List<Fact>> getFactsByCategoryId(ArrayList<Integer> categoryIds) {
+    public Observable<List<Fact>> getFactsByCategoryId(List<Integer> categoryIds) {
         return NetworkApiClient.getAPIClient().create(NetworkApiInterface.class)
                 .getFactsDetailsResponse(categoryIds)
                 .subscribeOn(Schedulers.io())
