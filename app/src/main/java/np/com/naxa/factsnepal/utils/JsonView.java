@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * TODO: create the ratingbar view, check style adding
@@ -196,6 +199,30 @@ public class JsonView extends LinearLayout {
         return textView;
     }
 
+    private synchronized LinearLayout getRatingBar(){
+        // first create a layout
+        LinearLayout ll = new LinearLayout(getApplicationContext());
+        for (int i = 0; i < params.options.length(); i++) {
+
+            JSONObject option = params.options.optJSONObject(i);
+
+
+// now you will have to set width and height
+        ll.setMinimumWidth(300);
+        ll.setMinimumHeight(100);
+// now init Rating bar
+        RatingBar ratingBar = new RatingBar(getApplicationContext());
+// now set num of stars
+//        ratingBar.setNumStars(option.optInt("max_rating"));
+        ratingBar.setNumStars(Integer.parseInt(option.optString("question")));
+        ratingBar.setTag(option.optString("id"));
+// adding ratingBar into the created layout
+        ll.addView(ratingBar);
+        }
+// get the current layout
+        return ll;
+    }
+
     void destroy() {
         if (handler != null && buildUi != null) {
             handler.removeCallbacks(buildUi);
@@ -222,6 +249,7 @@ public class JsonView extends LinearLayout {
                             optionGroup = getRadioGroupView();
                             break;
                         case RATING:
+                            optionGroup = getRatingBar();
                             break;
                     }
                     if (optionGroup != null) {

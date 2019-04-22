@@ -113,6 +113,19 @@ public class SurveyActivity extends BaseActivity {
                     "                   \"question_id\": 4\n" +
                     "               }\n" +
                     "           ]\n" +
+                    "       },\n" +
+                    "       {\n" +
+                    "           \"id\": 4,\n" +
+                    "           \"question\": \"Rate out of five.\",\n" +
+                    "           \"survey_id\": 7,\n" +
+                    "           \"question_type\": \"rating\",\n" +
+                    "           \"options\": [\n" +
+                    "               {\n" +
+                    "                   \"id\": 5,\n" +
+                    "                   \"question\": \"5\",\n" +
+                    "                   \"question_id\": 4\n" +
+                    "               }"+
+                    "           ]\n" +
                     "       }\n" +
                     "   ]";
             return new JSONArray(json);
@@ -134,6 +147,7 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
             JsonView.ViewParams params = JsonView.ViewParams.instanceFromJSON(jsonObject);
             JsonView jsonView = new JsonView(context);
             jsonView.init(params).create();
+
            return jsonView;
         }catch (Exception e){e.printStackTrace();
         return new LinearLayout(context);
