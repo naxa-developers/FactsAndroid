@@ -33,9 +33,10 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     }
 
     public void updateList(List<Fact> newList) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FactsDiffCallback(this.facts, newList));
-        facts.clear();
-        facts.addAll(newList);
+        ArrayList<Fact> oldList = this.facts;
+        this.facts = (ArrayList<Fact>) newList;
+
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FactsDiffCallback(oldList, newList));
         diffResult.dispatchUpdatesTo(this);
     }
 

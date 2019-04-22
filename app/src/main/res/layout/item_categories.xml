@@ -11,6 +11,7 @@
 
 
     <CheckBox
+        android:id="@+id/tv_category_title"
         android:text="@string/demo_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

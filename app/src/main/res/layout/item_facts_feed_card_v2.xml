@@ -10,25 +10,28 @@
     app:cardCornerRadius="4dp">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
         <ImageView
+
             android:id="@+id/iv_feed"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="300dp"
             app:layout_constraintBottom_toTopOf="@id/view"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.611"
-            tools:layout_editor_absoluteX="46dp" />
+             />
 
 
         <ImageView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/gradient_feed_image"
-            android:visibility="gone"
+
             app:layout_constraintBottom_toTopOf="@id/view"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,9 +48,9 @@
             android:text="@string/demo_fact"
             android:textColor="@color/white"
             android:textSize="24sp"
-            app:layout_constraintLeft_toLeftOf="@id/iv_feed"
-            app:layout_constraintRight_toRightOf="@id/iv_feed"
-            app:layout_constraintTop_toTopOf="@+id/iv_feed" />
+            app:layout_constraintLeft_toLeftOf="@id/wrapper"
+            app:layout_constraintRight_toRightOf="@id/wrapper"
+            app:layout_constraintTop_toTopOf="@+id/wrapper" />
 
 
         <TextView

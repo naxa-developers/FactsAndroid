@@ -85,4 +85,8 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
     public LiveData<Fact> getById(String id) {
         return factsDAO.getById(id);
     }
+
+    public LiveData<List<Fact>> getByIds(List<Integer> integers) {
+        return factsDAO.getByIds(integers);
+    }
 }

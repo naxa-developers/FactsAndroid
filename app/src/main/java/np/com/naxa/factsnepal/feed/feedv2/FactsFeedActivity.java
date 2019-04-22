@@ -2,6 +2,7 @@ package np.com.naxa.factsnepal.feed.feedv2;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,9 +29,12 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
@@ -43,6 +47,7 @@ import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
 import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
+import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.notification.NotificationCount;
@@ -51,7 +56,7 @@ import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 
-public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
+public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener, BottomDialogFragment.OnCategoriesSelectedListener {
 
     private View rootLayout;
     private FactsFeedAdapter adapter;
@@ -65,6 +70,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
     String colors[] = new String[]{"#571821", "#5C3219", "#103B31"};
     private Menu menu;
+    private LiveData<List<Fact>> factsLiveData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +80,11 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
         bindUI();
         setupRecyclerView();
-        FactsLocalSource.getINSTANCE().getAll()
-                .observe(this, facts -> {
-                    adapter.updateList(facts);
-                });
+        factsLiveData = FactsLocalSource.getINSTANCE().getAll();
+
+        factsLiveData.observe(this, facts -> {
+            adapter.updateList(facts);
+        });
 
         setUpToolbar();
         loadFacts();
@@ -268,7 +275,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
             case R.id.action_categories:
 
-                BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance();
+                BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance(this);
                 bottomSheetDialog.show(getSupportFragmentManager(), "Chips Dialog");
 
                 break;
@@ -302,20 +309,39 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 break;
             case R.id.backdrop_account:
                 ActivityUtil.openActivity(PreferencesActivity.class, this);
-
                 break;
             case R.id.backdrop_public_poll:
                 ActivityUtil.openActivity(PublicPollActivity.class, this);
                 break;
             case R.id.backdrop_bookmark:
                 ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
-
                 break;
             case R.id.backdrop_public_survey:
-                ActivityUtil.openActivity(SurveyCompanyListActivity
-                        .class, this);
-
+                ActivityUtil.openActivity(SurveyCompanyListActivity.class, this);
                 break;
         }
+    }
+
+    @Override
+    public void onCategoriesSelected(List<Category> categories) {
+        Observable.just(categories)
+                .flatMapIterable((Function<List<Category>, Iterable<Category>>) categories1 -> categories1)
+                .map(Category::getId)
+                .toList()
+                .subscribe(new DisposableSingleObserver<List<Integer>>() {
+                    @Override
+                    public void onSuccess(List<Integer> integers) {
+                        FactsRemoteSource.getINSTANCE().getFactsByCategoryId((ArrayList<Integer>) integers);
+                        factsLiveData = FactsLocalSource.getINSTANCE().getByIds(integers);
+                        factsLiveData.observe(FactsFeedActivity.this, facts -> {
+                            adapter.updateList(facts);
+                        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 }

@@ -19,4 +19,9 @@ public abstract class FactsDAO implements BaseDAO<Fact> {
 
     @Query("SELECT * FROM facts WHERE id=:id")
     public abstract LiveData<Fact> getById(String id);
+
+    @Query("SELECT * FROM facts WHERE catgoryId IN(:categoryIds)")
+    public abstract LiveData<List<Fact>> getByIds(List<Integer> categoryIds);
+
+
 }

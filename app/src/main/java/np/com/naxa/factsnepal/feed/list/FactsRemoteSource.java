@@ -1,5 +1,7 @@
 package np.com.naxa.factsnepal.feed.list;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,12 +9,15 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import np.com.naxa.factsnepal.FactsNepal;
+import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public class FactsRemoteSource {
 
@@ -26,7 +31,7 @@ public class FactsRemoteSource {
         return INSTANCE;
     }
 
-    private Observable<List<Fact>> getFactsByCategoryId(ArrayList<Integer> categoryIds) {
+    public Observable<List<Fact>> getFactsByCategoryId(ArrayList<Integer> categoryIds) {
         return NetworkApiClient.getAPIClient().create(NetworkApiInterface.class)
                 .getFactsDetailsResponse(categoryIds)
                 .subscribeOn(Schedulers.io())
@@ -56,6 +61,26 @@ public class FactsRemoteSource {
 
     public Observable<List<Fact>> getAllFacts() {
         return getFactsByCategoryId(null);
+    }
+
+    public Observable<List<Category>> getCategories() {
+        return NetworkApiClient.createCacheService(NetworkApiInterface.class)
+                .getFactsDetailsResponse(null)
+                .subscribeOn(Schedulers.io())
+                .flatMapIterable(new Function<List<FactsResponse>, Iterable<FactsResponse>>() {
+                    @Override
+                    public Iterable<FactsResponse> apply(List<FactsResponse> factsResponses) throws Exception {
+                        return factsResponses;
+                    }
+                })
+                .map(new Function<FactsResponse, List<Category>>() {
+                    @Override
+                    public List<Category> apply(FactsResponse factsResponse) throws Exception {
+                        SharedPreferenceUtils.getInstance(FactsNepal.getInstance()).setValue(Constant.SharedPrefKey.CATEGORIES, new Gson().toJson(factsResponse.getCategory()));
+                        return factsResponse.getCategory();
+                    }
+                });
+
     }
 
 }
