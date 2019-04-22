@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import java.util.List;
 
 import io.reactivex.observers.DisposableObserver;
+import np.com.naxa.factsnepal.common.NetworkUtils;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
@@ -26,7 +27,7 @@ public class FactsRepo {
     };
 
     public LiveData<List<Fact>> getAllFacts(boolean refreshCache) {
-        if (refreshCache) {
+        if (refreshCache && NetworkUtils.isConnected()) {
             FactsRemoteSource.getINSTANCE().getAllFacts()
                     .subscribe(new DisposableObserver<List<Fact>>() {
                         @Override
@@ -58,7 +59,7 @@ public class FactsRepo {
     public LiveData<List<Fact>> getByCategoryIds(List<Integer> categoryIds, boolean refreshCache) {
 
 
-        if (refreshCache) {
+        if (refreshCache && NetworkUtils.isConnected()) {
             FactsRemoteSource.getINSTANCE().getFactsByCategoryId(categoryIds)
                     .subscribe(new DisposableObserver<List<Fact>>() {
                         @Override
