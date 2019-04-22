@@ -47,6 +47,7 @@ import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
 import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
+import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
@@ -80,8 +81,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
         bindUI();
         setupRecyclerView();
-        factsLiveData = FactsLocalSource.getINSTANCE().getAll();
-
+        factsLiveData = FactsRepo.getINSTANCE().getAllFacts(true);
         factsLiveData.observe(this, facts -> {
             adapter.updateList(facts);
         });
@@ -332,7 +332,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                     @Override
                     public void onSuccess(List<Integer> integers) {
                         FactsRemoteSource.getINSTANCE().getFactsByCategoryId((ArrayList<Integer>) integers);
-                        factsLiveData = FactsLocalSource.getINSTANCE().getByIds(integers);
+                        factsLiveData = FactsRepo.getINSTANCE().getByCategoryIds(integers, true);
                         factsLiveData.observe(FactsFeedActivity.this, facts -> {
                             adapter.updateList(facts);
                         });

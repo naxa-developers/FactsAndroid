@@ -1,6 +1,7 @@
 package np.com.naxa.factsnepal.feed.dialog;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,14 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -27,7 +28,7 @@ import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
-import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
+import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
@@ -38,6 +39,8 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     private BaseRecyclerViewAdapter<Category, CategoryVH> adapter;
     private DisposableObserver<List<Category>> dis;
     private Gson gson;
+    Type typeToken = new TypeToken<List<Category>>() {
+    }.getType();
 
     public BottomDialogFragment(OnCategoriesSelectedListener listener) {
         this.listener = listener;
@@ -57,24 +60,14 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
 
         this.gson = new Gson();
 
-        dis = FactsRemoteSource.getINSTANCE()
-                .getCategories()
-
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<List<Category>>() {
+        FactsRepo.getINSTANCE().getFactsCategories(true)
+                .observe(this, new Observer<String>() {
                     @Override
-                    public void onNext(List<Category> categories) {
-                        setupListAdapter(categories);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
+                    public void onChanged(@Nullable String s) {
+                        if (s != null) {
+                            List<Category> list = gson.fromJson(s, typeToken);
+                            setupListAdapter(list);
+                        }
                     }
                 });
 
@@ -121,6 +114,10 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     }
 
     private void getSelectedItems() {
+        if (adapter == null) {
+            dismiss();
+            return;
+        }
         List<Category> data = adapter.getData();
         Single<List<Category>> observable = Observable.just(data)
                 .subscribeOn(Schedulers.io())

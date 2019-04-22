@@ -13,6 +13,8 @@ import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
+import np.com.naxa.factsnepal.feed.list.resource.FactCategoryLocalSource;
+import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.network.facts.Category;
@@ -73,12 +75,9 @@ public class FactsRemoteSource {
                         return factsResponses;
                     }
                 })
-                .map(new Function<FactsResponse, List<Category>>() {
-                    @Override
-                    public List<Category> apply(FactsResponse factsResponse) throws Exception {
-                        SharedPreferenceUtils.getInstance(FactsNepal.getInstance()).setValue(Constant.SharedPrefKey.CATEGORIES, new Gson().toJson(factsResponse.getCategory()));
-                        return factsResponse.getCategory();
-                    }
+                .map(factsResponse -> {
+                    FactCategoryLocalSource.getINSTANCE().saveCategories(new Gson().toJson(factsResponse.getCategory()));
+                    return factsResponse.getCategory();
                 });
 
     }

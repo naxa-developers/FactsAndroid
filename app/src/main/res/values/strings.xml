@@ -87,5 +87,6 @@
     <string name="dialog_action_dismiss">Cancel</string>
     <string name="msg_bookmared">Bookmarked</string>
     <string name="msg_not_bookmarked">Not Bookmarked</string>
+    <string name="msg_can_not_refresh_feed">Couldn\'t refresh feed</string>
 
 </resources>

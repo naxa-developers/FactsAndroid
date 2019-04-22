@@ -1,14 +1,19 @@
 package np.com.naxa.factsnepal.feed.list.resource;
 
 import android.arch.lifecycle.LiveData;
+import android.widget.Toast;
 
 import java.util.List;
 
 import io.reactivex.observers.DisposableObserver;
+import np.com.naxa.factsnepal.FactsNepal;
+import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.NetworkUtils;
+import np.com.naxa.factsnepal.common.livesharedpref.SharedPreferenceStringLiveData;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
+import np.com.naxa.factsnepal.network.facts.Category;
 
 public class FactsRepo {
 
@@ -21,10 +26,6 @@ public class FactsRepo {
         return INSTANCE;
     }
 
-    private Source[] sources = new Source[]{
-            RemoteSource.getINSTANCE(),
-            LocalSource.getINSTANCE(),
-    };
 
     public LiveData<List<Fact>> getAllFacts(boolean refreshCache) {
         if (refreshCache && NetworkUtils.isConnected()) {
@@ -37,7 +38,8 @@ public class FactsRepo {
 
                         @Override
                         public void onError(Throwable e) {
-
+                            e.printStackTrace();
+                            showMessage(FactsNepal.getInstance().getString(R.string.msg_can_not_refresh_feed));
                         }
 
                         @Override
@@ -49,11 +51,40 @@ public class FactsRepo {
         return FactsLocalSource.getINSTANCE().getAll();
     }
 
+    private void showMessage(String message) {
+        Toast.makeText(FactsNepal.getInstance(), message, Toast.LENGTH_SHORT).show();
+    }
+
     public LiveData<Fact> getById(String factId, boolean refreshCache) {
         if (refreshCache) {
             //not implemented
         }
         return FactsLocalSource.getINSTANCE().getById(factId);
+    }
+
+    public SharedPreferenceStringLiveData getFactsCategories(boolean refreshCache) {
+        if (refreshCache && NetworkUtils.isConnected()) {
+            FactsRemoteSource.getINSTANCE().getCategories().subscribe(new DisposableObserver<List<Category>>() {
+                @Override
+                public void onNext(List<Category> categories) {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    showMessage(FactsNepal.getInstance().getString(R.string.msg_can_not_refresh_feed));
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+        }
+
+        return FactCategoryLocalSource.getINSTANCE().getCategories();
+
     }
 
     public LiveData<List<Fact>> getByCategoryIds(List<Integer> categoryIds, boolean refreshCache) {
@@ -69,6 +100,8 @@ public class FactsRepo {
 
                         @Override
                         public void onError(Throwable e) {
+                            e.printStackTrace();
+                            showMessage(FactsNepal.getInstance().getString(R.string.msg_can_not_refresh_feed));
 
                         }
 
@@ -80,4 +113,7 @@ public class FactsRepo {
         }
         return FactsLocalSource.getINSTANCE().getByIds(categoryIds);
     }
+
+
+
 }
