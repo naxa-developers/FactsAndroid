@@ -2,6 +2,7 @@ package np.com.naxa.factsnepal.network;
 
 import android.content.Context;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.github.simonpercic.oklog3.BuildConfig;
 import com.github.simonpercic.oklog3.OkLogInterceptor;
 
@@ -32,7 +33,8 @@ public class NetworkApiClient {
 
         if (retrofit == null) {
             OkLogInterceptor okLogInterceptor = OkLogInterceptor.builder().build();
-            OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
+            OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder()
+                    .addNetworkInterceptor(new StethoInterceptor());
 
             Dispatcher dispatcher = new Dispatcher();
             dispatcher.setMaxRequests(3);
@@ -85,7 +87,6 @@ public class NetworkApiClient {
             }
 
         });
-
 
 
         return okHttpBuilder.build();

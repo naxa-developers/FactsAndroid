@@ -2,8 +2,6 @@ package np.com.naxa.factsnepal.common.livesharedpref;
 
 import android.content.SharedPreferences;
 
-import np.com.naxa.factsnepal.common.livesharedpref.LiveSharePref;
-
 public class SharedPreferenceStringLiveData extends LiveSharePref<String> {
 
 

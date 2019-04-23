@@ -39,7 +39,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     private BaseRecyclerViewAdapter<Category, CategoryVH> adapter;
     private DisposableObserver<List<Category>> dis;
     private Gson gson;
-    Type typeToken = new TypeToken<List<Category>>() {
+    private Type typeToken = new TypeToken<List<Category>>() {
     }.getType();
 
     public BottomDialogFragment(OnCategoriesSelectedListener listener) {
@@ -61,13 +61,10 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
         this.gson = new Gson();
 
         FactsRepo.getINSTANCE().getFactsCategories(true)
-                .observe(this, new Observer<String>() {
-                    @Override
-                    public void onChanged(@Nullable String s) {
-                        if (s != null) {
-                            List<Category> list = gson.fromJson(s, typeToken);
-                            setupListAdapter(list);
-                        }
+                .observe(this, s -> {
+                    if (s != null) {
+                        List<Category> list = gson.fromJson(s, typeToken);
+                        setupListAdapter(list);
                     }
                 });
 
@@ -84,7 +81,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     private void setupListAdapter(List<Category> list) {
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(requireActivity(), R.dimen.margin_small);
-        recyclerView.addItemDecoration(itemDecoration);
+
         adapter = new BaseRecyclerViewAdapter<Category, CategoryVH>(list, R.layout.item_categories) {
             @Override
             public void viewBinded(CategoryVH categoryVH, Category category, int position) {
@@ -105,11 +102,8 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_close_dialog_category_chips:
-                getSelectedItems();
-
-                break;
+        if (v.getId() == R.id.btn_close_dialog_category_chips) {
+            getSelectedItems();
         }
     }
 

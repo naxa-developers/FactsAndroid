@@ -9,11 +9,13 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -72,6 +75,13 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     String colors[] = new String[]{"#571821", "#5C3219", "#103B31"};
     private Menu menu;
     private LiveData<List<Fact>> factsLiveData;
+    private Handler uiFadeHanlder = new Handler();
+    private Runnable uiFadeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            findViewById(R.id.layout_progress).setVisibility(View.GONE);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +93,20 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         setupRecyclerView();
         factsLiveData = FactsRepo.getINSTANCE().getAllFacts(true);
         factsLiveData.observe(this, facts -> {
+            fadeProgress();
             adapter.updateList(facts);
         });
 
         setUpToolbar();
         loadFacts();
 
+    }
+
+    private void fadeProgress() {
+        runOnUiThread(() -> {
+            findViewById(R.id.layout_progress).setVisibility(View.VISIBLE);
+            uiFadeHanlder.postDelayed(uiFadeRunnable, 3000);
+        });
     }
 
     @Override
@@ -169,7 +187,10 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
             recyclerViewFeed.addItemDecoration(itemDecoration);
         }
 
-
+        RecyclerView.ItemAnimator animator = recyclerViewFeed.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
         recyclerViewFeed.setAdapter(adapter);
 
 
@@ -324,6 +345,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
     @Override
     public void onCategoriesSelected(List<Category> categories) {
+        fadeProgress();
         Observable.just(categories)
                 .flatMapIterable((Function<List<Category>, Iterable<Category>>) categories1 -> categories1)
                 .map(Category::getId)
@@ -331,9 +353,9 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 .subscribe(new DisposableSingleObserver<List<Integer>>() {
                     @Override
                     public void onSuccess(List<Integer> integers) {
-                        FactsRemoteSource.getINSTANCE().getFactsByCategoryId((ArrayList<Integer>) integers);
                         factsLiveData = FactsRepo.getINSTANCE().getByCategoryIds(integers, true);
                         factsLiveData.observe(FactsFeedActivity.this, facts -> {
+
                             adapter.updateList(facts);
                         });
                     }
