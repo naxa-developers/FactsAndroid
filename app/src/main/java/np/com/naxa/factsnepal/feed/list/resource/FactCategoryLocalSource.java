@@ -2,11 +2,15 @@ package np.com.naxa.factsnepal.feed.list.resource;
 
 import android.content.Context;
 
+import java.util.List;
+
 import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.livesharedpref.SharedPreferenceStringLiveData;
+import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+@Deprecated
 public class FactCategoryLocalSource {
     private static FactCategoryLocalSource INSTANCE;
     private final Context context;

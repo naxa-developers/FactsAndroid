@@ -229,7 +229,7 @@ public class FeedListActivity extends BaseActivity
 
                         Chip chip = new Chip(chipGroup.getContext());
                         chip.setChipText(category.getTitle());
-                        chip.setId(category.getId());
+//                        chip.setId(category.getId());
                         Log.d(TAG, "onNext: id" + category.getId());
 //                         chip.setCloseIconEnabled(true);
 //            chip.setCloseIconResource(R.drawable.your_icon);

@@ -105,7 +105,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     private void fadeProgress() {
         runOnUiThread(() -> {
             findViewById(R.id.layout_progress).setVisibility(View.VISIBLE);
-            uiFadeHanlder.postDelayed(uiFadeRunnable, 3000);
+            uiFadeHanlder.postDelayed(uiFadeRunnable, 1000);
         });
     }
 
@@ -344,26 +344,14 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     }
 
     @Override
-    public void onCategoriesSelected(List<Category> categories) {
+    public void onCategoriesSelected(List<Integer> categories) {
         fadeProgress();
-        Observable.just(categories)
-                .flatMapIterable((Function<List<Category>, Iterable<Category>>) categories1 -> categories1)
-                .map(Category::getId)
-                .toList()
-                .subscribe(new DisposableSingleObserver<List<Integer>>() {
-                    @Override
-                    public void onSuccess(List<Integer> integers) {
-                        factsLiveData = FactsRepo.getINSTANCE().getByCategoryIds(integers, true);
-                        factsLiveData.observe(FactsFeedActivity.this, facts -> {
 
-                            adapter.updateList(facts);
-                        });
-                    }
+        factsLiveData = FactsRepo.getINSTANCE().getByCategoryIds(categories, true);
+        factsLiveData.observe(FactsFeedActivity.this, facts -> {
 
-                    @Override
-                    public void onError(Throwable e) {
+            adapter.updateList(facts);
+        });
 
-                    }
-                });
     }
 }

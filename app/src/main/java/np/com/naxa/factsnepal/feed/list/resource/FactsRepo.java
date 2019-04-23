@@ -5,11 +5,11 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import io.reactivex.Single;
 import io.reactivex.observers.DisposableObserver;
 import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.NetworkUtils;
-import np.com.naxa.factsnepal.common.livesharedpref.SharedPreferenceStringLiveData;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
@@ -62,7 +62,7 @@ public class FactsRepo {
         return FactsLocalSource.getINSTANCE().getById(factId);
     }
 
-    public SharedPreferenceStringLiveData getFactsCategories(boolean refreshCache) {
+    public Single<List<Fact>> getFactsCategories(boolean refreshCache) {
         if (refreshCache && NetworkUtils.isConnected()) {
             FactsRemoteSource.getINSTANCE().getCategories().subscribe(new DisposableObserver<List<Category>>() {
                 @Override
@@ -83,7 +83,7 @@ public class FactsRepo {
             });
         }
 
-        return FactCategoryLocalSource.getINSTANCE().getCategories();
+        return FactsLocalSource.getINSTANCE().getAllCategories();
 
     }
 

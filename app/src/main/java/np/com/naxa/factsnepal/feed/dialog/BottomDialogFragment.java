@@ -16,9 +16,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
@@ -28,8 +30,11 @@ import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
+import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
 import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
 import np.com.naxa.factsnepal.network.facts.Category;
+import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 @SuppressLint("ValidFragment")
@@ -59,12 +64,39 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
         bindUI(view);
 
         this.gson = new Gson();
+        List<Category> categories = new ArrayList<>();
+
 
         FactsRepo.getINSTANCE().getFactsCategories(true)
-                .observe(this, s -> {
-                    if (s != null) {
-                        List<Category> list = gson.fromJson(s, typeToken);
-                        setupListAdapter(list);
+                .subscribeOn(Schedulers.io())
+                .map(new Function<List<Fact>, List<Category>>() {
+                    @Override
+                    public List<Category> apply(List<Fact> facts) throws Exception {
+                        categories.clear();
+                        String list = SharedPreferenceUtils.getInstance(getContext()).getStringValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, "");
+                        gson.fromJson(list, new TypeToken<List<Integer>>() {
+                        }.getType());
+
+                        for (Fact fact : facts) {
+                            Category category = new Category();
+                            category.setId(fact.getCatgoryId());
+                            category.setTitle(fact.getCategoryName());
+                            category.setSelected(list.contains(fact.getCatgoryId()));
+                            categories.add(category);
+                        }
+
+                        return categories;
+                    }
+                })
+                .subscribe(new DisposableSingleObserver<List<Category>>() {
+                    @Override
+                    public void onSuccess(List<Category> categories) {
+                        setupListAdapter(categories);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
 
@@ -113,17 +145,23 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
             return;
         }
         List<Category> data = adapter.getData();
-        Single<List<Category>> observable = Observable.just(data)
+        Single<List<Integer>> observable = Observable.just(data)
                 .subscribeOn(Schedulers.io())
                 .flatMapIterable((Function<List<Category>, Iterable<Category>>) categories -> categories)
                 .filter(Category::isSelected)
+                .map(new Function<Category, Integer>() {
+                    @Override
+                    public Integer apply(Category category) throws Exception {
+                        return Integer.valueOf(category.getId());
+                    }
+                })
                 .toList();
 
-        observable.subscribe(new DisposableSingleObserver<List<Category>>() {
+        observable.subscribe(new DisposableSingleObserver<List<Integer>>() {
             @Override
-            public void onSuccess(List<Category> categories) {
-                if (listener != null) listener.onCategoriesSelected(categories);
-                SharedPreferenceUtils.getInstance(getContext()).setValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, gson.toJson(categories));
+            public void onSuccess(List<Integer> selectedCategoriesIds) {
+                if (listener != null) listener.onCategoriesSelected(selectedCategoriesIds);
+                SharedPreferenceUtils.getInstance(getContext()).setValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, gson.toJson(selectedCategoriesIds));
                 dismiss();
             }
 
@@ -135,7 +173,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     }
 
     public interface OnCategoriesSelectedListener {
-        void onCategoriesSelected(List<Category> categories);
+        void onCategoriesSelected(List<Integer> categories);
     }
 }
 

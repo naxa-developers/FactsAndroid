@@ -3,17 +3,17 @@ package np.com.naxa.factsnepal.network.facts;
 public class Category {
     private boolean isSelected;
 
-    private int id;
+    private String id;
 
     private String title;
 
     private String slug;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
