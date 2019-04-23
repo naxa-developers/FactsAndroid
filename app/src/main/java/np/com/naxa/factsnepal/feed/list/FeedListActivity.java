@@ -199,7 +199,7 @@ public class FeedListActivity extends BaseActivity
         chipGroup = findViewById(R.id.chipgroup);
         findViewById(R.id.btn_add_more_chips)
                 .setOnClickListener(v -> {
-                    BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance(null);
+                    BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance();
                     bottomSheetDialog.show(getSupportFragmentManager(), "Chips Dialog");
                 });
     }

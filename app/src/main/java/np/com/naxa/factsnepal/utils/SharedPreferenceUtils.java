@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class SharedPreferenceUtils {
     private static SharedPreferenceUtils mSharedPreferenceUtils;
@@ -89,6 +92,14 @@ public class SharedPreferenceUtils {
     public void setValue(String key, boolean value) {
         mSharedPreferencesEditor.putBoolean(key, value);
         mSharedPreferencesEditor.commit();
+    }
+
+    public void setSetValue(String key, Set<String> set) {
+        mSharedPreferencesEditor.putStringSet(key, set).commit();
+    }
+
+    public Set<String> getSetValue(String key) {
+       return mSharedPreferences.getStringSet(key, new HashSet<>());
     }
 
     /**

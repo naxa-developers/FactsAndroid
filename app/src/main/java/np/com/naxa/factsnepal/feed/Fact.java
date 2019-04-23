@@ -1,6 +1,7 @@
 package np.com.naxa.factsnepal.feed;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.util.Pair;
@@ -50,6 +51,8 @@ public class Fact implements Serializable {
     @SerializedName("short_desc")
     private String shortDescription;
 
+    @Ignore
+    private boolean categorySelected;
 
     private boolean isBookmarked;
 
@@ -151,6 +154,14 @@ public class Fact implements Serializable {
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
+    }
+
+    public boolean isCategorySelected () {
+        return this.categorySelected;
+    }
+
+    public void setCategorySelected(boolean categorySelected) {
+        this.categorySelected = categorySelected;
     }
 
     @Override
