@@ -33,9 +33,10 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     }
 
     public void updateList(List<Fact> newList) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FactsDiffCallback(this.facts, newList));
-        facts.clear();
-        facts.addAll(newList);
+        ArrayList<Fact> oldList = this.facts;
+        this.facts = (ArrayList<Fact>) newList;
+
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FactsDiffCallback(oldList, newList));
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -91,12 +92,12 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 //                                viewHolder.imageView.setBackgroundColor(bgColor);
 //                            }
 //                            return false;
-//                        }
+//                        }`
 //                    })
                     .into(viewHolder.imageView);
 
 
-            viewHolder.tvTitle.setText(fact.getTitle());
+            viewHolder.tvTitle.setText(fact.getTitle().trim());
             viewHolder.tvCategory.setText(fact.getCategoryName());
             viewHolder.tvSaved.setChecked(fact.isBookmarked());
             viewHolder.tvLikeCount.setText(fact.getLikeCount());

@@ -1,5 +1,7 @@
 package np.com.naxa.factsnepal.feed.list;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +28,7 @@ public class FactsRemoteSource {
         return INSTANCE;
     }
 
-    private Observable<List<Fact>> getFactsByCategoryId(ArrayList<Integer> categoryIds) {
+    public Observable<List<Fact>> getFactsByCategoryId(List<Integer> categoryIds) {
         return NetworkApiClient.getAPIClient().create(NetworkApiInterface.class)
                 .getFactsDetailsResponse(categoryIds)
                 .subscribeOn(Schedulers.io())
@@ -56,6 +58,20 @@ public class FactsRemoteSource {
 
     public Observable<List<Fact>> getAllFacts() {
         return getFactsByCategoryId(null);
+    }
+
+    public Observable<List<Category>> getCategories() {
+        return NetworkApiClient.createCacheService(NetworkApiInterface.class)
+                .getFactsDetailsResponse(null)
+                .subscribeOn(Schedulers.io())
+                .flatMapIterable(new Function<List<FactsResponse>, Iterable<FactsResponse>>() {
+                    @Override
+                    public Iterable<FactsResponse> apply(List<FactsResponse> factsResponses) throws Exception {
+                        return factsResponses;
+                    }
+                })
+                .map(FactsResponse::getCategory);
+
     }
 
 }

@@ -26,7 +26,7 @@ import retrofit2.http.Path;
 public interface NetworkApiInterface {
     @POST(UrlConstant.FETCH_CONFIG_URL)
     @FormUrlEncoded
-    Observable<List<FactsResponse>> getFactsDetailsResponse(@Field("category")ArrayList<Integer> categories);
+    Observable<List<FactsResponse>> getFactsDetailsResponse(@Field("category")List<Integer> categories);
 
     @Headers("Content-Type: application/json; charset=utf-8")
     @POST(UrlConstant.POST_USER_DETAILS_URL)

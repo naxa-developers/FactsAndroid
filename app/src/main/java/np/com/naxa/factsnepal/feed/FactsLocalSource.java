@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.database.FactsDAO;
 import np.com.naxa.factsnepal.database.FactsNepalDatabase;
@@ -84,5 +85,13 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
 
     public LiveData<Fact> getById(String id) {
         return factsDAO.getById(id);
+    }
+
+    public LiveData<List<Fact>> getByIds(List<Integer> integers) {
+        return factsDAO.getByIds(integers);
+    }
+
+    public Single<List<Fact>> getAllCategories(){
+        return factsDAO.getAllCategories();
     }
 }

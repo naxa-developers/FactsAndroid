@@ -2,17 +2,20 @@ package np.com.naxa.factsnepal.feed.feedv2;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -27,10 +30,14 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
@@ -43,6 +50,8 @@ import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
 import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
+import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
+import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.notification.NotificationCount;
@@ -51,7 +60,7 @@ import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 
-public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
+public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener, BottomDialogFragment.OnCategoriesSelectedListener {
 
     private View rootLayout;
     private FactsFeedAdapter adapter;
@@ -65,6 +74,14 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
     String colors[] = new String[]{"#571821", "#5C3219", "#103B31"};
     private Menu menu;
+    private LiveData<List<Fact>> factsLiveData;
+    private Handler uiFadeHanlder = new Handler();
+    private Runnable uiFadeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            findViewById(R.id.layout_progress).setVisibility(View.GONE);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,14 +91,22 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
         bindUI();
         setupRecyclerView();
-        FactsLocalSource.getINSTANCE().getAll()
-                .observe(this, facts -> {
-                    adapter.updateList(facts);
-                });
+        factsLiveData = FactsRepo.getINSTANCE().getAllFacts(true);
+        factsLiveData.observe(this, facts -> {
+            fadeProgress();
+            adapter.updateList(facts);
+        });
 
         setUpToolbar();
         loadFacts();
 
+    }
+
+    private void fadeProgress() {
+        runOnUiThread(() -> {
+            findViewById(R.id.layout_progress).setVisibility(View.VISIBLE);
+            uiFadeHanlder.postDelayed(uiFadeRunnable, 1000);
+        });
     }
 
     @Override
@@ -162,7 +187,10 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
             recyclerViewFeed.addItemDecoration(itemDecoration);
         }
 
-
+        RecyclerView.ItemAnimator animator = recyclerViewFeed.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
         recyclerViewFeed.setAdapter(adapter);
 
 
@@ -268,7 +296,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
             case R.id.action_categories:
 
-                BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance();
+                BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance(this);
                 bottomSheetDialog.show(getSupportFragmentManager(), "Chips Dialog");
 
                 break;
@@ -302,20 +330,27 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 break;
             case R.id.backdrop_account:
                 ActivityUtil.openActivity(PreferencesActivity.class, this);
-
                 break;
             case R.id.backdrop_public_poll:
                 ActivityUtil.openActivity(PublicPollActivity.class, this);
                 break;
             case R.id.backdrop_bookmark:
                 ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
-
                 break;
             case R.id.backdrop_public_survey:
-                ActivityUtil.openActivity(SurveyCompanyListActivity
-                        .class, this);
-
+                ActivityUtil.openActivity(SurveyCompanyListActivity.class, this);
                 break;
         }
+    }
+
+    @Override
+    public void onCategoriesSelected(List<Integer> categories) {
+        fadeProgress();
+
+        factsLiveData = FactsRepo.getINSTANCE().getByCategoryIds(categories, true);
+        factsLiveData.observe(FactsFeedActivity.this, facts -> {
+            adapter.updateList(facts);
+        });
+
     }
 }

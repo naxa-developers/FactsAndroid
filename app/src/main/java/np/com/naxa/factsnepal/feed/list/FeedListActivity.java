@@ -193,22 +193,13 @@ public class FeedListActivity extends BaseActivity
 
     }
 
-    public void listenChipsStatus() {
 
-        BottomDialogFragment.getSelectedCategories(new BottomDialogFragment.CategorySelectedListener() {
-            @Override
-            public void onClick(ArrayList<Integer> categoriesList) {
-                Log.d(TAG, "onClick: chip selected" + categoriesList.size());
-
-            }
-        });
-    }
 
     private void initChips() {
         chipGroup = findViewById(R.id.chipgroup);
         findViewById(R.id.btn_add_more_chips)
                 .setOnClickListener(v -> {
-                    BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance();
+                    BottomDialogFragment bottomSheetDialog = BottomDialogFragment.getInstance(null);
                     bottomSheetDialog.show(getSupportFragmentManager(), "Chips Dialog");
                 });
     }
@@ -238,7 +229,7 @@ public class FeedListActivity extends BaseActivity
 
                         Chip chip = new Chip(chipGroup.getContext());
                         chip.setChipText(category.getTitle());
-                        chip.setId(category.getId());
+//                        chip.setId(category.getId());
                         Log.d(TAG, "onNext: id" + category.getId());
 //                         chip.setCloseIconEnabled(true);
 //            chip.setCloseIconResource(R.drawable.your_icon);
