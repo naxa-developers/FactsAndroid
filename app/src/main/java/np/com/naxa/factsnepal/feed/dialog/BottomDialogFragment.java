@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -74,14 +75,15 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
                     public List<Category> apply(List<Fact> facts) throws Exception {
                         categories.clear();
                         String list = SharedPreferenceUtils.getInstance(getContext()).getStringValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, "");
-                        gson.fromJson(list, new TypeToken<List<Integer>>() {
+                        gson.fromJson(list, new TypeToken<List<String>>() {
                         }.getType());
 
                         for (Fact fact : facts) {
                             Category category = new Category();
                             category.setId(fact.getCatgoryId());
                             category.setTitle(fact.getCategoryName());
-                            category.setSelected(list.contains(fact.getCatgoryId()));
+                            category.setSelected(list != null && list.contains(fact.getCatgoryId()));
+
                             categories.add(category);
                         }
 
@@ -96,7 +98,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
                 });
 

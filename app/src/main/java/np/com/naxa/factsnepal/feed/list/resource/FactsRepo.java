@@ -64,23 +64,24 @@ public class FactsRepo {
 
     public Single<List<Fact>> getFactsCategories(boolean refreshCache) {
         if (refreshCache && NetworkUtils.isConnected()) {
-            FactsRemoteSource.getINSTANCE().getCategories().subscribe(new DisposableObserver<List<Category>>() {
-                @Override
-                public void onNext(List<Category> categories) {
+            FactsRemoteSource.getINSTANCE().getCategories()
+                    .subscribe(new DisposableObserver<List<Category>>() {
+                        @Override
+                        public void onNext(List<Category> categories) {
 
-                }
+                        }
 
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                    showMessage(FactsNepal.getInstance().getString(R.string.msg_can_not_refresh_feed));
-                }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            showMessage(FactsNepal.getInstance().getString(R.string.msg_can_not_refresh_feed));
+                        }
 
-                @Override
-                public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                }
-            });
+                        }
+                    });
         }
 
         return FactsLocalSource.getINSTANCE().getAllCategories();
@@ -113,7 +114,6 @@ public class FactsRepo {
         }
         return FactsLocalSource.getINSTANCE().getByIds(categoryIds);
     }
-
 
 
 }

@@ -9,17 +9,12 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import np.com.naxa.factsnepal.FactsNepal;
-import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
-import np.com.naxa.factsnepal.feed.list.resource.FactCategoryLocalSource;
-import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
-import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public class FactsRemoteSource {
 
@@ -75,10 +70,7 @@ public class FactsRemoteSource {
                         return factsResponses;
                     }
                 })
-                .map(factsResponse -> {
-                    FactCategoryLocalSource.getINSTANCE().saveCategories(new Gson().toJson(factsResponse.getCategory()));
-                    return factsResponse.getCategory();
-                });
+                .map(FactsResponse::getCategory);
 
     }
 
