@@ -349,7 +349,6 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
         factsLiveData = FactsRepo.getINSTANCE().getByCategoryIds(categories, true);
         factsLiveData.observe(FactsFeedActivity.this, facts -> {
-
             adapter.updateList(facts);
         });
 

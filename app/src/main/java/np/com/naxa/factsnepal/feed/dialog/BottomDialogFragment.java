@@ -1,7 +1,6 @@
 package np.com.naxa.factsnepal.feed.dialog;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,11 +18,10 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -32,10 +31,8 @@ import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
 import np.com.naxa.factsnepal.feed.Fact;
-import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
 import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
 import np.com.naxa.factsnepal.network.facts.Category;
-import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 @SuppressLint("ValidFragment")
@@ -47,6 +44,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     private Gson gson;
     private Type typeToken = new TypeToken<List<Category>>() {
     }.getType();
+    private ArrayList<Category> categories;
 
     public BottomDialogFragment(OnCategoriesSelectedListener listener) {
         this.listener = listener;
@@ -57,6 +55,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     }
 
     private RecyclerView recyclerView;
+    private CheckBox selectAllCheckbox;
 
     @Nullable
     @Override
@@ -65,31 +64,12 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
         bindUI(view);
 
         this.gson = new Gson();
-        List<Category> categories = new ArrayList<>();
 
 
         FactsRepo.getINSTANCE().getFactsCategories(true)
                 .subscribeOn(Schedulers.io())
-                .map(new Function<List<Fact>, List<Category>>() {
-                    @Override
-                    public List<Category> apply(List<Fact> facts) throws Exception {
-                        categories.clear();
-                        String list = SharedPreferenceUtils.getInstance(getContext()).getStringValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, "");
-                        gson.fromJson(list, new TypeToken<List<String>>() {
-                        }.getType());
-
-                        for (Fact fact : facts) {
-                            Category category = new Category();
-                            category.setId(fact.getCatgoryId());
-                            category.setTitle(fact.getCategoryName());
-                            category.setSelected(list != null && list.contains(fact.getCatgoryId()));
-
-                            categories.add(category);
-                        }
-
-                        return categories;
-                    }
-                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(this::mapFactsToCategories)
                 .subscribe(new DisposableSingleObserver<List<Category>>() {
                     @Override
                     public void onSuccess(List<Category> categories) {
@@ -106,9 +86,29 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
         return view;
     }
 
+    private List<Category> mapFactsToCategories(List<Fact> facts) {
+        categories = new ArrayList<>();
+        String list = SharedPreferenceUtils.getInstance(getContext()).getStringValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, "");
+        gson.fromJson(list, new TypeToken<List<String>>() {
+        }.getType());
+
+        for (Fact fact : facts) {
+            Category category = new Category();
+            category.setId(fact.getCatgoryId());
+            category.setTitle(fact.getCategoryName());
+            category.setSelected(list != null && list.contains(fact.getCatgoryId()));
+
+            categories.add(category);
+        }
+
+        return categories;
+    }
+
     private void bindUI(View view) {
         recyclerView = view.findViewById(R.id.rv_categories_chips);
         View btnClose = view.findViewById(R.id.btn_close_dialog_category_chips);
+        selectAllCheckbox = view.findViewById(R.id.checkbox_dialog_category_chips);
+        selectAllCheckbox.setOnClickListener(this);
         btnClose.setOnClickListener(this);
     }
 
@@ -136,8 +136,16 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_close_dialog_category_chips) {
-            getSelectedItems();
+        switch (v.getId()) {
+            case R.id.checkbox_dialog_category_chips:
+                for (Category category : categories) {
+                    category.setSelected(!category.isSelected());
+                }
+                adapter.notifyDataSetChanged();
+                break;
+            case R.id.btn_close_dialog_category_chips:
+                getSelectedItems();
+                break;
         }
     }
 
