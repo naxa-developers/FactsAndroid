@@ -66,6 +66,8 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+
 @Deprecated
 public class FeedListActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
@@ -393,7 +395,7 @@ public class FeedListActivity extends BaseActivity
                 BaseLogout baseLogout = new BaseLogout(FeedListActivity.this) {
                     @Override
                     public void onLogoutSuccess() {
-                        sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false);
+                        sharedPreferenceUtils.setValue(KEY_IS_USER_LOGGED_IN, false);
                         sharedPreferenceUtils.clearAll();
                         ActivityUtil.openActivity(LoginActivity.class, FeedListActivity.this);
 

@@ -64,7 +64,12 @@ public class SurveyFormListActivity extends BaseActivity {
                 .subscribe(new DisposableObserver<SurveyCompanyDetails>() {
                     @Override
                     public void onNext(SurveyCompanyDetails surveyCompanyDetails) {
-                        surevyFormsList = surveyCompanyDetails.getSurevyForms();
+                        
+                        for(SurevyForms surevyForms : surveyCompanyDetails.getSurevyForms()){
+                            if(surevyForms.getSurveyCompanyId() ==  surveyCompany.getId()){
+                                surevyFormsList.add(surevyForms);
+                            }
+                        }
                     }
 
                     @Override

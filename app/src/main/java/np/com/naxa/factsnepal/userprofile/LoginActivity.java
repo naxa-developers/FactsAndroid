@@ -17,6 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.common.BaseLoginActivity;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 
@@ -24,9 +25,10 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import np.com.naxa.factsnepal.utils.Utils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+
 public class LoginActivity extends BaseLoginActivity {
     private static final String TAG = "LoginActivity";
-    public static final String KEY_IS_USER_LOGGED_IN = "is_user_logged_in";
 
     SharedPreferenceUtils sharedPreferenceUtils ;
     Gson gson = new Gson();
@@ -136,7 +138,7 @@ public class LoginActivity extends BaseLoginActivity {
                             String loginResponseInString = gson.toJson(userLoginResponse1);
                             Log.d(TAG, "onNext: "+loginResponseInString);
                             sharedPreferenceUtils.setValue(LoginActivity.KEY_USER_LOGGED_IN_DETAILS, loginResponseInString);
-                            sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN , true);
+                            sharedPreferenceUtils.setValue(KEY_IS_USER_LOGGED_IN , true);
                         }
                     }
 
@@ -147,7 +149,7 @@ public class LoginActivity extends BaseLoginActivity {
 
                     @Override
                     public void onComplete() {
-                        ActivityUtil.openActivity(FeedListActivity.class, LoginActivity.this, null, false);
+                        ActivityUtil.openActivity(FactsFeedActivity.class, LoginActivity.this, null, false);
 
                     }
                 });
