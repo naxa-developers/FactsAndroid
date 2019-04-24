@@ -11,6 +11,8 @@ public class Constant {
         public static final String SELECTED_CATEGORIES = "selected_categories";
         public static final String KEY_IS_USER_LOGGED_IN = "is_user_logged_in";
         public static final String IS_APP_FIRST_TIME_LAUNCH = "is_app_first_time_launch";
+        public static final String KEY_NOTIFICATION_LIST = "notification_list";
+
 
 
     }
