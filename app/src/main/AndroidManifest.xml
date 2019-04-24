@@ -23,7 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".walkthroughscreen.WalkThroughSliderActivity"></activity>
+        <activity
+            android:noHistory="true"
+            android:name=".walkthroughscreen.WalkThroughSliderActivity"></activity>
         <activity
             android:name=".feed.feedv2.FactsFeedActivity"
             android:exported="true" />
