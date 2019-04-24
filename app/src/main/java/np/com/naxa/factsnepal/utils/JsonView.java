@@ -195,7 +195,7 @@ public class JsonView extends LinearLayout {
             textView= new TextView(getContext());
         }
 //        textView.setTextAppearance(params.titleStyleRes);
-        textView.setText(Html.fromHtml(text));
+        textView.setText("\t"+Html.fromHtml(text));
         textView.setTextColor(Color.parseColor("#212121"));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         return textView;
@@ -204,7 +204,6 @@ public class JsonView extends LinearLayout {
     private synchronized LinearLayout getEditTextView() {
         LinearLayout ll = new LinearLayout(getApplicationContext());
         EditText editText;
-
             Log.d("getText", "titleRes = " + params.titleStyleRes);
             if (params.titleStyleRes != 0) {
                 editText = new EditText(getContext(), null, params.titleStyleRes);

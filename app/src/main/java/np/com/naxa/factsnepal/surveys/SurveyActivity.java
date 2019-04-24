@@ -1,9 +1,11 @@
 package np.com.naxa.factsnepal.surveys;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,8 +18,10 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
 import np.com.naxa.factsnepal.utils.JsonView;
 
@@ -154,16 +158,16 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
         this.surveyArray = surveyArray;
     }
 
-    private LinearLayout convert(JSONObject jsonObject, Context context) {
+    private CardView convert(JSONObject jsonObject, Context context) {
         this.context = context;
         try {
             JsonView.ViewParams params = JsonView.ViewParams.instanceFromJSON(jsonObject);
             JsonView jsonView = new JsonView(context);
             jsonView.init(params).create();
 
-           return jsonView;
+           return wrapByCardView(jsonView);
         }catch (Exception e){e.printStackTrace();
-        return new LinearLayout(context);
+        return wrapByCardView(new LinearLayout(context));
         }
     }
 
@@ -186,6 +190,38 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
         return surveyArray.length();
     }
 
+    private CardView wrapByCardView(LinearLayout linearLayout){
+        CardView card = new CardView(FactsNepal.getInstance());
+
+        // Set the CardView layoutParams
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(16, 16, 16, 16);
+        card.setLayoutParams(params);
+
+        // Set CardView corner radius
+        card.setRadius(9);
+
+        // Set cardView content padding
+        card.setContentPadding(15, 15, 15, 15);
+
+        // Set a background color for CardView
+        card.setCardBackgroundColor(FactsNepal.getInstance().getResources().getColor(R.color.silver_grey_windows_background));
+
+        // Set the CardView maximum elevation
+        card.setMaxCardElevation(15);
+
+        // Set CardView elevation
+        card.setCardElevation(9);
+
+
+        // Put the TextView in CardView
+        card.addView(linearLayout);
+
+        return card;
+    }
 
 }
 
