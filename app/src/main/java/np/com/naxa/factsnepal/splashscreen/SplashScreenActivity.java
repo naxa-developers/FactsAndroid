@@ -11,6 +11,9 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import np.com.naxa.factsnepal.walkthroughscreen.WalkThroughSliderActivity;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.IS_APP_FIRST_TIME_LAUNCH;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -25,12 +28,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                 //Do something after 100ms
                 SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(SplashScreenActivity.this);
 
-                if(sharedPreferenceUtils.getBoolanValue(WalkThroughSliderActivity.IS_APP_FIRST_TIME_LAUNCH , true)) {
+                if(SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(IS_APP_FIRST_TIME_LAUNCH, true)) {
                     ActivityUtil.openActivity(WalkThroughSliderActivity.class, SplashScreenActivity.this);
 
                 }else {
 
-                    if (sharedPreferenceUtils.getBoolanValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false)) {
+                    if (SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(KEY_IS_USER_LOGGED_IN, false)) {
                         ActivityUtil.openActivity(FactsFeedActivity.class, SplashScreenActivity.this);
                     } else {
                         ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);

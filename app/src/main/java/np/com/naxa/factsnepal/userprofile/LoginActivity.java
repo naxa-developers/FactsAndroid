@@ -24,9 +24,10 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import np.com.naxa.factsnepal.utils.Utils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+
 public class LoginActivity extends BaseLoginActivity {
     private static final String TAG = "LoginActivity";
-    public static final String KEY_IS_USER_LOGGED_IN = "is_user_logged_in";
 
     SharedPreferenceUtils sharedPreferenceUtils ;
     Gson gson = new Gson();
@@ -136,7 +137,7 @@ public class LoginActivity extends BaseLoginActivity {
                             String loginResponseInString = gson.toJson(userLoginResponse1);
                             Log.d(TAG, "onNext: "+loginResponseInString);
                             sharedPreferenceUtils.setValue(LoginActivity.KEY_USER_LOGGED_IN_DETAILS, loginResponseInString);
-                            sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN , true);
+                            sharedPreferenceUtils.setValue(KEY_IS_USER_LOGGED_IN , true);
                         }
                     }
 

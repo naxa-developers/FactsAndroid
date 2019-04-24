@@ -22,10 +22,10 @@ import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.IS_APP_FIRST_TIME_LAUNCH;
+
 public class WalkThroughSliderActivity extends AppCompatActivity {
 
-    public static final String IS_APP_FIRST_TIME_LAUNCH = "is_app_first_time_launch";
-    SharedPreferenceUtils sharedPreferenceUtils ;
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
@@ -38,7 +38,6 @@ public class WalkThroughSliderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         makeNotificationBarTransparent();
         setContentView(R.layout.activity_walk_through_slider);
-        sharedPreferenceUtils  = new SharedPreferenceUtils(this);
 
         initUI();
 
@@ -126,7 +125,7 @@ public class WalkThroughSliderActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        sharedPreferenceUtils.setValue(IS_APP_FIRST_TIME_LAUNCH, false);
+        SharedPreferenceUtils.getInstance(WalkThroughSliderActivity.this).setValue(IS_APP_FIRST_TIME_LAUNCH, false);
         ActivityUtil.openActivity(LoginActivity.class, WalkThroughSliderActivity.this);
     }
 
