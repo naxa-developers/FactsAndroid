@@ -9,6 +9,7 @@ import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
+import np.com.naxa.factsnepal.walkthroughscreen.WalkThroughSliderActivity;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -23,11 +24,19 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 //Do something after 100ms
                 SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(SplashScreenActivity.this);
-                if (sharedPreferenceUtils.getBoolanValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false)) {
-                    ActivityUtil.openActivity(FactsFeedActivity.class, SplashScreenActivity.this);
-                } else {
-                    ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);
+
+                if(sharedPreferenceUtils.getBoolanValue(WalkThroughSliderActivity.IS_APP_FIRST_TIME_LAUNCH , true)) {
+                    ActivityUtil.openActivity(WalkThroughSliderActivity.class, SplashScreenActivity.this);
+
+                }else {
+
+                    if (sharedPreferenceUtils.getBoolanValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false)) {
+                        ActivityUtil.openActivity(FactsFeedActivity.class, SplashScreenActivity.this);
+                    } else {
+                        ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);
+                    }
                 }
+
             }
         }, 2000);
     }

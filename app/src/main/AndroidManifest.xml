@@ -23,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".walkthroughscreen.WalkThroughSliderActivity"></activity>
         <activity
             android:name=".feed.feedv2.FactsFeedActivity"
             android:exported="true" />
@@ -30,19 +31,15 @@
         <activity android:name=".surveys.SurveyCompanyListActivity" />
         <activity
             android:name=".userprofile.UserProfileInfoActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".userprofile.UpdateProfileActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity
-
             android:name=".feed.detail.FactDetailActivity"
             android:label="@string/app_name">
-
-            <intent-filter
-
-                android:label="@string/app_name">
+            <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -52,12 +49,10 @@
                     android:host="detail"
                     android:scheme="factsnepal" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".feed.list.FeedListActivity"
             android:exported="true"
-
             android:label="@string/app_name">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
@@ -70,7 +65,6 @@
                     android:scheme="factsnepal" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".splashscreen.SplashScreenActivity"
             android:label="@string/app_name"
@@ -121,7 +115,6 @@
             android:label="@string/app_name" />
         <activity
             android:name=".surveys.SurveyActivity"
-
             android:exported="true">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
@@ -133,7 +126,6 @@
                     android:host="survey"
                     android:scheme="factsnepal" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".notification.NotificationActivity"
@@ -145,9 +137,6 @@
         <activity
             android:name=".preferences.PreferencesActivity"
             android:exported="true" />
-
-
-
     </application>
 
 </manifest>
