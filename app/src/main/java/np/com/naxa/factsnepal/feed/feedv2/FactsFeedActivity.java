@@ -2,18 +2,13 @@ package np.com.naxa.factsnepal.feed.feedv2;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +33,6 @@ import java.util.List;
 import java.util.Set;
 
 import io.reactivex.annotations.NonNull;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
@@ -84,24 +77,23 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         setupRecyclerView();
 
         factsLiveData.addSource(FactsRepo.getINSTANCE().getAllFacts(true), facts -> {
-            Log.d("FactsFeedActivity", "in all facts");
+
             if (getSelectedCategories().size() == 0) {
-                Log.d("FactsFeedActivity", "size0, selectedFactSize = " + facts.size());
+
                 adapter.updateList(facts);
             }
         });
         factsLiveData.addSource(FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true),
                 facts -> {
-                    Log.d("FactsFeedActivity", "in selected facts");
+
                     if (getSelectedCategories().size() > 0) {
-                        Log.d("FactsFeedActivity", "selectedFactSize = " + facts.size());
+
                         adapter.updateList(facts);
                     }
                 });
 
         factsLiveData.observe(this, facts -> {
-            Log.d("FactsFeedActivity", "in selected facts");
-            Log.d("FactsFeedActivity", "size = " + facts.size());
+
         });
 
         setUpToolbar();
@@ -111,11 +103,11 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     private List<Integer> getSelectedCategories() {
        Set<String> idSet =  SharedPreferenceUtils.getInstance(getApplicationContext()).getSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES);
        List<Integer> idInteger = new ArrayList<>();
-        Log.d("Factsfeed", " idset length = " + idSet.size());
+
        for( String id : idSet ) {
            idInteger.add(Integer.parseInt(id));
        }
-       Log.d("Factsfeed", " id length = " + idInteger.size());
+
        return idInteger;
     }
 
@@ -331,7 +323,8 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
     @Override
     public void onCategoriesSelected(Set<String> categories) {
-        Toast.makeText(getApplicationContext(), categories.size() + " categories added to your preference list", Toast.LENGTH_SHORT).show();
+
         FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true);
+        Toast.makeText(getApplicationContext(), categories.size() + " categories added to your preference list", Toast.LENGTH_SHORT).show();
     }
 }
