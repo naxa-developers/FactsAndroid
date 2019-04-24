@@ -22,25 +22,17 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Do something after 100ms
-                SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(SplashScreenActivity.this);
-
-                if(SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(IS_APP_FIRST_TIME_LAUNCH, true)) {
-                    ActivityUtil.openActivity(WalkThroughSliderActivity.class, SplashScreenActivity.this);
-
-                }else {
-
-                    if (SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(KEY_IS_USER_LOGGED_IN, false)) {
-                        ActivityUtil.openActivity(FactsFeedActivity.class, SplashScreenActivity.this);
-                    } else {
-                        ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);
-                    }
+        handler.postDelayed(() -> {
+            if (SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(IS_APP_FIRST_TIME_LAUNCH, true)) {
+                ActivityUtil.openActivity(WalkThroughSliderActivity.class, SplashScreenActivity.this);
+            } else {
+                if (SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(KEY_IS_USER_LOGGED_IN, false)) {
+                    ActivityUtil.openActivity(FactsFeedActivity.class, SplashScreenActivity.this);
+                } else {
+                    ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);
                 }
-
             }
+
         }, 2000);
     }
 
