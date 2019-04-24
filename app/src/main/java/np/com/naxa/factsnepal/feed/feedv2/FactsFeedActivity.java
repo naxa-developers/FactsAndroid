@@ -101,6 +101,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
         factsLiveData.observe(this, facts -> {
             Log.d("FactsFeedActivity", "in selected facts");
+            Log.d("FactsFeedActivity", "size = " + facts.size());
         });
 
         setUpToolbar();
@@ -331,5 +332,6 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     @Override
     public void onCategoriesSelected(Set<String> categories) {
         Toast.makeText(getApplicationContext(), categories.size() + " categories added to your preference list", Toast.LENGTH_SHORT).show();
+        FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true);
     }
 }
