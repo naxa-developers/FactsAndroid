@@ -29,7 +29,7 @@
         android:layout_marginEnd="@dimen/margin_large"
         android:layout_toStartOf="@+id/btn_close_dialog_category_chips" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_close_dialog_category_chips"
         android:background="?selectableItemBackgroundBorderless"
         android:layout_marginRight="@dimen/margin_large"
@@ -41,7 +41,7 @@
         app:srcCompat="@drawable/ic_close_white_24dp"
         android:layout_marginEnd="@dimen/margin_large" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@id/tv_selected_categories"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"

@@ -1,10 +1,9 @@
 package np.com.naxa.factsnepal.feed.list;
 
-import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import np.com.naxa.factsnepal.feed.Fact;
