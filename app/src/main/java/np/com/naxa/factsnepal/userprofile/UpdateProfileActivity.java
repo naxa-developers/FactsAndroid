@@ -304,6 +304,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
             case R.id.btn_skip:
                 ActivityUtil.openActivity(FactsFeedActivity.class, this, null, false);
+                finishAffinity();
                 break;
             default:
                 break;

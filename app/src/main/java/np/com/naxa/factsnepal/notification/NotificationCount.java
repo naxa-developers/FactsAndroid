@@ -18,10 +18,11 @@ import java.util.Calendar;
 import io.reactivex.Observable;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_NOTIFICATION_LIST;
+
 public class NotificationCount {
 
     private static final String TAG = "NotificationCount";
-    public static final String KEY_NOTIFICATION_LIST = "notification_list";
 
     SharedPreferenceUtils sharedPreferenceUtils;
 

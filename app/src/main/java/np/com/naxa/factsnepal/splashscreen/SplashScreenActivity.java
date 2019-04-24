@@ -41,8 +41,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                         ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);
                     }
                 }
-
             }
+
         }, 2000);
     }
 

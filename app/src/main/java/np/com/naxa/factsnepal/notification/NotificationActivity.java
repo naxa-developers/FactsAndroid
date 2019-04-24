@@ -26,6 +26,8 @@ import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
 import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_NOTIFICATION_LIST;
+
 public class NotificationActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
@@ -41,10 +43,13 @@ public class NotificationActivity extends BaseActivity {
         bindUI();
 
         Gson gson = new Gson();
-        SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
-        ArrayList<FactsNotification> factsNotification = gson.fromJson(sharedPreferenceUtils.getStringValue(NotificationCount.KEY_NOTIFICATION_LIST, "")
-                , new TypeToken<List<FactsNotification>>(){}.getType());
-        setupListAdapter(factsNotification);
+        ArrayList<FactsNotification> factsNotification = gson.fromJson(SharedPreferenceUtils.getInstance(NotificationActivity.this).getStringValue(KEY_NOTIFICATION_LIST, "")
+                , new TypeToken<List<FactsNotification>>() {
+                }.getType());
+
+        if (factsNotification != null) {
+            setupListAdapter(factsNotification);
+        }
 
     }
 
@@ -96,23 +101,22 @@ public class NotificationActivity extends BaseActivity {
 //        factsNotification.setRead(true);
 //        Gson gson = new Gson();
 //        String josnSeenFactNotification = gson.toJson(factsNotification);
-        Log.d(TAG, "viewBinded: clicked : "+factsNotification.isRead());
+        Log.d(TAG, "viewBinded: clicked : " + factsNotification.isRead());
 
         SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(this);
         JSONArray jsonArray = null;
         try {
-            jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(NotificationCount.KEY_NOTIFICATION_LIST, ""));
+            jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, ""));
             jsonArray.getJSONObject(position).remove("idRead");
             jsonArray.getJSONObject(position).put("isRead", true);
 
-            sharedPreferenceUtils.setValue(NotificationCount.KEY_NOTIFICATION_LIST, jsonArray.toString());
+            sharedPreferenceUtils.setValue(KEY_NOTIFICATION_LIST, jsonArray.toString());
 
-            Log.d(TAG, "viewBinded: clicked last: "+jsonArray.getJSONObject(position).getString("isRead"));
+            Log.d(TAG, "viewBinded: clicked last: " + jsonArray.getJSONObject(position).getString("isRead"));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
 
     }

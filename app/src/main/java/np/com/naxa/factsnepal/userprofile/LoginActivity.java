@@ -17,6 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.common.BaseLoginActivity;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 
@@ -148,7 +149,7 @@ public class LoginActivity extends BaseLoginActivity {
 
                     @Override
                     public void onComplete() {
-                        ActivityUtil.openActivity(FeedListActivity.class, LoginActivity.this, null, false);
+                        ActivityUtil.openActivity(FactsFeedActivity.class, LoginActivity.this, null, false);
 
                     }
                 });
