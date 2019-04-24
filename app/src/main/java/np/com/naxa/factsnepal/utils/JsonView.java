@@ -214,7 +214,6 @@ public class JsonView extends LinearLayout {
         for (int i = 0; i < params.options.length(); i++) {
             JSONObject option = params.options.optJSONObject(i);
 
-//        textView.setTextAppearance(params.titleStyleRes);
             editText.setHint(Html.fromHtml(option.optString("question")));
             editText.setTag(option.optString("id"));
             editText.setTextColor(Color.parseColor("#212121"));
