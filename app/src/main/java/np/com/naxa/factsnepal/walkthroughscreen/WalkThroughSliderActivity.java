@@ -1,7 +1,6 @@
 package np.com.naxa.factsnepal.walkthroughscreen;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
@@ -19,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import np.com.naxa.factsnepal.R;
-import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -64,11 +62,11 @@ public class WalkThroughSliderActivity extends AppCompatActivity {
         // layouts of all welcome sliders
         // add few more layouts if you want
         layouts = new int[]{
-                R.layout.welcome_slide1_disaster_ready_layout,
-                R.layout.welcome_slide2_disaster_report_layout,
-                R.layout.welcome_slide3_react_quickly_layout,
-                R.layout.welcome_slide4_get_connected_layout,
-                R.layout.welcome_slide5_registration_layout
+                R.layout.walk_through_slide1_layout,
+                R.layout.walk_through_slide2_layout,
+                R.layout.walk_through_slide3_layout,
+                R.layout.walk_through_slide4_layout,
+                R.layout.walk_through_slide5_layout
         };
 
         // adding bottom dots
