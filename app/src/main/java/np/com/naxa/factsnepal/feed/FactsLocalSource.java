@@ -81,15 +81,7 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
 
 
     public LiveData<List<Fact>> getAll() {
-        SharedPreferenceUtils utils = SharedPreferenceUtils.getInstance(FactsNepal.getInstance());
-        Set<String> selectedCategories = utils.getSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES);
-        if (selectedCategories != null && selectedCategories.size() > 0) {
-            Log.d("LocalSource", " category by id called ");
-            return getByIds(selectedCategories);
-        } else {
-            Log.d("LocalSource", " all facts called");
-            return factsDAO.getAll();
-        }
+        return factsDAO.getAll();
     }
 
     public LiveData<List<Fact>> getAllBookmarked() {

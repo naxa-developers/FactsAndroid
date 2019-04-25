@@ -77,37 +77,29 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         setupRecyclerView();
 
         factsLiveData.addSource(FactsRepo.getINSTANCE().getAllFacts(true), facts -> {
-
             if (getSelectedCategories().size() == 0) {
-
-                adapter.updateList(facts);
+                factsLiveData.postValue(facts);
             }
         });
         factsLiveData.addSource(FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true),
                 facts -> {
-
                     if (getSelectedCategories().size() > 0) {
-
-                        adapter.updateList(facts);
+                       factsLiveData.postValue(facts);
                     }
                 });
 
         factsLiveData.observe(this, facts -> {
-
+            adapter.updateList(facts);
         });
-
         setUpToolbar();
     }
-
 
     private List<Integer> getSelectedCategories() {
        Set<String> idSet =  SharedPreferenceUtils.getInstance(getApplicationContext()).getSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES);
        List<Integer> idInteger = new ArrayList<>();
-
        for( String id : idSet ) {
            idInteger.add(Integer.parseInt(id));
        }
-
        return idInteger;
     }
 
