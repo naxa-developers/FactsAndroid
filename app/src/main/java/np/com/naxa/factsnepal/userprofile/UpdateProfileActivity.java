@@ -39,12 +39,13 @@ import io.reactivex.subscribers.DisposableSubscriber;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseLoginActivity;
-import np.com.naxa.factsnepal.feed.list.FeedListActivity;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.gps.GeoPointActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
 import static np.com.naxa.factsnepal.gps.GeoPointActivity.LOCATION_RESULT;
 
 public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
@@ -302,7 +303,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.btn_skip:
-                ActivityUtil.openActivity(FeedListActivity.class, this, null, false);
+                ActivityUtil.openActivity(FactsFeedActivity.class, this, null, false);
+                finishAffinity();
                 break;
             default:
                 break;
@@ -427,7 +429,8 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                     public void onNext(UserRegistrationDetailsResponse userRegistrationDetailsResponse) {
                         if(userRegistrationDetailsResponse.getSuccess()){
                             sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEARER_ACCESS_TOKEN, userRegistrationDetailsResponse.getToken());
-                            sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, true);
+                            sharedPreferenceUtils.setValue(KEY_IS_USER_LOGGED_IN, true);
+
 
                             loginActivity.getUserDetails(userRegistrationDetailsResponse.getToken());
 //                            ActivityUtil.openActivity(FeedListActivity.class, UpdateProfileActivity.this, null, false);

@@ -5,25 +5,29 @@
 
     <!--https://stackoverflow.com/questions/14908578/android-action-bar-menu-item-with-actionlayout-not-working-properly-->
     <item
-        android:visible="false"
         android:id="@+id/menu_notification_action_layout"
         android:orderInCategory="80"
         android:title="@string/actions_notification"
+        android:visible="false"
         app:actionLayout="@layout/action_view_notificaiton"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_notification"
+        android:icon="@drawable/actionbar_group_icon"
         android:orderInCategory="80"
         android:title="@string/actions_notification"
-        android:icon="@drawable/actionbar_group_icon"
         app:showAsAction="ifRoom" />
     <item
-        android:orderInCategory="90"
         android:id="@+id/action_profile"
         android:icon="@drawable/ic_menu_profile_24dp"
+        android:orderInCategory="90"
         android:title="@string/action_settings"
         app:showAsAction="ifRoom" />
-
+    <item
+        android:id="@+id/action_categories"
+        android:icon="@drawable/ic_chip_add_24dp"
+        android:orderInCategory="90"
+        app:showAsAction="ifRoom" />
 
 </menu>

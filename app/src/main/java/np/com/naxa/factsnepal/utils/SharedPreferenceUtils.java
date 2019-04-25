@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
-import np.com.naxa.factsnepal.common.BaseLoginActivity;
-
 
 public class SharedPreferenceUtils {
     private static SharedPreferenceUtils mSharedPreferenceUtils;
@@ -19,6 +17,10 @@ public class SharedPreferenceUtils {
         mContext = context;
         mSharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         mSharedPreferencesEditor = mSharedPreferences.edit();
+    }
+
+    public SharedPreferences getSharePref(){
+        return mSharedPreferences;
     }
 
     /**

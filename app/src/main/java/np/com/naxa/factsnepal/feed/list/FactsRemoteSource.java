@@ -1,5 +1,7 @@
 package np.com.naxa.factsnepal.feed.list;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,19 +16,19 @@ import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
 
-class FactsRemoteSource {
+public class FactsRemoteSource {
 
     private static FactsRemoteSource INSTANCE = null;
     private HashMap<String, String> categoriesIdsMap = new HashMap<>();
 
-    static FactsRemoteSource getINSTANCE() {
+    public static FactsRemoteSource getINSTANCE() {
         if (INSTANCE == null) {
             INSTANCE = new FactsRemoteSource();
         }
         return INSTANCE;
     }
 
-    private Observable<List<Fact>> getFactsByCategoryId(ArrayList<Integer> categoryIds) {
+    public Observable<List<Fact>> getFactsByCategoryId(List<Integer> categoryIds) {
         return NetworkApiClient.getAPIClient().create(NetworkApiInterface.class)
                 .getFactsDetailsResponse(categoryIds)
                 .subscribeOn(Schedulers.io())
@@ -54,8 +56,22 @@ class FactsRemoteSource {
                 });
     }
 
-    Observable<List<Fact>> getAllFacts() {
+    public Observable<List<Fact>> getAllFacts() {
         return getFactsByCategoryId(null);
+    }
+
+    public Observable<List<Category>> getCategories() {
+        return NetworkApiClient.createCacheService(NetworkApiInterface.class)
+                .getFactsDetailsResponse(null)
+                .subscribeOn(Schedulers.io())
+                .flatMapIterable(new Function<List<FactsResponse>, Iterable<FactsResponse>>() {
+                    @Override
+                    public Iterable<FactsResponse> apply(List<FactsResponse> factsResponses) throws Exception {
+                        return factsResponses;
+                    }
+                })
+                .map(FactsResponse::getCategory);
+
     }
 
 }
