@@ -2,14 +2,13 @@ package np.com.naxa.factsnepal.surveys;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
-import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;

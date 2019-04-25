@@ -4,11 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
-import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

@@ -1,6 +1,6 @@
 package np.com.naxa.factsnepal.feed.list.resource;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import android.widget.Toast;
 
 import java.util.List;

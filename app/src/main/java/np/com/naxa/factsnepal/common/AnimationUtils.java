@@ -1,11 +1,9 @@
 package np.com.naxa.factsnepal.common;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.view.animation.Animation;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.animation.LayoutAnimationController;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 
 import np.com.naxa.factsnepal.R;
 

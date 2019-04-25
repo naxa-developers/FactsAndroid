@@ -1,18 +1,12 @@
 package np.com.naxa.factsnepal.feed;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-import android.util.Pair;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import np.com.naxa.factsnepal.network.facts.Category;
 
 @Entity(tableName = "facts")
 public class Fact implements Serializable {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backdrop_home"
         style="@style/Widget.Facts.Button.TextButton"
         android:layout_width="wrap_content"
@@ -9,14 +9,14 @@
         android:text="Home" />
 
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backdrop_public_poll"
         style="@style/Widget.Facts.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Public Poll" />
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backdrop_public_survey"
         style="@style/Widget.Facts.Button.TextButton"
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
         android:text="Survey" />
 
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backdrop_bookmark"
         style="@style/Widget.Facts.Button.TextButton"
         android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_margin="16dp"
         android:background="@color/white" />
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/backdrop_account"
         style="@style/Widget.Facts.Button.TextButton"
         android:layout_width="wrap_content"
