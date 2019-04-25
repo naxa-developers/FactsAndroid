@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
@@ -47,7 +48,9 @@ public class BookmarkedFactsActivity extends BaseActivity implements NavigationV
 
 
         FactsLocalSource.getINSTANCE().getAllBookmarked()
-                .observe(this, facts -> adapter.updateList(facts));
+                .observe(this, (List<Fact> facts) -> {
+                    adapter.updateList(facts);
+                });
     }
 
     private void setupNavigationBar() {

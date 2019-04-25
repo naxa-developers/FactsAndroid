@@ -36,6 +36,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.bookmarkedfeed.BookmarkedFeedV2Activity;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
@@ -53,6 +54,7 @@ import np.com.naxa.factsnepal.notification.NotificationCount;
 import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
+import np.com.naxa.factsnepal.userprofile.UserProfileInfoActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 
 public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener, BottomDialogFragment.OnCategoriesSelectedListener {
@@ -283,6 +285,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
             case R.id.action_profile:
                 try {
                     notificationCount.saveNotification(notificationCount.getJsonArray());
+                    ActivityUtil.openActivity(UserProfileInfoActivity.class, this);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -330,7 +333,8 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 ActivityUtil.openActivity(PublicPollActivity.class, this);
                 break;
             case R.id.backdrop_bookmark:
-                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+//                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+                ActivityUtil.openActivity(BookmarkedFeedV2Activity.class, this);
                 break;
             case R.id.backdrop_public_survey:
                 ActivityUtil.openActivity(SurveyCompanyListActivity.class, this);

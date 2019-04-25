@@ -15,21 +15,22 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/primary_text"
+            android:id="@+id/tv_bookmarked_facts_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
+            android:maxLines="1"
             android:text="@string/primary_short"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/colorAccent"
-            app:layout_constraintEnd_toStartOf="@+id/media_image"
+            app:layout_constraintEnd_toStartOf="@+id/iv_bookmarked_facts_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/sub_text"
+            android:id="@+id/tv_bookmarked_facts_sub_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -37,12 +38,12 @@
             android:text="@string/subtext"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/colorAccent"
-            app:layout_constraintEnd_toStartOf="@+id/media_image"
+            app:layout_constraintEnd_toStartOf="@+id/iv_bookmarked_facts_image"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/primary_text" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_bookmarked_facts_title" />
 
         <ImageView
-            android:id="@+id/media_image"
+            android:id="@+id/iv_bookmarked_facts_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="16dp"
@@ -53,10 +54,11 @@
             app:srcCompat="@android:color/darker_gray" />
 
         <Button
-            android:id="@+id/action_button_1"
+            android:id="@+id/btn_fact_un_bookmarked"
             style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="@drawable/button_background"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:minWidth="0dp"
@@ -66,13 +68,15 @@
             android:textColor="@color/white_80"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/media_image" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_bookmarked_facts_image"
+            />
 
         <Button
-            android:id="@+id/action_button_2"
+            android:id="@+id/btn_view_bookmarked_fact_details"
             style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="@drawable/button_background"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:minWidth="0dp"
@@ -80,8 +84,8 @@
             android:paddingEnd="8dp"
             android:text="@string/view_fact"
             android:textColor="@color/white_80"
-            app:layout_constraintStart_toEndOf="@+id/action_button_1"
-            app:layout_constraintTop_toTopOf="@+id/action_button_1" />
+            app:layout_constraintStart_toEndOf="@+id/btn_fact_un_bookmarked"
+            app:layout_constraintTop_toTopOf="@+id/btn_fact_un_bookmarked" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
