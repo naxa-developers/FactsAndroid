@@ -2,17 +2,12 @@ package np.com.naxa.factsnepal.feed.bookmarkedfacts;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.widget.ImageView;
+
 import androidx.annotation.Nullable;
-import com.google.android.material.navigation.NavigationView;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.MenuItem;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +20,13 @@ import np.com.naxa.factsnepal.common.ListPaddingDecoration;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
-import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
-import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
-import np.com.naxa.factsnepal.surveys.SurveyStartActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 
-public class BookmarkedFactsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, FactsFeedAdapter.OnFeedCardItemClickListener {
+public class BookmarkedFactsActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener {
 
     private RecyclerView recyclerViewFeed;
     private FactsFeedAdapter adapter;
-    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +35,6 @@ public class BookmarkedFactsActivity extends BaseActivity implements NavigationV
         bindUI();
         setupRecyclerView();
         setupToolbar(getString(R.string.toolbar_title_bookmarked));
-        setupNavigationBar();
 
 
         FactsLocalSource.getINSTANCE().getAllBookmarked()
@@ -53,18 +43,8 @@ public class BookmarkedFactsActivity extends BaseActivity implements NavigationV
                 });
     }
 
-    private void setupNavigationBar() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-    }
-
     private void bindUI() {
         recyclerViewFeed = findViewById(R.id.rv_bookmarked_facts);
-        drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setupRecyclerView() {
@@ -75,34 +55,6 @@ public class BookmarkedFactsActivity extends BaseActivity implements NavigationV
         recyclerViewFeed.setAdapter(adapter);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.nav_home:
-                ActivityUtil.openActivity(FactsFeedActivity.class,this);
-                break;
-            case R.id.nav_public_poll:
-                ActivityUtil.openActivity(PublicPollActivity.class, this);
-                break;
-            case R.id.nav_survey:
-                ActivityUtil.openActivity(SurveyStartActivity
-                        .class, this);
-                break;
-
-        }
-        return true;
-    }
-
-    private void toggleNavDrawer() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            drawer.openDrawer(GravityCompat.START);
-        }
-
-    }
 
     @Override
     public void onCardTap(Fact fact, ImageView imageView) {
