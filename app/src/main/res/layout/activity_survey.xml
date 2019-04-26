@@ -5,34 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <include layout="@layout/toolbar" />
-
-    <!--<ScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="@dimen/margin_small"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical">-->
-
-            <!--&lt;!&ndash;<include layout="@layout/layout_survey_widget_header" />&ndash;&gt;-->
-            <!--&lt;!&ndash;<include layout="@layout/layout_survey_question_radio"/>&ndash;&gt;-->
-            <!--&lt;!&ndash;<include layout="@layout/layout_survey_question_rating"/>&ndash;&gt;-->
-            <!--&lt;!&ndash;<include layout="@layout/layout_survey_question_checkbox"/>&ndash;&gt;-->
-
-            <!--&lt;!&ndash;<include layout="@layout/layout_survey_question_radio"/>&ndash;&gt;-->
-            <!--&lt;!&ndash;<include layout="@layout/layout_survey_question_rating"/>&ndash;&gt;-->
-
-
-        <!--</LinearLayout>-->
-
-
-    <!--</ScrollView>-->
-
+  
     <androidx.recyclerview.widget.RecyclerView
 
         android:layout_width="match_parent"
@@ -41,3 +15,5 @@
         android:layout_margin="@dimen/margin_small"/>
 
 </LinearLayout>
+
+

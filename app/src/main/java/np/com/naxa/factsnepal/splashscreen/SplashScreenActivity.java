@@ -12,6 +12,7 @@ import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
 import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
+
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -20,9 +21,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import np.com.naxa.factsnepal.walkthroughscreen.WalkThroughSliderActivity;
-
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.IS_APP_FIRST_TIME_LAUNCH;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+
 
 
 public class SplashScreenActivity extends AppCompatActivity {

@@ -2,7 +2,6 @@ package np.com.naxa.factsnepal.surveys;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.util.Log;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
