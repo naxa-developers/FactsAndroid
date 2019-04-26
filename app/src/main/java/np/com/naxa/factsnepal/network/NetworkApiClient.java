@@ -5,6 +5,8 @@ import android.content.Context;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.github.simonpercic.oklog3.BuildConfig;
 import com.github.simonpercic.oklog3.OkLogInterceptor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -109,6 +111,34 @@ public class NetworkApiClient {
         }
 
         return map;
+    }
+
+    public static Retrofit getTestAPIClient() {
+
+        if (retrofit == null) {
+            OkLogInterceptor okLogInterceptor = OkLogInterceptor.builder().build();
+            OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
+
+            Dispatcher dispatcher = new Dispatcher();
+            dispatcher.setMaxRequests(3);
+
+            okHttpBuilder.dispatcher(dispatcher);
+            okHttpBuilder.addInterceptor(okLogInterceptor);
+
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
+
+            OkHttpClient okHttpClient = okHttpBuilder.build();
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(UrlConstant.TEST_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(okHttpClient)
+                    .build();
+        }
+        return retrofit;
+
     }
 
 }

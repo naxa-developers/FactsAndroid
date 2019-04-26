@@ -9,13 +9,13 @@ public class SurveyQuestion {
 
     @SerializedName("id")
     @Expose
-    private String id;
+    private Integer id;
     @SerializedName("question")
     @Expose
     private String question;
     @SerializedName("survey_id")
     @Expose
-    private String surveyId;
+    private Integer surveyId;
     @SerializedName("question_type")
     @Expose
     private String questionType;
@@ -23,11 +23,11 @@ public class SurveyQuestion {
     @Expose
     private List<Option> options = null;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -39,11 +39,11 @@ public class SurveyQuestion {
         this.question = question;
     }
 
-    public String getSurveyId() {
+    public Integer getSurveyId() {
         return surveyId;
     }
 
-    public void setSurveyId(String surveyId) {
+    public void setSurveyId(Integer surveyId) {
         this.surveyId = surveyId;
     }
 

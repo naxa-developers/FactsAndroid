@@ -2,6 +2,7 @@ package np.com.naxa.factsnepal.surveys;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +20,14 @@ import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
+import np.com.naxa.factsnepal.network.NetworkApiClient;
+import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_FORM_TYPE;
@@ -121,6 +127,7 @@ public class SurveyFormListActivity extends BaseActivity {
             showToast("No Internet Connection");
             return;
         }
+
             apiInterface.getSurveyQuestionDetailsResponse(surveyCompany.getId(), surevyForms.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -132,6 +139,7 @@ public class SurveyFormListActivity extends BaseActivity {
                                 showToast("Null response from the server.");
                                 isQuestionNotNull = false;
                             } else {
+                                Log.d(TAG, "onNext: "+gson.toJson(surveyQuestionDetailsResponse));
                                 isQuestionNotNull = true;
                                 sharedPreferenceUtils.setValue(KEY_RECENT_SURVEY_FORM_DETAILS, gson.toJson(surveyQuestionDetailsResponse));
                             }
@@ -140,12 +148,15 @@ public class SurveyFormListActivity extends BaseActivity {
                         @Override
                         public void onError(Throwable e) {
                             showToast(e.getMessage());
+                            Log.d(TAG, "onError: "+e.getMessage());
+                            ActivityUtil.openActivity(SurveyActivity.class, SurveyFormListActivity.this);
+
                         }
 
                         @Override
                         public void onComplete() {
                             if (isQuestionNotNull) {
-                                ActivityUtil.openActivity(SurveyStartActivity.class, SurveyFormListActivity.this);
+                                ActivityUtil.openActivity(SurveyActivity.class, SurveyFormListActivity.this);
                             }
                         }
                     });

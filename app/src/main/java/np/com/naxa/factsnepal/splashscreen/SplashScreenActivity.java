@@ -2,19 +2,29 @@ package np.com.naxa.factsnepal.splashscreen;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
-
 import np.com.naxa.factsnepal.R;
+
+import np.com.naxa.factsnepal.network.NetworkApiClient;
+import np.com.naxa.factsnepal.network.NetworkApiInterface;
+import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
+
 import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
+
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import np.com.naxa.factsnepal.walkthroughscreen.WalkThroughSliderActivity;
-
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.IS_APP_FIRST_TIME_LAUNCH;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -24,6 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         makeActivityFullScreen();
         setContentView(R.layout.activity_splash_screen);
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

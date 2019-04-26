@@ -13,6 +13,9 @@ import np.com.naxa.factsnepal.userprofile.UserLoginResponse;
 import np.com.naxa.factsnepal.userprofile.UserRegistrationDetails;
 import np.com.naxa.factsnepal.userprofile.UserRegistrationDetailsResponse;
 import np.com.naxa.factsnepal.userprofile.earninghistory.UsersEarningResponse;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -22,6 +25,7 @@ import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface NetworkApiInterface {
     @POST(UrlConstant.FETCH_CONFIG_URL)
@@ -48,6 +52,15 @@ public interface NetworkApiInterface {
                                                                                @Path("survey_id") int survey_id);
     @POST(UrlConstant.GET_USER_EARNING_HISTORY_DETAILS_URL)
     Observable<UsersEarningResponse> getUserEarningDetailsResponse(@HeaderMap Map<String, String> headers);
+
+
+    @Headers("Content-Type: application/json; charset=utf-8")
+    @GET(UrlConstant.GET_SAMPLE_SURVEY_QUESTION_DETAILS_URL)
+    Observable<SurveyQuestionDetailsResponse> getSampleSurveyQuestionDetailsResponse(@Query("file_name") String filename);
+
+//    @Headers("Content-Type: application/json; charset=utf-8")
+//    @GET(UrlConstant.GET_SAMPLE_SURVEY_QUESTION_DETAILS_URL)
+//    Call<Response<SurveyQuestionDetailsResponse>> getSampleSurveyQuestionDetailsResponse(@Query("file_name") String filename);
 
 
 }
