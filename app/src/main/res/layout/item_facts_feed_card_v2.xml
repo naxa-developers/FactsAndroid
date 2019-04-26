@@ -119,15 +119,14 @@
 
             style="@style/Text.Compound"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="16dp"
             android:layout_margin="@dimen/margin_large"
             android:button="@drawable/ic_like_stateful"
             android:text="@string/action_save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_share"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_like"
-            tools:layout_editor_absoluteY="109dp" />
+            app:layout_constraintStart_toEndOf="@+id/btn_like" />
 
 
         <TextView
@@ -151,8 +150,7 @@
             android:layout_height="56dp"
             android:text="OPEN FACT"
             app:cornerRadius="56dp"
-            app:icon="@drawable/ic_facebook"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/btn_share"
             app:layout_constraintHorizontal_bias="0.921"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
