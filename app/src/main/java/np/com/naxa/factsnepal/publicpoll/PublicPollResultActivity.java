@@ -2,27 +2,21 @@ package np.com.naxa.factsnepal.publicpoll;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
-
-import static com.github.mikephil.charting.utils.ColorTemplate.VORDIPLOM_COLORS;
 
 public class PublicPollResultActivity extends BaseActivity {
 

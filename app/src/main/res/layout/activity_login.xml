@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cv_login_facebook"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -41,10 +41,10 @@
                     android:textColor="@android:color/white"
                     android:text="Facebook" />
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cv_login_google"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                     android:textColor="@android:color/white"
                     android:text="Google +" />
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <!--<android.support.v7.widget.CardView-->
                 <!--android:id="@+id/cv_login_twitter"-->

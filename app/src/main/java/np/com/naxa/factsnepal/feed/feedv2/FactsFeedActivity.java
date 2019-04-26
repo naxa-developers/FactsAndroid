@@ -2,21 +2,22 @@ package np.com.naxa.factsnepal.feed.feedv2;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.arch.lifecycle.MediatorLiveData;
+import androidx.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.support.design.button.MaterialButton;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
-import android.support.v7.widget.SnapHelper;
-import android.support.v7.widget.Toolbar;
+import android.os.Handler;
+import com.google.android.material.button.MaterialButton;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
+import androidx.recyclerview.widget.SnapHelper;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,8 +34,14 @@ import java.util.List;
 import java.util.Set;
 
 import io.reactivex.annotations.NonNull;
+
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.bookmarkedfeed.BookmarkedFeedV2Activity;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
@@ -51,6 +58,7 @@ import np.com.naxa.factsnepal.notification.NotificationCount;
 import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
+import np.com.naxa.factsnepal.userprofile.UserProfileInfoActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
@@ -135,21 +143,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
              * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
              */
 
-            recyclerViewFeed.post(new Runnable() {
-                @Override
-                public void run() {
-                    recyclerViewFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(@android.support.annotation.NonNull @NonNull RecyclerView recyclerView, int newState) {
-                            super.onScrollStateChanged(recyclerView, newState);
-                            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                                int position = getCurrentItem();
-                                getColorPallete(position);
-                            }
-                        }
-                    });
-                }
-            });
+
 
         } else {
             StackLayoutManager manager = new StackLayoutManager(StackLayoutManager.ScrollOrientation.TOP_TO_BOTTOM, 2);
@@ -258,6 +252,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
             case R.id.action_profile:
                 try {
                     notificationCount.saveNotification(notificationCount.getJsonArray());
+                    ActivityUtil.openActivity(UserProfileInfoActivity.class, this);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -305,7 +300,8 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 ActivityUtil.openActivity(PublicPollActivity.class, this);
                 break;
             case R.id.backdrop_bookmark:
-                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+//                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+                ActivityUtil.openActivity(BookmarkedFeedV2Activity.class, this);
                 break;
             case R.id.backdrop_public_survey:
                 ActivityUtil.openActivity(SurveyCompanyListActivity.class, this);

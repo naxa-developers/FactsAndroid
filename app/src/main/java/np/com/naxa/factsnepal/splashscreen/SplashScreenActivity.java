@@ -2,7 +2,9 @@ package np.com.naxa.factsnepal.splashscreen;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
 
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
@@ -20,20 +22,35 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        makeActivityFullScreen();
         setContentView(R.layout.activity_splash_screen);
         final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(IS_APP_FIRST_TIME_LAUNCH, true)) {
-                ActivityUtil.openActivity(WalkThroughSliderActivity.class, SplashScreenActivity.this);
-            } else {
-                if (SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(KEY_IS_USER_LOGGED_IN, false)) {
-                    ActivityUtil.openActivity(FactsFeedActivity.class, SplashScreenActivity.this);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 100ms
+                SharedPreferenceUtils sharedPreferenceUtils = new SharedPreferenceUtils(SplashScreenActivity.this);
+
+                if (SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(IS_APP_FIRST_TIME_LAUNCH, true)) {
+                    ActivityUtil.openActivity(WalkThroughSliderActivity.class, SplashScreenActivity.this);
                 } else {
-                    ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);
+
+                    if (SharedPreferenceUtils.getInstance(SplashScreenActivity.this).getBoolanValue(KEY_IS_USER_LOGGED_IN, false)) {
+                        ActivityUtil.openActivity(FactsFeedActivity.class, SplashScreenActivity.this);
+                    } else {
+                        ActivityUtil.openActivity(LoginActivity.class, SplashScreenActivity.this, null, false);
+                    }
                 }
             }
 
         }, 2000);
+    }
+
+
+    private void makeActivityFullScreen() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
 }

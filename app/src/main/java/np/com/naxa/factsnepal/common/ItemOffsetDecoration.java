@@ -2,8 +2,8 @@ package np.com.naxa.factsnepal.common;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.annotation.DimenRes;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.DimenRes;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import io.reactivex.annotations.NonNull;

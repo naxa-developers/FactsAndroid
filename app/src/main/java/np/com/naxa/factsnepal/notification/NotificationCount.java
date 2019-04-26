@@ -2,7 +2,7 @@ package np.com.naxa.factsnepal.notification;
 
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -11,11 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import io.reactivex.Observable;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;

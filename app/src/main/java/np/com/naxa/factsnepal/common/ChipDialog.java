@@ -3,9 +3,9 @@ package np.com.naxa.factsnepal.common;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.chip.Chip;
-import android.support.design.chip.ChipGroup;
+import androidx.annotation.NonNull;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import android.util.Log;
 import android.view.View;
 

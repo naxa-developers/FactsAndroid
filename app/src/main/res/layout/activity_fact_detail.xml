@@ -70,7 +70,7 @@
         </LinearLayout>
 
 
-        <android.support.design.chip.Chip
+        <com.google.android.material.chip.Chip
             android:id="@+id/chip_category"
             style="@style/Feed.Widget.Chip.Orange"
             android:layout_width="wrap_content"
