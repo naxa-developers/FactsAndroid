@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import com.google.android.material.button.MaterialButton;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
