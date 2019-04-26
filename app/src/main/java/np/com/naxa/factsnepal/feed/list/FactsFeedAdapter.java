@@ -3,9 +3,9 @@ package np.com.naxa.factsnepal.feed.list;
 import android.content.Context;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +33,9 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     }
 
     public void updateList(List<Fact> newList) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FactsDiffCallback(this.facts, newList));
-        facts.clear();
-        facts.addAll(newList);
+        ArrayList<Fact> oldList = this.facts;
+        this.facts = (ArrayList<Fact>) newList;
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FactsDiffCallback(oldList, newList));
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -91,12 +91,12 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
 //                                viewHolder.imageView.setBackgroundColor(bgColor);
 //                            }
 //                            return false;
-//                        }
+//                        }`
 //                    })
                     .into(viewHolder.imageView);
 
 
-            viewHolder.tvTitle.setText(fact.getTitle());
+            viewHolder.tvTitle.setText(fact.getTitle().trim());
             viewHolder.tvCategory.setText(fact.getCategoryName());
             viewHolder.tvSaved.setChecked(fact.isBookmarked());
             viewHolder.tvLikeCount.setText(fact.getLikeCount());

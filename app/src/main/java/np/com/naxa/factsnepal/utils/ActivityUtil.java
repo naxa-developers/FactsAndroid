@@ -3,13 +3,10 @@ package np.com.naxa.factsnepal.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v7.widget.ShareActionProvider;
-import android.text.Html;
+
+import androidx.appcompat.widget.ShareActionProvider;
 
 import java.util.HashMap;
-
-import np.com.naxa.factsnepal.BuildConfig;
 
 public class ActivityUtil {
 

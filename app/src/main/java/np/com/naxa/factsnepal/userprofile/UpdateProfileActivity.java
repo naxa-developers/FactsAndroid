@@ -7,9 +7,9 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.design.button.MaterialButton;
-import android.support.v4.app.ActivityCompat;
+import androidx.annotation.Nullable;
+import com.google.android.material.button.MaterialButton;
+import androidx.core.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -45,6 +45,7 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
 import static np.com.naxa.factsnepal.gps.GeoPointActivity.LOCATION_RESULT;
 
 public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
@@ -303,6 +304,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
 
             case R.id.btn_skip:
                 ActivityUtil.openActivity(FactsFeedActivity.class, this, null, false);
+                finishAffinity();
                 break;
             default:
                 break;
@@ -427,7 +429,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                     public void onNext(UserRegistrationDetailsResponse userRegistrationDetailsResponse) {
                         if(userRegistrationDetailsResponse.getSuccess()){
                             sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEARER_ACCESS_TOKEN, userRegistrationDetailsResponse.getToken());
-                            sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, true);
+                            sharedPreferenceUtils.setValue(KEY_IS_USER_LOGGED_IN, true);
 
 
                             loginActivity.getUserDetails(userRegistrationDetailsResponse.getToken());

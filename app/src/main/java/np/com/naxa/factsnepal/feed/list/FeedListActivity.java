@@ -7,17 +7,17 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.chip.Chip;
-import android.support.design.chip.ChipGroup;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,6 +65,8 @@ import np.com.naxa.factsnepal.userprofile.UserProfileInfoActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
+
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
 
 @Deprecated
 public class FeedListActivity extends BaseActivity
@@ -193,16 +195,7 @@ public class FeedListActivity extends BaseActivity
 
     }
 
-    public void listenChipsStatus() {
 
-        BottomDialogFragment.getSelectedCategories(new BottomDialogFragment.CategorySelectedListener() {
-            @Override
-            public void onClick(ArrayList<Integer> categoriesList) {
-                Log.d(TAG, "onClick: chip selected" + categoriesList.size());
-
-            }
-        });
-    }
 
     private void initChips() {
         chipGroup = findViewById(R.id.chipgroup);
@@ -238,7 +231,7 @@ public class FeedListActivity extends BaseActivity
 
                         Chip chip = new Chip(chipGroup.getContext());
                         chip.setChipText(category.getTitle());
-                        chip.setId(category.getId());
+//                        chip.setId(category.getId());
                         Log.d(TAG, "onNext: id" + category.getId());
 //                         chip.setCloseIconEnabled(true);
 //            chip.setCloseIconResource(R.drawable.your_icon);
@@ -402,7 +395,7 @@ public class FeedListActivity extends BaseActivity
                 BaseLogout baseLogout = new BaseLogout(FeedListActivity.this) {
                     @Override
                     public void onLogoutSuccess() {
-                        sharedPreferenceUtils.setValue(LoginActivity.KEY_IS_USER_LOGGED_IN, false);
+                        sharedPreferenceUtils.setValue(KEY_IS_USER_LOGGED_IN, false);
                         sharedPreferenceUtils.clearAll();
                         ActivityUtil.openActivity(LoginActivity.class, FeedListActivity.this);
 

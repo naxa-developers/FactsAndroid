@@ -2,9 +2,10 @@ package np.com.naxa.factsnepal.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import np.com.naxa.factsnepal.common.BaseLoginActivity;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class SharedPreferenceUtils {
@@ -19,6 +20,10 @@ public class SharedPreferenceUtils {
         mContext = context;
         mSharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         mSharedPreferencesEditor = mSharedPreferences.edit();
+    }
+
+    public SharedPreferences getSharePref(){
+        return mSharedPreferences;
     }
 
     /**
@@ -87,6 +92,14 @@ public class SharedPreferenceUtils {
     public void setValue(String key, boolean value) {
         mSharedPreferencesEditor.putBoolean(key, value);
         mSharedPreferencesEditor.commit();
+    }
+
+    public void setSetValue(String key, Set<String> set) {
+        mSharedPreferencesEditor.putStringSet(key, set).commit();
+    }
+
+    public Set<String> getSetValue(String key) {
+       return mSharedPreferences.getStringSet(key, new HashSet<>());
     }
 
     /**

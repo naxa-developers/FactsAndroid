@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_activity_facts_feed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
+    android:animateLayoutChanges="true"
     android:clipToPadding="false">
 
 
@@ -21,18 +22,35 @@
 
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_facts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.AppBarLayout
+
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        >
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="8dp">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/app_bar"
             style="@style/Widget.Facts.Toolbar"
             android:layout_width="match_parent"
@@ -45,7 +63,7 @@
             app:navigationIcon="@drawable/ic_expand_more_black_24dp"
             app:title="Home"
             app:titleTextColor="@color/white" />
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

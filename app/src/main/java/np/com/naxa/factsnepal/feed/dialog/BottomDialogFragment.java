@@ -1,82 +1,148 @@
 package np.com.naxa.factsnepal.feed.dialog;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.chip.ChipGroup;
-import android.support.design.widget.BottomSheetDialogFragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
-import java.util.ArrayList;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
+import np.com.naxa.factsnepal.common.Constant;
+import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
+import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
+import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-@SuppressLint("ValidFragment")
-public class BottomDialogFragment extends BottomSheetDialogFragment {
+public class BottomDialogFragment extends BottomSheetDialogFragment implements View.OnClickListener {
+    private OnCategoriesSelectedListener listener;
+    private BaseRecyclerViewAdapter<Fact, CategoryVH> adapter;
+    Set<String> selectedCategories = new HashSet<>();
+
+    public BottomDialogFragment() {
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FactsFeedActivity) {
+            this.listener = (OnCategoriesSelectedListener) context;
+        }
+    }
 
     public static BottomDialogFragment getInstance() {
         return new BottomDialogFragment();
     }
 
-    private ChipGroup chipGroup;
+    private RecyclerView recyclerView;
+    private CheckBox selectAllCheckbox;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.layout_dialog_category_chips, container, false);
-        bindUI(view);
-        setupChips();
-        return view;
+        return inflater.inflate(R.layout.layout_dialog_category_chips, container, false);
     }
 
-    public static ArrayList<Integer> categoryList = new ArrayList<Integer>();
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        selectedCategories = SharedPreferenceUtils.getInstance(getContext()).getSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES);
+        bindUI();
+        FactsRepo.getINSTANCE().getFactsCategories(true)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(this::mapFactsToCategories)
+                .subscribe(new DisposableSingleObserver<List<Fact>>() {
+                    @Override
+                    public void onSuccess(List<Fact> categories) {
+                        setupListAdapter(categories);
+                    }
 
-    private void setupChips() {
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
 
-//        for (Pair p : Fact.getCategories()) {
-//            Chip chip = new Chip(new ContextThemeWrapper(requireActivity(), R.style.Feed_Widget_Chip));
-//            chip.setText(p.second.toString());
-//            chip.setTag(p);
-//            chip.setCheckable(true);
-//
-//
-//            chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                String label = ((Pair) buttonView.getTag()).second.toString();
-//                int id = Integer.parseInt(((Pair) buttonView.getTag()).first.toString());
-//                Log.d("bottomsheet", "setupChips: "+label);
-//                Log.d("bottomsheet", "setupChips: "+id);
-//
-//                if(!categoryList.contains(id)) {
-//                    categoryList.add(id);
-//
-//                    feedListActivity.listenChipsStatus();
-//
-//                }
-//
-//            });
-//
-//            chipGroup.addView(chip);
-//        }
-//        chipGroup.invalidate();
     }
 
-    public static void getSelectedCategories( @NonNull CategorySelectedListener listener) {
-        listener.onClick(categoryList);
+    private List<Fact> mapFactsToCategories(List<Fact> facts) {
+        for (Fact fact : facts) {
+            fact.setCategorySelected(selectedCategories.contains(fact.getCatgoryId()));
+        }
+        return facts;
     }
 
-        public interface CategorySelectedListener {
-        void onClick(ArrayList<Integer> categoriesList);
+    private void bindUI() {
+        recyclerView = getView().findViewById(R.id.rv_categories_chips);
+        View btnClose = getView().findViewById(R.id.btn_close_dialog_category_chips);
+        selectAllCheckbox = getView().findViewById(R.id.checkbox_dialog_category_chips);
+        selectAllCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            for (Fact fact : adapter.getData()) {
+                fact.setCategorySelected(isChecked);
+            }
+            adapter.notifyDataSetChanged();
+        });
+        btnClose.setOnClickListener(this);
     }
 
+    private void setupListAdapter(List<Fact> list) {
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(requireActivity(), R.dimen.margin_small);
+        adapter = new BaseRecyclerViewAdapter<Fact, CategoryVH>(list, R.layout.item_categories) {
+            @Override
+            public void viewBinded(CategoryVH categoryVH, Fact category, int position) {
+                categoryVH.bindView(category);
+            }
 
-    private void bindUI(View view) {
-        chipGroup = view.findViewById(R.id.cg_dialog_category);
+            @Override
+            public CategoryVH attachViewHolder(View view) {
+                return new CategoryVH(view);
+            }
+        };
+
+        GridLayoutManager manager = new GridLayoutManager(requireActivity(), 3);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.addItemDecoration(itemDecoration);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setMinimumHeight(400);
+        recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_close_dialog_category_chips:
+                selectedCategories.clear();
+                for (Fact fact : adapter.getData()) {
+                    if (fact.isCategorySelected())
+                        selectedCategories.add(fact.getCatgoryId());
+                }
+                SharedPreferenceUtils.getInstance(getContext()).setSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, selectedCategories);
+                if (listener != null) listener.onCategoriesSelected(selectedCategories);
+                dismiss();
+        }
+    }
 
+    public interface OnCategoriesSelectedListener {
+        void onCategoriesSelected(Set<String> categories);
+    }
 }
 
 

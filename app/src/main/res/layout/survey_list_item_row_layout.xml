@@ -16,12 +16,12 @@
     <LinearLayout
         android:layout_toRightOf="@+id/iv_survey_list_item_image"
         android:layout_toEndOf="@id/iv_survey_list_item_image"
-        android:layout_toLeftOf="@id/right_imageview_layout"
-        android:layout_toStartOf="@id/right_imageview_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_toLeftOf="@id/right_imageview_layout"
+        android:layout_toStartOf="@id/right_imageview_layout">
     <TextView
         android:id="@+id/tv_survey_list_item_title"
         android:layout_width="match_parent"
@@ -43,12 +43,13 @@
         android:id="@+id/right_imageview_layout"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:srcCompat="@drawable/ic_arrow_right_grey_24dp"/>
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_arrow_right_grey_24dp"/>
 
 
-    <ImageView
+    <View
         android:layout_below="@id/iv_survey_list_item_image"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

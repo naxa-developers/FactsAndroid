@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_item_facts_feed_card"
@@ -66,7 +66,7 @@
         tools:ignore="ContentDescription" />
 
 
-    <android.support.v4.widget.Space
+    <androidx.legacy.widget.Space
         android:id="@+id/marginSpacer"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -76,7 +76,7 @@
         app:layout_constraintRight_toRightOf="@id/iv_feed" />
 
 
-    <android.support.design.card.MaterialCardView
+    <com.google.android.material.card.MaterialCardView
 
         android:id="@+id/editText"
         style="@style/Feed.Widget.CardView"
@@ -147,7 +147,7 @@
 
 
         </RelativeLayout>
-    </android.support.design.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

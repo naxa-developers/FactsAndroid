@@ -1,18 +1,13 @@
 package np.com.naxa.factsnepal.feed;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-import android.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import np.com.naxa.factsnepal.network.facts.Category;
 
 @Entity(tableName = "facts")
 public class Fact implements Serializable {
@@ -50,6 +45,8 @@ public class Fact implements Serializable {
     @SerializedName("short_desc")
     private String shortDescription;
 
+    @Ignore
+    private boolean categorySelected;
 
     private boolean isBookmarked;
 
@@ -151,6 +148,14 @@ public class Fact implements Serializable {
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
+    }
+
+    public boolean isCategorySelected () {
+        return this.categorySelected;
+    }
+
+    public void setCategorySelected(boolean categorySelected) {
+        this.categorySelected = categorySelected;
     }
 
     @Override

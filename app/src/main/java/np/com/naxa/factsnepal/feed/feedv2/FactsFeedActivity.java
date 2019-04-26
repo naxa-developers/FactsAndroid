@@ -2,24 +2,29 @@ package np.com.naxa.factsnepal.feed.feedv2;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import androidx.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.support.design.button.MaterialButton;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
-import android.support.v7.widget.Toolbar;
+import android.os.Handler;
+import com.google.android.material.button.MaterialButton;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
+import androidx.recyclerview.widget.SnapHelper;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.littlemango.stacklayoutmanager.StackLayoutManager;
 
@@ -27,12 +32,17 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import io.reactivex.annotations.NonNull;
+
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.bookmarkedfeed.BookmarkedFeedV2Activity;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
@@ -42,76 +52,65 @@ import np.com.naxa.factsnepal.feed.bookmarkedfacts.BookmarkedFactsActivity;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 import np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment;
 import np.com.naxa.factsnepal.feed.list.FactsFeedAdapter;
-import np.com.naxa.factsnepal.feed.list.FactsRemoteSource;
+import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
 import np.com.naxa.factsnepal.notification.CountDrawable;
 import np.com.naxa.factsnepal.notification.NotificationActivity;
 import np.com.naxa.factsnepal.notification.NotificationCount;
 import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
+import np.com.naxa.factsnepal.userprofile.UserProfileInfoActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener {
+public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener, BottomDialogFragment.OnCategoriesSelectedListener {
 
     private View rootLayout;
     private FactsFeedAdapter adapter;
     private RecyclerView recyclerViewFeed;
-    private DisposableObserver<List<Fact>> factsDisposable;
     private LinearLayoutManager layoutManager;
     private Toolbar toolbar;
     private MaterialButton btnHome, btnPublicPoll, btnSurvey, btnBookmarked, btnAccount;
     private NotificationCount notificationCount;
 
-
     String colors[] = new String[]{"#571821", "#5C3219", "#103B31"};
     private Menu menu;
+    private MediatorLiveData<List<Fact>> factsLiveData = new MediatorLiveData<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facts_feed);
         notificationCount = new NotificationCount(this);
-
         bindUI();
         setupRecyclerView();
-        FactsLocalSource.getINSTANCE().getAll()
-                .observe(this, facts -> {
-                    adapter.updateList(facts);
+
+        factsLiveData.addSource(FactsRepo.getINSTANCE().getAllFacts(true), facts -> {
+            if (getSelectedCategories().size() == 0) {
+                factsLiveData.postValue(facts);
+            }
+        });
+        factsLiveData.addSource(FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true),
+                facts -> {
+                    if (getSelectedCategories().size() > 0) {
+                       factsLiveData.postValue(facts);
+                    }
                 });
 
+        factsLiveData.observe(this, facts -> {
+            adapter.updateList(facts);
+        });
         setUpToolbar();
-        loadFacts();
-
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        factsDisposable.dispose();
+    private List<Integer> getSelectedCategories() {
+       Set<String> idSet =  SharedPreferenceUtils.getInstance(getApplicationContext()).getSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES);
+       List<Integer> idInteger = new ArrayList<>();
+       for( String id : idSet ) {
+           idInteger.add(Integer.parseInt(id));
+       }
+       return idInteger;
     }
-
-    private void loadFacts() {
-        factsDisposable = FactsRemoteSource.getINSTANCE()
-                .getAllFacts()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<List<Fact>>() {
-                    @Override
-                    public void onNext(List<Fact> facts) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
 
     private void bindUI() {
         recyclerViewFeed = findViewById(R.id.rv_facts);
@@ -138,22 +137,15 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         if (useSnapLayout) {
             layoutManager = new LinearLayoutManager(this);
             recyclerViewFeed.setLayoutManager(layoutManager);
+            SnapHelper snapHelper = new PagerSnapHelper();
+            snapHelper.attachToRecyclerView(recyclerViewFeed);
+
             /*
              * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
              */
-            recyclerViewFeed.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(@android.support.annotation.NonNull @NonNull RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        int position = getCurrentItem();
-                        getColorPallete(position);
-                    }
-                }
-            });
 
-            SnapHelper snapHelper = new PagerSnapHelper();
-            snapHelper.attachToRecyclerView(recyclerViewFeed);
+
+
         } else {
             StackLayoutManager manager = new StackLayoutManager(StackLayoutManager.ScrollOrientation.TOP_TO_BOTTOM, 2);
             recyclerViewFeed.setLayoutManager(manager);
@@ -162,10 +154,11 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
             recyclerViewFeed.addItemDecoration(itemDecoration);
         }
 
-
+        RecyclerView.ItemAnimator animator = recyclerViewFeed.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
         recyclerViewFeed.setAdapter(adapter);
-
-
     }
 
     private void getColorPallete(int position) {
@@ -260,6 +253,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
             case R.id.action_profile:
                 try {
                     notificationCount.saveNotification(notificationCount.getJsonArray());
+                    ActivityUtil.openActivity(UserProfileInfoActivity.class, this);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -302,20 +296,24 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 break;
             case R.id.backdrop_account:
                 ActivityUtil.openActivity(PreferencesActivity.class, this);
-
                 break;
             case R.id.backdrop_public_poll:
                 ActivityUtil.openActivity(PublicPollActivity.class, this);
                 break;
             case R.id.backdrop_bookmark:
-                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
-
+//                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
+                ActivityUtil.openActivity(BookmarkedFeedV2Activity.class, this);
                 break;
             case R.id.backdrop_public_survey:
-                ActivityUtil.openActivity(SurveyCompanyListActivity
-                        .class, this);
-
+                ActivityUtil.openActivity(SurveyCompanyListActivity.class, this);
                 break;
         }
+    }
+
+    @Override
+    public void onCategoriesSelected(Set<String> categories) {
+
+        FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true);
+        Toast.makeText(getApplicationContext(), categories.size() + " categories added to your preference list", Toast.LENGTH_SHORT).show();
     }
 }

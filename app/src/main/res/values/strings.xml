@@ -87,5 +87,31 @@
     <string name="dialog_action_dismiss">Cancel</string>
     <string name="msg_bookmared">Bookmarked</string>
     <string name="msg_not_bookmarked">Not Bookmarked</string>
+    <string name="msg_can_not_refresh_feed">Couldn\'t refresh feed</string>
+
+    <!-- walk through screen -->
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="got_it">GOT IT</string>
+
+    <string name="slide_1_title">Introduction 1!</string>
+    <string name="slide_1_desc">Short Description 1!</string>
+
+    <string name="slide_2_title">Introduction 2!</string>
+    <string name="slide_2_desc">Short Description 2!</string>
+
+    <string name="slide_3_title">Introduction 3!</string>
+    <string name="slide_3_desc">Short Description 3!</string>
+
+    <string name="slide_4_title">Introduction 4!</string>
+    <string name="slide_4_desc">Short Description 4!</string>
+
+    <string name="slide_5_title">Introduction 5!</string>
+    <string name="slide_5_desc">Short Description 5!</string>
+    <string name="subtext">subtext</string>
+    <string name="primary_short">Primary Short</string>
+    <string name="un_bookmark">Un Bookmark</string>
+    <string name="view_fact">View Fact</string>
+    <!--end of walk through screen-->
 
 </resources>

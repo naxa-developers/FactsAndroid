@@ -1,15 +1,20 @@
 package np.com.naxa.factsnepal.feed;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import np.com.naxa.factsnepal.FactsNepal;
+import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.database.FactsDAO;
 import np.com.naxa.factsnepal.database.FactsNepalDatabase;
 import np.com.naxa.factsnepal.database.base.BaseLocalDataSourceRX;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
 
@@ -74,6 +79,7 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
         factsDAO.insert(items);
     }
 
+
     public LiveData<List<Fact>> getAll() {
         return factsDAO.getAll();
     }
@@ -84,5 +90,17 @@ public class FactsLocalSource implements BaseLocalDataSourceRX<Fact> {
 
     public LiveData<Fact> getById(String id) {
         return factsDAO.getById(id);
+    }
+
+    public LiveData<List<Fact>> getByIds(List<Integer> integers) {
+        return factsDAO.getByIds(integers);
+    }
+
+    public LiveData<List<Fact>> getByIds(Set<String> integers) {
+        return factsDAO.getByIds(integers);
+    }
+
+    public Single<List<Fact>> getAllCategories() {
+        return factsDAO.getAllCategories();
     }
 }
