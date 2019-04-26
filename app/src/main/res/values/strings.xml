@@ -108,6 +108,10 @@
 
     <string name="slide_5_title">Introduction 5!</string>
     <string name="slide_5_desc">Short Description 5!</string>
+    <string name="subtext">subtext</string>
+    <string name="primary_short">Primary Short</string>
+    <string name="un_bookmark">Un Bookmark</string>
+    <string name="view_fact">View Fact</string>
     <!--end of walk through screen-->
 
 </resources>

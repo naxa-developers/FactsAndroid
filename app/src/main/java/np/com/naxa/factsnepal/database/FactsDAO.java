@@ -1,10 +1,11 @@
 package np.com.naxa.factsnepal.database;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Query;
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Query;
 
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Single;
 import np.com.naxa.factsnepal.database.base.BaseDAO;
@@ -23,6 +24,9 @@ public abstract class FactsDAO implements BaseDAO<Fact> {
 
     @Query("SELECT * FROM facts WHERE catgoryId IN(:categoryIds)")
     public abstract LiveData<List<Fact>> getByIds(List<Integer> categoryIds);
+
+    @Query("SELECT * FROM facts WHERE catgoryId IN(:categoryIds)")
+    public abstract LiveData<List<Fact>> getByIds(Set<String> categoryIds);
 
     @Query("SELECT * FROM facts GROUP BY catgoryId")
     public abstract Single<List<Fact>> getAllCategories();
