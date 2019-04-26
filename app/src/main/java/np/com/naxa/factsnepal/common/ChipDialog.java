@@ -47,7 +47,7 @@ public class ChipDialog extends AlertDialog {
                 chip.setOnCloseIconClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("DUCK","DUCK");
+
                     }
                 });
 

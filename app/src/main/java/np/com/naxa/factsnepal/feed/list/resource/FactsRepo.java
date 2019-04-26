@@ -1,9 +1,12 @@
 package np.com.naxa.factsnepal.feed.list.resource;
 
+import android.util.Log;
 import androidx.lifecycle.LiveData;
+
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Single;
 import io.reactivex.observers.DisposableObserver;
@@ -28,25 +31,24 @@ public class FactsRepo {
 
 
     public LiveData<List<Fact>> getAllFacts(boolean refreshCache) {
+        Log.d("FactsRepo", "get ALl Fact called");
         if (refreshCache && NetworkUtils.isConnected()) {
-            FactsRemoteSource.getINSTANCE().getAllFacts()
-                    .subscribe(new DisposableObserver<List<Fact>>() {
-                        @Override
-                        public void onNext(List<Fact> facts) {
+            FactsRemoteSource.getINSTANCE().getAllFacts().subscribe(new DisposableObserver<List<Fact>>() {
+                @Override
+                public void onNext(List<Fact> facts) {
+                    Log.d("success", "datarecieved");
+                }
 
-                        }
+                @Override
+                public void onError(Throwable e) {
 
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                            showMessage(FactsNepal.getInstance().getString(R.string.msg_can_not_refresh_feed));
-                        }
+                }
 
-                        @Override
-                        public void onComplete() {
+                @Override
+                public void onComplete() {
 
-                        }
-                    });
+                }
+            });
         }
         return FactsLocalSource.getINSTANCE().getAll();
     }
@@ -63,12 +65,13 @@ public class FactsRepo {
     }
 
     public Single<List<Fact>> getFactsCategories(boolean refreshCache) {
+        Log.d("FactsRepo", "categories by id called");
         if (refreshCache && NetworkUtils.isConnected()) {
             FactsRemoteSource.getINSTANCE().getCategories()
                     .subscribe(new DisposableObserver<List<Category>>() {
                         @Override
                         public void onNext(List<Category> categories) {
-
+                            Log.d("FactsRepo", "data recieved by categories");
                         }
 
                         @Override
@@ -89,8 +92,6 @@ public class FactsRepo {
     }
 
     public LiveData<List<Fact>> getByCategoryIds(List<Integer> categoryIds, boolean refreshCache) {
-
-
         if (refreshCache && NetworkUtils.isConnected()) {
             FactsRemoteSource.getINSTANCE().getFactsByCategoryId(categoryIds)
                     .subscribe(new DisposableObserver<List<Fact>>() {
@@ -114,6 +115,4 @@ public class FactsRepo {
         }
         return FactsLocalSource.getINSTANCE().getByIds(categoryIds);
     }
-
-
 }

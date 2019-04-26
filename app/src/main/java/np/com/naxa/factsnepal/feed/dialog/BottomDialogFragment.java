@@ -1,10 +1,10 @@
 package np.com.naxa.factsnepal.feed.dialog;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,18 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
@@ -31,27 +26,29 @@ import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
 import np.com.naxa.factsnepal.feed.Fact;
+import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 import np.com.naxa.factsnepal.feed.list.resource.FactsRepo;
-import np.com.naxa.factsnepal.network.facts.Category;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-@SuppressLint("ValidFragment")
 public class BottomDialogFragment extends BottomSheetDialogFragment implements View.OnClickListener {
+    private OnCategoriesSelectedListener listener;
+    private BaseRecyclerViewAdapter<Fact, CategoryVH> adapter;
+    Set<String> selectedCategories = new HashSet<>();
 
-    private final OnCategoriesSelectedListener listener;
-    private BaseRecyclerViewAdapter<Category, CategoryVH> adapter;
-    private DisposableObserver<List<Category>> dis;
-    private Gson gson;
-    private Type typeToken = new TypeToken<List<Category>>() {
-    }.getType();
-    private ArrayList<Category> categories;
+    public BottomDialogFragment() {
 
-    public BottomDialogFragment(OnCategoriesSelectedListener listener) {
-        this.listener = listener;
     }
 
-    public static BottomDialogFragment getInstance(OnCategoriesSelectedListener listener) {
-        return new BottomDialogFragment(listener);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof FactsFeedActivity) {
+            this.listener = (OnCategoriesSelectedListener) context;
+        }
+    }
+
+    public static BottomDialogFragment getInstance() {
+        return new BottomDialogFragment();
     }
 
     private RecyclerView recyclerView;
@@ -60,19 +57,21 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.layout_dialog_category_chips, container, false);
-        bindUI(view);
+        return inflater.inflate(R.layout.layout_dialog_category_chips, container, false);
+    }
 
-        this.gson = new Gson();
-
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        selectedCategories = SharedPreferenceUtils.getInstance(getContext()).getSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES);
+        bindUI();
         FactsRepo.getINSTANCE().getFactsCategories(true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(this::mapFactsToCategories)
-                .subscribe(new DisposableSingleObserver<List<Category>>() {
+                .subscribe(new DisposableSingleObserver<List<Fact>>() {
                     @Override
-                    public void onSuccess(List<Category> categories) {
+                    public void onSuccess(List<Fact> categories) {
                         setupListAdapter(categories);
                     }
 
@@ -82,43 +81,33 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
                     }
                 });
 
-
-        return view;
     }
 
-    private List<Category> mapFactsToCategories(List<Fact> facts) {
-        categories = new ArrayList<>();
-        String list = SharedPreferenceUtils.getInstance(getContext()).getStringValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, "");
-        gson.fromJson(list, new TypeToken<List<String>>() {
-        }.getType());
-
+    private List<Fact> mapFactsToCategories(List<Fact> facts) {
         for (Fact fact : facts) {
-            Category category = new Category();
-            category.setId(fact.getCatgoryId());
-            category.setTitle(fact.getCategoryName());
-            category.setSelected(list != null && list.contains(fact.getCatgoryId()));
-
-            categories.add(category);
+            fact.setCategorySelected(selectedCategories.contains(fact.getCatgoryId()));
         }
-
-        return categories;
+        return facts;
     }
 
-    private void bindUI(View view) {
-        recyclerView = view.findViewById(R.id.rv_categories_chips);
-        View btnClose = view.findViewById(R.id.btn_close_dialog_category_chips);
-        selectAllCheckbox = view.findViewById(R.id.checkbox_dialog_category_chips);
-        selectAllCheckbox.setOnClickListener(this);
+    private void bindUI() {
+        recyclerView = getView().findViewById(R.id.rv_categories_chips);
+        View btnClose = getView().findViewById(R.id.btn_close_dialog_category_chips);
+        selectAllCheckbox = getView().findViewById(R.id.checkbox_dialog_category_chips);
+        selectAllCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            for (Fact fact : adapter.getData()) {
+                fact.setCategorySelected(isChecked);
+            }
+            adapter.notifyDataSetChanged();
+        });
         btnClose.setOnClickListener(this);
     }
 
-    private void setupListAdapter(List<Category> list) {
-
+    private void setupListAdapter(List<Fact> list) {
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(requireActivity(), R.dimen.margin_small);
-
-        adapter = new BaseRecyclerViewAdapter<Category, CategoryVH>(list, R.layout.item_categories) {
+        adapter = new BaseRecyclerViewAdapter<Fact, CategoryVH>(list, R.layout.item_categories) {
             @Override
-            public void viewBinded(CategoryVH categoryVH, Category category, int position) {
+            public void viewBinded(CategoryVH categoryVH, Fact category, int position) {
                 categoryVH.bindView(category);
             }
 
@@ -130,60 +119,29 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
 
         GridLayoutManager manager = new GridLayoutManager(requireActivity(), 3);
         recyclerView.setLayoutManager(manager);
-
+        recyclerView.addItemDecoration(itemDecoration);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setMinimumHeight(400);
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.checkbox_dialog_category_chips:
-                for (Category category : categories) {
-                    category.setSelected(!category.isSelected());
-                }
-                adapter.notifyDataSetChanged();
-                break;
             case R.id.btn_close_dialog_category_chips:
-                getSelectedItems();
-                break;
-        }
-    }
-
-    private void getSelectedItems() {
-        if (adapter == null) {
-            dismiss();
-            return;
-        }
-        List<Category> data = adapter.getData();
-        Single<List<Integer>> observable = Observable.just(data)
-                .subscribeOn(Schedulers.io())
-                .flatMapIterable((Function<List<Category>, Iterable<Category>>) categories -> categories)
-                .filter(Category::isSelected)
-                .map(new Function<Category, Integer>() {
-                    @Override
-                    public Integer apply(Category category) throws Exception {
-                        return Integer.valueOf(category.getId());
-                    }
-                })
-                .toList();
-
-        observable.subscribe(new DisposableSingleObserver<List<Integer>>() {
-            @Override
-            public void onSuccess(List<Integer> selectedCategoriesIds) {
-                if (listener != null) listener.onCategoriesSelected(selectedCategoriesIds);
-                SharedPreferenceUtils.getInstance(getContext()).setValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, gson.toJson(selectedCategoriesIds));
+                selectedCategories.clear();
+                for (Fact fact : adapter.getData()) {
+                    if (fact.isCategorySelected())
+                        selectedCategories.add(fact.getCatgoryId());
+                }
+                SharedPreferenceUtils.getInstance(getContext()).setSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES, selectedCategories);
+                if (listener != null) listener.onCategoriesSelected(selectedCategories);
                 dismiss();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-        });
+        }
     }
 
     public interface OnCategoriesSelectedListener {
-        void onCategoriesSelected(List<Integer> categories);
+        void onCategoriesSelected(Set<String> categories);
     }
 }
 
