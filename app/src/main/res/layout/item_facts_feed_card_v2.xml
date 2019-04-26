@@ -19,10 +19,13 @@
 
             android:id="@+id/iv_feed"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:layout_constraintBottom_toTopOf="@id/view"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.611"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/fab"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            app:layout_constraintTop_toBottomOf="@id/tv_feed_card_category"
+            android:scaleType="fitCenter"
+            app:layout_constraintVertical_bias="0.411"
              />
 
 
@@ -42,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:maxLines="2"
             android:paddingLeft="@dimen/padding_large"
             android:paddingRight="@dimen/padding_large"
             android:paddingTop="@dimen/padding_large"
@@ -153,7 +157,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.87" />
+            app:layout_constraintVertical_bias="0.91" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
