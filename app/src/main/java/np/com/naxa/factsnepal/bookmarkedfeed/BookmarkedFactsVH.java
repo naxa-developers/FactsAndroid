@@ -53,7 +53,7 @@ public class BookmarkedFactsVH extends RecyclerView.ViewHolder {
         btnViewDetailsBookmarkedFact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bookmarkedFactsClickListner.viewBookmarkedListner(fact);
+                bookmarkedFactsClickListner.viewBookmarkedListner(fact, ivBookmarkedFactsImage);
             }
         });
     }

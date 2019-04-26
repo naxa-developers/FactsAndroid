@@ -1,9 +1,12 @@
 package np.com.naxa.factsnepal.bookmarkedfeed;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +16,10 @@ import java.util.List;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
+import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
+import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
 
 public class BookmarkedFeedV2Activity extends BaseActivity {
 
@@ -61,8 +66,9 @@ public class BookmarkedFeedV2Activity extends BaseActivity {
                     }
 
                     @Override
-                    public void viewBookmarkedListner(Fact fact) {
+                    public void viewBookmarkedListner(Fact fact, ImageView imageView) {
                         Log.d("Bookmarked", "viewBookmarkedListner: ");
+                        openFactDetailsActivity(fact, imageView);
                     }
                 });
             }
@@ -77,5 +83,14 @@ public class BookmarkedFeedV2Activity extends BaseActivity {
         recyclerView.setAdapter(adapter);
     }
 
+
+    private void openFactDetailsActivity(Fact fact, ImageView imageView){
+        Intent intent = new Intent(this, FactDetailActivity.class);
+        intent.putExtra(Constant.EXTRA_IMAGE, fact);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, imageView, getString(R.string.transtion_fact_list_details));
+        startActivity(intent, options.toBundle());
+    }
 
 }
