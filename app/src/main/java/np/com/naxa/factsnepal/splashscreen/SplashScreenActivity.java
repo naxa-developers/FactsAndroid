@@ -7,11 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 import np.com.naxa.factsnepal.R;
-
+import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
 import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
-
 import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
 
 import np.com.naxa.factsnepal.userprofile.LoginActivity;
