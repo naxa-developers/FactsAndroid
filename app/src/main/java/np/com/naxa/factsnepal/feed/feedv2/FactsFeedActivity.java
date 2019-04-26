@@ -228,6 +228,9 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         try {
+            MenuItem morecategories = menu.findItem(R.id.action_categories);
+            morecategories.setVisible(true);
+
             long count = notificationCount.getNotificationCount();
             setNotificationCount(this, count + "", menu);
         } catch (NullPointerException | JSONException e) {
