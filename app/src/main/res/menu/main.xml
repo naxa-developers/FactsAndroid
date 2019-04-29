@@ -28,6 +28,7 @@
         android:id="@+id/action_categories"
         android:icon="@drawable/ic_chip_add_24dp"
         android:orderInCategory="90"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
 
 </menu>
