@@ -3,11 +3,11 @@ package np.com.naxa.factsnepal.surveys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.View;
 
 import com.google.gson.Gson;
 
@@ -21,22 +21,17 @@ import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
-import np.com.naxa.factsnepal.network.NetworkApiClient;
-import np.com.naxa.factsnepal.network.NetworkApiInterface;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
 import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_FORM_TYPE;
 import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_SURVEY_COMPANY_DETAILS_JSON;
 
 public class SurveyFormListActivity extends BaseActivity {
     private static final String TAG = "SurveyFormsListActivity";
-    public static final String KEY_RECENT_SURVEY_FORM_DETAILS = "recent_survey_form_details";
     private BaseRecyclerViewAdapter<SurevyForms, SurveyItemListVH> adapter;
     List<SurevyForms> surevyFormsList;
 
@@ -150,7 +145,7 @@ public class SurveyFormListActivity extends BaseActivity {
                         public void onError(Throwable e) {
                             showToast(e.getMessage());
                             Log.d(TAG, "onError: "+e.getMessage());
-                            ActivityUtil.openActivity(SurveyActivity.class, SurveyFormListActivity.this);
+//                            ActivityUtil.openActivity(SurveyActivity.class, SurveyFormListActivity.this);
 
                         }
 

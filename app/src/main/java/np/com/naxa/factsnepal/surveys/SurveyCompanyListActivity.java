@@ -51,6 +51,8 @@ public class SurveyCompanyListActivity extends BaseActivity {
 
     }
 
+
+
     private void getSurveyListData() {
         createProgressDialog("fetching data.\nPlease wait..");
         if (isNetworkAvailable()) {
