@@ -145,8 +145,6 @@ public class SurveyFormListActivity extends BaseActivity {
                         public void onError(Throwable e) {
                             showToast(e.getMessage());
                             Log.d(TAG, "onError: "+e.getMessage());
-//                            ActivityUtil.openActivity(SurveyActivity.class, SurveyFormListActivity.this);
-
                         }
 
                         @Override

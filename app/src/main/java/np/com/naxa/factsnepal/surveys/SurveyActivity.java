@@ -38,7 +38,6 @@ public class SurveyActivity extends BaseActivity {
         setupToolbar("Survey Activity");
         RecyclerView recyclerView = findViewById(R.id.rv_survey);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(new SurveyAdapter(buildUi()));
             recyclerView.setAdapter(new SurveyAdapter(buildUi()));
     }
 
