@@ -20,6 +20,7 @@ import java.util.List;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.utils.ImageUtils;
+import np.com.naxa.factsnepal.utils.TouchImageView;
 
 public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.FeedCardVH> {
 
@@ -130,7 +131,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     class FeedCardVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvTitle, tvCategory, btnShare, tvLikeCount;
-        ImageView imageView;
+        TouchImageView imageView;
         View rootView;
         Button fab;
 
@@ -143,6 +144,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
             tvCategory = itemView.findViewById(R.id.tv_feed_card_category);
             tvSaved = itemView.findViewById(R.id.btn_bookmark);
             imageView = itemView.findViewById(R.id.iv_feed);
+            imageView.setMaxZoom(4f);
             btnShare = itemView.findViewById(R.id.btn_share);
             tvLikeCount = itemView.findViewById(R.id.btn_like);
             rootView = itemView.findViewById(R.id.root_item_facts_feed_card);

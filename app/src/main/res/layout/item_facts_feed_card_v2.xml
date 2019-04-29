@@ -15,17 +15,18 @@
         android:layout_height="match_parent">
 
 
-        <ImageView
-
+        <np.com.naxa.factsnepal.utils.TouchImageView
             android:id="@+id/iv_feed"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@id/fab"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             app:layout_constraintTop_toBottomOf="@id/tv_feed_card_category"
             android:scaleType="fitCenter"
             app:layout_constraintVertical_bias="0.411"
+            android:clickable="true"
+            android:focusable="true"
              />
 
 
