@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -152,6 +153,7 @@ public class SurveyActivity extends BaseActivity {
 }
 
 class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
+    private static final String TAG = "SurveyAdapter";
     JSONArray surveyArray;
     Context context ;
     int arrayCounter = -1 ;
@@ -182,6 +184,23 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SurveyViewHolder surveyViewHolder, int i) {
+
+        surveyViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onBindViewHolder: item view click listner");
+            }
+        });
+        if(surveyViewHolder.itemView instanceof RadioGroup){
+            Log.d(TAG, "onBindViewHolder: RadioGroup");
+
+        }
+
+        if(surveyViewHolder.itemView instanceof ViewGroup){
+            Log.d(TAG, "onBindViewHolder: Checkbox");
+
+        }
+        
     }
 
     @Override
