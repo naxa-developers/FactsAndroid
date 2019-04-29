@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,6 +24,9 @@ import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
 import np.com.naxa.factsnepal.utils.JsonView;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
+
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
 
 public class SurveyActivity extends BaseActivity {
     private static final String TAG = "SurveyActivity";
@@ -37,15 +38,16 @@ public class SurveyActivity extends BaseActivity {
         setupToolbar("Survey Activity");
         RecyclerView recyclerView = findViewById(R.id.rv_survey);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new SurveyAdapter(buildUi()));
+            recyclerView.setAdapter(new SurveyAdapter(buildUi()));
     }
 
 
-    private JSONArray buildUi (){
-        Gson gson = new Gson();
-        SurveyQuestionDetailsResponse surveyQuestionDetailsResponse = gson.fromJson(SurveyQuestionDetailsResponse.getDemoJson(), SurveyQuestionDetailsResponse.class);
+    private synchronized JSONArray buildUi (){
         try {
             Log.d(TAG, "buildUi: " + SurveyQuestionDetailsResponse.getDemoJson());
+            String json1 = SharedPreferenceUtils.getInstance(this).getStringValue(KEY_RECENT_SURVEY_FORM_DETAILS, "");
+            JSONObject jsonObject = new JSONObject(json1);
+            JSONArray jsonArray = jsonObject.getJSONArray("survey_question");
             String json = " [\n" +
                     "       {\n" +
                     "           \"id\": 1,\n" +
@@ -146,7 +148,8 @@ public class SurveyActivity extends BaseActivity {
                     "           ]\n" +
                     "       }\n" +
                     "   ]";
-            return new JSONArray(json);
+//            return new JSONArray(json);
+            return jsonArray;
         } catch (Exception e){ return new JSONArray(); }
     }
 }
@@ -182,7 +185,6 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SurveyViewHolder surveyViewHolder, int i) {
-
     }
 
     @Override
@@ -231,6 +233,7 @@ class SurveyViewHolder extends RecyclerView.ViewHolder {
     public SurveyViewHolder(View view) {
         super(view);
     }
+
 }
 
 

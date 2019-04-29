@@ -126,6 +126,7 @@ public class UserProfileInfoActivity extends BaseActivity {
                     @Override
                     public void onNext(UsersEarningResponse usersEarningResponse) {
                         if (usersEarningResponse != null) {
+                            Log.d(TAG, "onNext: "+usersEarningResponse.getEarning().size());
                             tvTotalEarning.setText(usersEarningResponse.getEarning().get(0).getTotal());
                             sharedPreferenceUtils.setValue(KEY_USERS_EARNING_DETAILS, gson.toJson(usersEarningResponse));
                             surveyDetails = usersEarningResponse.getSurveyDetails();
