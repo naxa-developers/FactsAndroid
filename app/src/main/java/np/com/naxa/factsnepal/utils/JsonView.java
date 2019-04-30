@@ -165,11 +165,12 @@ public class JsonView extends LinearLayout {
             checkBox.setText(option.optString("question"));
             checkBox.setTag(option.optString("id"));
             chkGroup.addView(checkBox, i);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                Constant.generatedViewIdsList.add(LinearLayout.generateViewId());
-            }else {
-                Constant.generatedViewIdsList.add(ViewUtils.generateViewId());
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                Constant.generatedViewIdsList.add(LinearLayout.generateViewId());
+//            }else {
+            int viewId = ViewUtils.generateViewId();
+            chkGroup.setId(viewId);
+            Constant.generatedViewIdsList.add(viewId);//            }
         }
         return chkGroup;
     }
@@ -188,7 +189,14 @@ public class JsonView extends LinearLayout {
             radioButton.setText(option.optString("question"));
             radioGroup.addView(radioButton);
             radioButton.setTag(option.optString("id"));
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                Constant.generatedViewIdsList.add(RadioGroup.generateViewId());
+//            }else {
+//            }
         }
+        int viewId = ViewUtils.generateViewId();
+        radioGroup.setId(viewId);
+        Constant.generatedViewIdsList.add(viewId);
         return radioGroup;
     }
 
@@ -204,6 +212,12 @@ public class JsonView extends LinearLayout {
         textView.setText("\t"+Html.fromHtml(text));
         textView.setTextColor(Color.parseColor("#212121"));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//            Constant.generatedViewIdsList.add(TextView.generateViewId());
+//        }else {
+        int viewId = ViewUtils.generateViewId();
+        textView.setId(viewId);
+        Constant.generatedViewIdsList.add(viewId);//        }
         return textView;
     }
 
@@ -225,6 +239,12 @@ public class JsonView extends LinearLayout {
             editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         }
         ll.addView(editText);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//            Constant.generatedViewIdsList.add(LinearLayout.generateViewId());
+//        }else {
+        int viewId = ViewUtils.generateViewId();
+        editText.setId(viewId);
+        Constant.generatedViewIdsList.add(viewId);//        }
         return ll;
     }
 
@@ -249,6 +269,12 @@ public class JsonView extends LinearLayout {
         ll.addView(ratingBar);
         }
 // get the current layout
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//            Constant.generatedViewIdsList.add(LinearLayout.generateViewId());
+//        }else {
+        int viewId = ViewUtils.generateViewId();
+        ll.setId(viewId);
+        Constant.generatedViewIdsList.add(viewId);//        }
         return ll;
     }
 

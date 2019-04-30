@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
@@ -17,9 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
 import np.com.naxa.factsnepal.utils.JsonView;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -28,15 +37,28 @@ import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SU
 
 public class SurveyActivity extends BaseActivity {
     private static final String TAG = "SurveyActivity";
+    Button btnFormSubmit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey);
+
+        btnFormSubmit = findViewById(R.id.btn_form_submit);
         setupToolbar("Survey Activity");
         RecyclerView recyclerView = findViewById(R.id.rv_survey);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(new SurveyAdapter(buildUi()));
+
+
+            btnFormSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getValueFromView();
+                }
+            });
+
     }
 
 
@@ -150,6 +172,48 @@ public class SurveyActivity extends BaseActivity {
             return jsonArray;
         } catch (Exception e){ return new JSONArray(); }
     }
+
+
+    private void getValueFromView(){
+        Log.d(TAG, "getValueFromView: "+Constant.generatedViewIdsList.size());
+        Observable.just(Constant.generatedViewIdsList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapIterable(new Function<List<Integer>, Iterable<Integer>>() {
+                    @Override
+                    public Iterable<Integer> apply(List<Integer> integers) throws Exception {
+                        return integers;
+                    }
+                })
+                .map(new Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer integer) throws Exception {
+                        return integer;
+                    }
+                })
+                .subscribe(new DisposableObserver<Integer>() {
+                    @Override
+                    public void onNext(Integer integer) {
+                        View view = findViewById(integer);
+
+                        if(view instanceof RadioGroup){
+                            Log.d(TAG, "onNext: Radio group");
+                            Log.d(TAG, "onNext: "+((RadioGroup) view).getChildCount());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
 }
 
 class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
@@ -252,6 +316,8 @@ class SurveyViewHolder extends RecyclerView.ViewHolder {
     }
 
 }
+
+
 
 
 
