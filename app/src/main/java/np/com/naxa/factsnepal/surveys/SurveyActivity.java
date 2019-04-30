@@ -185,6 +185,7 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull SurveyViewHolder surveyViewHolder, int i) {
 
+
         surveyViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,10 +198,10 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
         }
 
         if(surveyViewHolder.itemView instanceof ViewGroup){
-            Log.d(TAG, "onBindViewHolder: Checkbox");
+            Log.d(TAG, "onBindViewHolder: Checkbox"+((ViewGroup) surveyViewHolder.itemView).getChildCount());
 
         }
-        
+
     }
 
     @Override

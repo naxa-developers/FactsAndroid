@@ -3,6 +3,7 @@ package np.com.naxa.factsnepal.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import np.com.naxa.factsnepal.common.Constant;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -148,7 +151,7 @@ public class JsonView extends LinearLayout {
         }
     }
 
-    private synchronized ViewGroup getCheckBoxView() {
+    private synchronized LinearLayout getCheckBoxView() {
         LinearLayout chkGroup = new LinearLayout(getContext());
         chkGroup.setOrientation(VERTICAL);
         for (int i = 0; i < params.options.length(); i++) {
@@ -162,6 +165,11 @@ public class JsonView extends LinearLayout {
             checkBox.setText(option.optString("question"));
             checkBox.setTag(option.optString("id"));
             chkGroup.addView(checkBox, i);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Constant.generatedViewIdsList.add(LinearLayout.generateViewId());
+            }else {
+                Constant.generatedViewIdsList.add(ViewUtils.generateViewId());
+            }
         }
         return chkGroup;
     }
