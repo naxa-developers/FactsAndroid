@@ -1,12 +1,11 @@
 package np.com.naxa.factsnepal.feed.list.resource;
 
 import android.util.Log;
-import androidx.lifecycle.LiveData;
-
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
-import java.util.Set;
 
 import io.reactivex.Single;
 import io.reactivex.observers.DisposableObserver;
@@ -53,8 +52,9 @@ public class FactsRepo {
         return FactsLocalSource.getINSTANCE().getAll();
     }
 
+
     private void showMessage(String message) {
-        Toast.makeText(FactsNepal.getInstance(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(FactsNepal.getInstance(), message, Toast.LENGTH_SHORT).show();
     }
 
     public LiveData<Fact> getById(String factId, boolean refreshCache) {

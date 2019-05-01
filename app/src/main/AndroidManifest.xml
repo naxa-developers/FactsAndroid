@@ -31,7 +31,8 @@
             android:name=".feed.feedv2.FactsFeedActivity"
             android:exported="true" />
         <activity android:name=".surveys.SurveyFormListActivity" />
-        <activity android:name=".surveys.SurveyCompanyListActivity" />
+        <activity android:name=".surveys.SurveyCompanyListActivity"
+            android:exported="true"/>
         <activity
             android:name=".userprofile.UserProfileInfoActivity"
             android:exported="true" />
