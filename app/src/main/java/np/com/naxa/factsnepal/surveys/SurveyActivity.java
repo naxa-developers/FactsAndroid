@@ -2,12 +2,13 @@ package np.com.naxa.factsnepal.surveys;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -44,7 +46,11 @@ public class SurveyActivity extends BaseActivity {
     private static final String TAG = "SurveyActivity";
     Button btnFormSubmit;
     List<String> checkedStringList = new ArrayList<String>();
+    String checkboxString = "";
+    String viewTag = "";
+    String lastViewTag = "";
 
+    JSONObject jsonObject = new JSONObject();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +63,6 @@ public class SurveyActivity extends BaseActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new SurveyAdapter(buildUi()));
-
 
         btnFormSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +209,7 @@ public class SurveyActivity extends BaseActivity {
                     public void onNext(Integer integer) {
                         Log.d(TAG, "onNext: view id " + integer);
                         View view = findViewById(integer);
+                        viewTag = view.getTag().toString();
                         getChildFromLinearLayout(view);
 
                     }
@@ -235,48 +241,78 @@ public class SurveyActivity extends BaseActivity {
                 break;
 
             case "RadioGroup":
-                getValueFromRadioGroup((RadioGroup) view);
+                try {
+                    jsonObject.put(viewTag, getValueFromRadioGroup((RadioGroup) view) );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Log.d(TAG, "getChildFromRadioGroup: " + ((RadioGroup) view).getChildCount());
 
                 break;
 
             case "RatingBar":
-                getValueFromratingBar((RatingBar) view);
+                try {
+                    jsonObject.put(viewTag, getValueFromratingBar((RatingBar) view) );
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 break;
 
             case "CheckBox":
                 getValueFromCheckBox((CheckBox) view);
+                if (!TextUtils.equals(viewTag, lastViewTag)) {
+                    try {
+                        jsonObject.put(viewTag, checkboxString);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
                 break;
 
             case "EditText":
+                try {
+                    jsonObject.put(viewTag, getValueFromEditTex((EditText) view) );
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 break;
 
         }
+
+        Log.d(TAG, "json to send : "+jsonObject.toString());
     }
 
-    public synchronized void getValueFromRadioGroup(RadioGroup radioGroup) {
+    public synchronized String getValueFromRadioGroup(RadioGroup radioGroup) throws Exception {
         RadioButton rb1 = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
         if (rb1 == null) {
             showToast("no any option selected");
-            return;
+            throw new  Exception();
         }
         String radiovalue = rb1.getText().toString();
         Log.d(TAG, "getValueFromRadioGroup: radiovalue " + radiovalue);
+        return radiovalue;
     }
 
-    public synchronized void getValueFromTextView(TextView textView) {
+    public synchronized String getValueFromTextView(TextView textView) {
         Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
+        return textView.getText().toString();
     }
-
-    String viewTag = "";
+    public synchronized String getValueFromEditTex(EditText editText) {
+        Log.d(TAG, "getValueFromTextView: " + editText.getClass().getSimpleName() + " " + editText.getText().toString());
+        return editText.getText().toString();
+    }
 
     public synchronized void getValueFromCheckBox(CheckBox checkBox) {
-        String checkboxString = "";
 
         if (checkBox.isChecked()) {
-            if (viewTag.equals("") || viewTag.equals(checkBox.getTag())) {
+
+            if (TextUtils.equals("",viewTag) || TextUtils.equals(viewTag,checkBox.getTag().toString())) {
                 checkedStringList.add(checkBox.getText().toString());
             } else {
+                lastViewTag = checkBox.getTag().toString();
                 checkedStringList = new ArrayList<String>();
                 checkedStringList.add(checkBox.getText().toString());
 
@@ -291,9 +327,10 @@ public class SurveyActivity extends BaseActivity {
         Log.d(TAG, "getValueFromCheckBox: " + checkboxString);
     }
 
-    public synchronized void getValueFromratingBar(RatingBar ratingBar) {
+    public synchronized String getValueFromratingBar(RatingBar ratingBar) {
         String rating = String.valueOf(ratingBar.getRating());
         Log.d(TAG, "getValueFromratingBar: " + rating);
+        return rating;
     }
 
 
