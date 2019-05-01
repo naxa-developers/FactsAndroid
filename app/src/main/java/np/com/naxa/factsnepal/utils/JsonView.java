@@ -189,10 +189,6 @@ public class JsonView extends LinearLayout {
             radioButton.setText(option.optString("question"));
             radioGroup.addView(radioButton);
             radioButton.setTag(option.optString("id"));
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//                Constant.generatedViewIdsList.add(RadioGroup.generateViewId());
-//            }else {
-//            }
         }
         int viewId = ViewUtils.generateViewId();
         radioGroup.setId(viewId);
@@ -212,12 +208,10 @@ public class JsonView extends LinearLayout {
         textView.setText("\t"+Html.fromHtml(text));
         textView.setTextColor(Color.parseColor("#212121"));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//            Constant.generatedViewIdsList.add(TextView.generateViewId());
-//        }else {
-        int viewId = ViewUtils.generateViewId();
-        textView.setId(viewId);
-        Constant.generatedViewIdsList.add(viewId);//        }
+
+//        int viewId = ViewUtils.generateViewId();
+//        textView.setId(viewId);
+//        Constant.generatedViewIdsList.add(viewId);
         return textView;
     }
 

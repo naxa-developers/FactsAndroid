@@ -6,8 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -49,22 +53,21 @@ public class SurveyActivity extends BaseActivity {
         RecyclerView recyclerView = findViewById(R.id.rv_survey);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new SurveyAdapter(buildUi()));
+        recyclerView.setAdapter(new SurveyAdapter(buildUi()));
 
 
-            btnFormSubmit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getValueFromView();
-                }
-            });
+        btnFormSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getValueFromView();
+            }
+        });
 
     }
 
 
-    private synchronized JSONArray buildUi (){
+    private synchronized JSONArray buildUi() {
         try {
-            Log.d(TAG, "buildUi: " + SurveyQuestionDetailsResponse.getDemoJson());
             String json1 = SharedPreferenceUtils.getInstance(this).getStringValue(KEY_RECENT_SURVEY_FORM_DETAILS, "");
             JSONObject jsonObject = new JSONObject(json1);
             JSONArray jsonArray = jsonObject.getJSONArray("survey_question");
@@ -151,7 +154,7 @@ public class SurveyActivity extends BaseActivity {
                     "                   \"id\": 6,\n" +
                     "                   \"question\": \"5\",\n" +
                     "                   \"question_id\": 5\n" +
-                    "               }"+
+                    "               }" +
                     "           ]\n" +
                     "       },\n" +
                     "       {\n" +
@@ -164,18 +167,21 @@ public class SurveyActivity extends BaseActivity {
                     "                   \"id\": 6,\n" +
                     "                   \"question\": \"Please enter your name\",\n" +
                     "                   \"question_id\": 7\n" +
-                    "               }"+
+                    "               }" +
                     "           ]\n" +
                     "       }\n" +
                     "   ]";
+            Log.d(TAG, "buildUi: " + jsonArray.toString());
 //            return new JSONArray(json);
             return jsonArray;
-        } catch (Exception e){ return new JSONArray(); }
+        } catch (Exception e) {
+            return new JSONArray();
+        }
     }
 
 
-    private void getValueFromView(){
-        Log.d(TAG, "getValueFromView: "+Constant.generatedViewIdsList.size());
+    private void getValueFromView() {
+        Log.d(TAG, "getValueFromView: " + Constant.generatedViewIdsList.size());
         Observable.just(Constant.generatedViewIdsList)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -194,12 +200,9 @@ public class SurveyActivity extends BaseActivity {
                 .subscribe(new DisposableObserver<Integer>() {
                     @Override
                     public void onNext(Integer integer) {
+                        Log.d(TAG, "onNext: view id " + integer);
                         View view = findViewById(integer);
-
-                        if(view instanceof RadioGroup){
-                            Log.d(TAG, "onNext: Radio group");
-                            Log.d(TAG, "onNext: "+((RadioGroup) view).getChildCount());
-                        }
+                        getChildFromLinearLayout(view);
                     }
 
                     @Override
@@ -214,13 +217,69 @@ public class SurveyActivity extends BaseActivity {
                 });
 
     }
+
+    public void getValueFromRadioGroup(RadioGroup radioGroup) {
+        RadioButton rb1 = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
+        if (rb1 == null) {
+            showToast("no any option selected");
+            return;
+        }
+        String radiovalue = rb1.getText().toString();
+        Log.d(TAG, "getValueFromRadioGroup: radiovalue " + radiovalue);
+    }
+
+    public void getValueFromTextView(TextView textView) {
+        Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
+    }
+
+    public synchronized void getChildFromLinearLayout(View view) {
+        if (view == null) {
+            Log.d(TAG, "getChildFromLinearLayout: Null View");
+            return;
+        }
+
+        String viewType = "";
+        if (view.getClass().getSimpleName().equals("RadioGroup")) {
+            viewType = view.getClass().getSimpleName();
+        } else if(view.getClass().getSimpleName().equals("RadioButton")) {
+            viewType = view.getClass().getSimpleName();
+        }else {
+            LinearLayout linearLayout = (LinearLayout) view;
+            viewType = linearLayout.getChildAt(0).getClass().getSimpleName();
+        }
+        Log.d(TAG, "getChildFromLinearLayout: " + viewType);
+
+        switch (viewType) {
+            case "TextView":
+                getValueFromTextView((TextView) view);
+                break;
+
+            case "RadioGroup":
+                getValueFromRadioGroup((RadioGroup) view);
+                Log.d(TAG, "getChildFromRadioGroup: " + ((RadioGroup) view).getChildCount());
+
+                break;
+
+            case "RatingBar":
+                break;
+
+            case "Checkbox":
+                break;
+
+            case "EditText":
+                break;
+
+        }
+    }
+
 }
 
 class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
     private static final String TAG = "SurveyAdapter";
     JSONArray surveyArray;
-    Context context ;
-    int arrayCounter = -1 ;
+    Context context;
+    int arrayCounter = -1;
+
     public SurveyAdapter(JSONArray surveyArray) {
         this.surveyArray = surveyArray;
     }
@@ -232,9 +291,10 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
             JsonView jsonView = new JsonView(context);
             jsonView.init(params).create();
 
-           return wrapByCardView(jsonView);
-        }catch (Exception e){e.printStackTrace();
-        return wrapByCardView(new LinearLayout(context));
+            return wrapByCardView(jsonView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return wrapByCardView(new LinearLayout(context));
         }
     }
 
@@ -242,7 +302,6 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
     @Override
     public SurveyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         arrayCounter++;
-        Log.d("SurveyAdapter", "onCreateViewHolder: optJSON "+surveyArray.optJSONObject(arrayCounter)+" position : "+arrayCounter);
         return new SurveyViewHolder(convert(surveyArray.optJSONObject(arrayCounter), viewGroup.getContext()));
     }
 
@@ -256,13 +315,13 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
                 Log.d(TAG, "onBindViewHolder: item view click listner");
             }
         });
-        if(surveyViewHolder.itemView instanceof RadioGroup){
+        if (surveyViewHolder.itemView instanceof RadioGroup) {
             Log.d(TAG, "onBindViewHolder: RadioGroup");
 
         }
 
-        if(surveyViewHolder.itemView instanceof ViewGroup){
-            Log.d(TAG, "onBindViewHolder: Checkbox"+((ViewGroup) surveyViewHolder.itemView).getChildCount());
+        if (surveyViewHolder.itemView instanceof ViewGroup) {
+            Log.d(TAG, "onBindViewHolder: Checkbox" + ((ViewGroup) surveyViewHolder.itemView).getChildCount());
 
         }
 
@@ -270,11 +329,11 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
     @Override
     public int getItemCount() {
-        Log.d("SurveyRecycler", "getItemCount: "+surveyArray.length());
+        Log.d("SurveyRecycler", "getItemCount: " + surveyArray.length());
         return surveyArray.length();
     }
 
-    private CardView wrapByCardView(LinearLayout linearLayout){
+    private CardView wrapByCardView(LinearLayout linearLayout) {
         CardView card = new CardView(FactsNepal.getInstance());
 
         // Set the CardView layoutParams
@@ -307,7 +366,6 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
         return card;
     }
 }
-
 
 
 class SurveyViewHolder extends RecyclerView.ViewHolder {

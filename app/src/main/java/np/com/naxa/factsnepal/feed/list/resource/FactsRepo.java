@@ -1,9 +1,14 @@
 package np.com.naxa.factsnepal.feed.list.resource;
 
+import android.app.Activity;
 import android.util.Log;
+
+import androidx.annotation.UiThread;
 import androidx.lifecycle.LiveData;
 
 import android.widget.Toast;
+
+import org.jetbrains.annotations.TestOnly;
 
 import java.util.List;
 import java.util.Set;
@@ -53,8 +58,9 @@ public class FactsRepo {
         return FactsLocalSource.getINSTANCE().getAll();
     }
 
+
     private void showMessage(String message) {
-        Toast.makeText(FactsNepal.getInstance(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(FactsNepal.getInstance(), message, Toast.LENGTH_SHORT).show();
     }
 
     public LiveData<Fact> getById(String factId, boolean refreshCache) {
