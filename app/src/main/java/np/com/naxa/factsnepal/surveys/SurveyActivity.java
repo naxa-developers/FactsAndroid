@@ -38,6 +38,7 @@ import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
+import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.JsonView;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
@@ -228,8 +229,9 @@ public class SurveyActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
-//                        Constant.generatedViewIdsList = null;
+                        Constant.generatedViewIdsList = null;
                         Log.d(TAG, "json to send : "+jsonObject.toString());
+                        ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
 
 
                     }
@@ -366,7 +368,7 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SurveyViewHolder surveyViewHolder, int i) {
-
+//        surveyViewHolder.setIsRecyclable(false);
     }
 
     @Override
