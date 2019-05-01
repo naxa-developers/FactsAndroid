@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.common.Constant;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -153,6 +154,8 @@ public class JsonView extends LinearLayout {
 
     private synchronized LinearLayout getCheckBoxView() {
         LinearLayout chkGroup = new LinearLayout(getContext());
+//        CheckBox[] checkBoxes = new CheckBox[params.options.length()];
+
         chkGroup.setOrientation(VERTICAL);
         for (int i = 0; i < params.options.length(); i++) {
             JSONObject option = params.options.optJSONObject(i);
@@ -163,14 +166,18 @@ public class JsonView extends LinearLayout {
                 checkBox = new CheckBox(getContext());
             }
             checkBox.setText(option.optString("question"));
-            checkBox.setTag(option.optString("id"));
+//            checkBox.setTag(option.optString("id"));
+            checkBox.setTag(option.optString("question_id"));
             chkGroup.addView(checkBox, i);
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 //                Constant.generatedViewIdsList.add(LinearLayout.generateViewId());
 //            }else {
+
+//                checkBoxes[i] = checkBox;
+
             int viewId = ViewUtils.generateViewId();
-            chkGroup.setId(viewId);
-            Constant.generatedViewIdsList.add(viewId);//            }
+            checkBox.setId(viewId);
+            Constant.generatedViewIdsList.add(viewId);
         }
         return chkGroup;
     }
@@ -231,14 +238,14 @@ public class JsonView extends LinearLayout {
             editText.setTag(option.optString("id"));
             editText.setTextColor(Color.parseColor("#212121"));
             editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+
+            int viewId = ViewUtils.generateViewId();
+            editText.setId(viewId);
+            Constant.generatedViewIdsList.add(viewId);
         }
         ll.addView(editText);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//            Constant.generatedViewIdsList.add(LinearLayout.generateViewId());
-//        }else {
-        int viewId = ViewUtils.generateViewId();
-        editText.setId(viewId);
-        Constant.generatedViewIdsList.add(viewId);//        }
+
+
         return ll;
     }
 
@@ -256,19 +263,16 @@ public class JsonView extends LinearLayout {
 // now init Rating bar
         RatingBar ratingBar = new RatingBar(getApplicationContext());
 // now set num of stars
-//        ratingBar.setNumStars(option.optInt("max_rating"));
         ratingBar.setNumStars(Integer.parseInt(option.optString("question")));
+
         ratingBar.setTag(option.optString("id"));
+            int viewId = ViewUtils.generateViewId();
+            ratingBar.setId(viewId);
+            Constant.generatedViewIdsList.add(viewId);
 // adding ratingBar into the created layout
         ll.addView(ratingBar);
         }
-// get the current layout
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//            Constant.generatedViewIdsList.add(LinearLayout.generateViewId());
-//        }else {
-        int viewId = ViewUtils.generateViewId();
-        ll.setId(viewId);
-        Constant.generatedViewIdsList.add(viewId);//        }
+
         return ll;
     }
 

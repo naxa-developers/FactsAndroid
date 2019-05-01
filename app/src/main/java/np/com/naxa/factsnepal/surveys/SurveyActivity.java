@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,7 +35,6 @@ import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
-import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
 import np.com.naxa.factsnepal.utils.JsonView;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
@@ -42,6 +43,8 @@ import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SU
 public class SurveyActivity extends BaseActivity {
     private static final String TAG = "SurveyActivity";
     Button btnFormSubmit;
+    List<String> checkedStringList = new ArrayList<String>();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -179,7 +182,6 @@ public class SurveyActivity extends BaseActivity {
         }
     }
 
-
     private void getValueFromView() {
         Log.d(TAG, "getValueFromView: " + Constant.generatedViewIdsList.size());
         Observable.just(Constant.generatedViewIdsList)
@@ -203,6 +205,7 @@ public class SurveyActivity extends BaseActivity {
                         Log.d(TAG, "onNext: view id " + integer);
                         View view = findViewById(integer);
                         getChildFromLinearLayout(view);
+
                     }
 
                     @Override
@@ -218,38 +221,15 @@ public class SurveyActivity extends BaseActivity {
 
     }
 
-    public void getValueFromRadioGroup(RadioGroup radioGroup) {
-        RadioButton rb1 = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
-        if (rb1 == null) {
-            showToast("no any option selected");
-            return;
-        }
-        String radiovalue = rb1.getText().toString();
-        Log.d(TAG, "getValueFromRadioGroup: radiovalue " + radiovalue);
-    }
-
-    public void getValueFromTextView(TextView textView) {
-        Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
-    }
 
     public synchronized void getChildFromLinearLayout(View view) {
         if (view == null) {
             Log.d(TAG, "getChildFromLinearLayout: Null View");
             return;
         }
+        Log.d(TAG, "getChildFromLinearLayout: " + view.getClass().getSimpleName());
 
-        String viewType = "";
-        if (view.getClass().getSimpleName().equals("RadioGroup")) {
-            viewType = view.getClass().getSimpleName();
-        } else if(view.getClass().getSimpleName().equals("RadioButton")) {
-            viewType = view.getClass().getSimpleName();
-        }else {
-            LinearLayout linearLayout = (LinearLayout) view;
-            viewType = linearLayout.getChildAt(0).getClass().getSimpleName();
-        }
-        Log.d(TAG, "getChildFromLinearLayout: " + viewType);
-
-        switch (viewType) {
+        switch (view.getClass().getSimpleName()) {
             case "TextView":
                 getValueFromTextView((TextView) view);
                 break;
@@ -261,9 +241,11 @@ public class SurveyActivity extends BaseActivity {
                 break;
 
             case "RatingBar":
+                getValueFromratingBar((RatingBar) view);
                 break;
 
-            case "Checkbox":
+            case "CheckBox":
+                getValueFromCheckBox((CheckBox) view);
                 break;
 
             case "EditText":
@@ -271,6 +253,49 @@ public class SurveyActivity extends BaseActivity {
 
         }
     }
+
+    public synchronized void getValueFromRadioGroup(RadioGroup radioGroup) {
+        RadioButton rb1 = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
+        if (rb1 == null) {
+            showToast("no any option selected");
+            return;
+        }
+        String radiovalue = rb1.getText().toString();
+        Log.d(TAG, "getValueFromRadioGroup: radiovalue " + radiovalue);
+    }
+
+    public synchronized void getValueFromTextView(TextView textView) {
+        Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
+    }
+
+    String viewTag = "";
+
+    public synchronized void getValueFromCheckBox(CheckBox checkBox) {
+        String checkboxString = "";
+
+        if (checkBox.isChecked()) {
+            if (viewTag.equals("") || viewTag.equals(checkBox.getTag())) {
+                checkedStringList.add(checkBox.getText().toString());
+            } else {
+                checkedStringList = new ArrayList<String>();
+                checkedStringList.add(checkBox.getText().toString());
+
+            }
+        } else {
+            int position = checkedStringList.indexOf(checkBox.getText().toString());
+            checkedStringList.remove(position);
+        }
+
+        viewTag = checkBox.getTag().toString();
+        checkboxString = checkedStringList.toString();
+        Log.d(TAG, "getValueFromCheckBox: " + checkboxString);
+    }
+
+    public synchronized void getValueFromratingBar(RatingBar ratingBar) {
+        String rating = String.valueOf(ratingBar.getRating());
+        Log.d(TAG, "getValueFromratingBar: " + rating);
+    }
+
 
 }
 
