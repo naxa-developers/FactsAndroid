@@ -1,17 +1,11 @@
 package np.com.naxa.factsnepal.feed.list.resource;
 
-import android.app.Activity;
 import android.util.Log;
-
-import androidx.annotation.UiThread;
-import androidx.lifecycle.LiveData;
-
 import android.widget.Toast;
 
-import org.jetbrains.annotations.TestOnly;
+import androidx.lifecycle.LiveData;
 
 import java.util.List;
-import java.util.Set;
 
 import io.reactivex.Single;
 import io.reactivex.observers.DisposableObserver;

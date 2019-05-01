@@ -101,7 +101,7 @@ public class JsonView extends LinearLayout {
             if (!isValidJSON) throw new JSONException("Invlaid json");
 
             String title = jsonObject.optString("question");
-            String questionID = jsonObject.optString("id");
+            String questionID = jsonObject.optInt("id")+"";
             String question_type = jsonObject.optString("question_type");
             JSONArray options = jsonObject.optJSONArray("options");
             return new ViewParams(title, options, typeMap.get(question_type), questionID);
