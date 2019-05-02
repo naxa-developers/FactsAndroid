@@ -1,10 +1,18 @@
 package np.com.naxa.factsnepal.bookmarkedfeed;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -13,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
@@ -20,6 +29,7 @@ import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
+import np.com.naxa.factsnepal.utils.DialogUtils;
 
 public class BookmarkedFeedV2Activity extends BaseActivity {
 
@@ -63,6 +73,8 @@ public class BookmarkedFeedV2Activity extends BaseActivity {
                     @Override
                     public void unBookmarkedListner(Fact fact) {
                         Log.d("Bookmarked", "unBookmarkedListner: ");
+
+                       createUnBookmarkAlertDialog(fact);
                     }
 
                     @Override
@@ -91,6 +103,58 @@ public class BookmarkedFeedV2Activity extends BaseActivity {
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation(this, imageView, getString(R.string.transtion_fact_list_details));
         startActivity(intent, options.toBundle());
+    }
+
+
+    private void createUnBookmarkAlertDialog (Fact fact){
+       AlertDialog.Builder builder =  new AlertDialog.Builder(BookmarkedFeedV2Activity.this)
+                .setTitle("Un Bookmark Fact")
+                .setCancelable(false)
+                .setMessage("Are you sure you want to Un Bookmark this Fact?")
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                        FactsLocalSource.getINSTANCE().toggleBookMark(fact)
+                                .subscribeOn(Schedulers.io())
+                                .subscribe();
+                        Toast.makeText(BookmarkedFeedV2Activity.this, "Un Bookmarked Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                })
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(R.drawable.ic_dialog_alert);
+
+        AlertDialog ad = builder.create();
+
+        //change colors of background and buttons
+        ad.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Context context = BookmarkedFeedV2Activity.this;
+                Window view = ((AlertDialog)dialog).getWindow();
+
+                view.setBackgroundDrawableResource(R.color.white);
+                Button positiveButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+                positiveButton.setBackgroundColor(context.getResources().getColor(R.color.grey));
+                positiveButton.setTextColor(context.getResources().getColor(R.color.white));
+                positiveButton.setText("Unbookmark Fact");
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(20,0,0,0);
+                positiveButton.setLayoutParams(params);
+            }
+        });
+
+        ad.show();
+
     }
 
 }

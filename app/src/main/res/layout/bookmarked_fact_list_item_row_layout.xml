@@ -57,8 +57,9 @@
             android:id="@+id/btn_fact_un_bookmarked"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:background="@drawable/button_background"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent=".47"
+            android:layout_height="30dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginBottom="@dimen/margin_small"
@@ -66,17 +67,19 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textColor="@color/white_80"
+            android:text="Unbookmark Fact"
+            android:drawableRight="@drawable/ic_bookmark_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_bookmarked_facts_image"
-            android:visibility="invisible"
             />
 
         <Button
             android:id="@+id/btn_view_bookmarked_fact_details"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:background="@drawable/button_background"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent=".47"
             android:layout_height="30dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -87,8 +90,10 @@
             android:paddingEnd="8dp"
             android:text="@string/view_fact"
             android:textColor="@color/white_80"
+            android:drawableRight="@drawable/ic_open_in_new_white_24dp"
             app:layout_constraintStart_toEndOf="@+id/btn_fact_un_bookmarked"
             app:layout_constraintTop_toTopOf="@+id/btn_fact_un_bookmarked"
+            app:layout_constraintEnd_toEndOf="parent"
              />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
