@@ -191,6 +191,7 @@ public class SurveyActivity extends BaseActivity {
     }
 
     private void getValueFromView() {
+
         Log.d(TAG, "getValueFromView: " + Constant.generatedViewIdsList.size());
         Observable.just(Constant.generatedViewIdsList)
                 .subscribeOn(Schedulers.io())
@@ -230,6 +231,7 @@ public class SurveyActivity extends BaseActivity {
                     @Override
                     public void onComplete() {
                         Constant.generatedViewIdsList = null;
+                        Constant.generatedViewIdsList = new ArrayList<>();
                         Log.d(TAG, "json to send : "+jsonObject.toString());
                         ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
 
@@ -314,8 +316,7 @@ public class SurveyActivity extends BaseActivity {
 
             }
         } else {
-            int position = checkedStringList.indexOf(checkBox.getText().toString());
-            checkedStringList.remove(position);
+            checkedStringList.remove(checkBox.getText().toString());
         }
 
         viewTag = checkBox.getTag().toString();
@@ -336,7 +337,6 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
     private static final String TAG = "SurveyAdapter";
     JSONArray surveyArray;
     Context context;
-    int arrayCounter = -1;
 
     public SurveyAdapter(JSONArray surveyArray) {
         this.surveyArray = surveyArray;
@@ -358,17 +358,21 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
     @NonNull
     @Override
-    public SurveyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        arrayCounter++;
+    public SurveyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
-        Log.d(TAG, "onCreateViewHolder: position "+i);
-        Log.d(TAG, "onCreateViewHolder: arrayCounter "+arrayCounter);
-        return new SurveyViewHolder(convert(surveyArray.optJSONObject(arrayCounter), viewGroup.getContext()));
+        Log.d(TAG, "onCreateViewHolder: position "+viewType);
+
+        return new SurveyViewHolder(convert(surveyArray.optJSONObject(viewType), viewGroup.getContext()));
     }
 
     @Override
     public void onBindViewHolder(@NonNull SurveyViewHolder surveyViewHolder, int i) {
-//        surveyViewHolder.setIsRecyclable(false);
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
@@ -413,7 +417,7 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
 
 class SurveyViewHolder extends RecyclerView.ViewHolder {
-    public SurveyViewHolder(View view) {
+    SurveyViewHolder(View view) {
         super(view);
     }
 

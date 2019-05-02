@@ -69,6 +69,7 @@ public class FactsFeedAdapter extends RecyclerView.Adapter<FactsFeedAdapter.Feed
     @Override
     public void onBindViewHolder(@NonNull FeedCardVH viewHolder, int i) {
         Context context = viewHolder.itemView.getContext();
+
         try {
             int position = viewHolder.getAdapterPosition();
             Fact fact = facts.get(position);
