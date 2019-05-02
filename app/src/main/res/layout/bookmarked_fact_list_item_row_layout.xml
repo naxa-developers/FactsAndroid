@@ -67,7 +67,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textColor="@color/white_80"
-            android:text="Un Bookmark"
+            android:text="Unbookmark Fact"
             android:drawableRight="@drawable/ic_bookmark_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

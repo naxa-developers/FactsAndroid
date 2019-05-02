@@ -9,6 +9,7 @@
 
     <color name="transparent">#0000ffff </color>
     <color name="silver_grey_windows_background">#FFDBDBDB</color>
+    <color name="grey">#9E9C9C</color>
     <color name="light_green">#008000 </color>
     <color name="productGridBackgroundColor">@color/colorPrimary</color>
 

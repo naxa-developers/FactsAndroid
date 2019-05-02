@@ -2,12 +2,16 @@ package np.com.naxa.factsnepal.bookmarkedfeed;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityOptionsCompat;
@@ -103,8 +107,9 @@ public class BookmarkedFeedV2Activity extends BaseActivity {
 
 
     private void createUnBookmarkAlertDialog (Fact fact){
-        new AlertDialog.Builder(BookmarkedFeedV2Activity.this)
+       AlertDialog.Builder builder =  new AlertDialog.Builder(BookmarkedFeedV2Activity.this)
                 .setTitle("Un Bookmark Fact")
+                .setCancelable(false)
                 .setMessage("Are you sure you want to Un Bookmark this Fact?")
 
                 // Specifying a listener allows you to take an action before dismissing the dialog.
@@ -121,8 +126,35 @@ public class BookmarkedFeedV2Activity extends BaseActivity {
 
                 // A null listener allows the button to dismiss the dialog and take no further action.
                 .setNegativeButton(android.R.string.no, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+                .setIcon(R.drawable.ic_dialog_alert);
+
+        AlertDialog ad = builder.create();
+
+        //change colors of background and buttons
+        ad.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                Context context = BookmarkedFeedV2Activity.this;
+                Window view = ((AlertDialog)dialog).getWindow();
+
+                view.setBackgroundDrawableResource(R.color.white);
+                Button positiveButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+                positiveButton.setBackgroundColor(context.getResources().getColor(R.color.grey));
+                positiveButton.setTextColor(context.getResources().getColor(R.color.white));
+                positiveButton.setText("Unbookmark Fact");
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(20,0,0,0);
+                positiveButton.setLayoutParams(params);
+            }
+        });
+
+        ad.show();
+
     }
 
 }
