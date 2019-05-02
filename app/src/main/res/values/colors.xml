@@ -34,6 +34,7 @@
     <color name="dot_light_screen3">#93c6fd</color>
     <color name="dot_light_screen4">#e4b5fc</color>
     <color name="dot_light_screen5">#FACA83</color>
+    <color name="bgDark">#252525</color>
 
     <array name="array_dot_active">
         <item>@color/dot_light_screen1</item>
