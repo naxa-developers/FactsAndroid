@@ -112,6 +112,7 @@
     <string name="primary_short">Primary Short</string>
     <string name="un_bookmark">Un Bookmark</string>
     <string name="view_fact">View Fact</string>
+    <string name="storage_rationale">Facts need storage permission to download photos so they can be shared directly</string>
     <!--end of walk through screen-->
 
 </resources>
