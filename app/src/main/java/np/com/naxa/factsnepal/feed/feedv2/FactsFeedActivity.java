@@ -1,16 +1,25 @@
 package np.com.naxa.factsnepal.feed.feedv2;
 
+import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+
 import androidx.lifecycle.LiveData;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.button.MaterialButton;
+
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.recyclerview.widget.SnapHelper;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +41,11 @@ import com.littlemango.stacklayoutmanager.StackLayoutManager;
 
 import org.json.JSONException;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import io.reactivex.annotations.NonNull;
 
@@ -45,6 +58,7 @@ import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.bookmarkedfeed.BookmarkedFeedV2Activity;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
+import np.com.naxa.factsnepal.common.GlideApp;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
@@ -62,6 +76,8 @@ import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
 import np.com.naxa.factsnepal.userprofile.UserProfileInfoActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener, BottomDialogFragment.OnCategoriesSelectedListener {
 
@@ -93,7 +109,7 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         factsLiveData.addSource(FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true),
                 facts -> {
                     if (getSelectedCategories().size() > 0) {
-                       factsLiveData.postValue(facts);
+                        factsLiveData.postValue(facts);
                     }
                 });
 
@@ -104,12 +120,12 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
     }
 
     private List<Integer> getSelectedCategories() {
-       Set<String> idSet =  SharedPreferenceUtils.getInstance(getApplicationContext()).getSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES);
-       List<Integer> idInteger = new ArrayList<>();
-       for( String id : idSet ) {
-           idInteger.add(Integer.parseInt(id));
-       }
-       return idInteger;
+        Set<String> idSet = SharedPreferenceUtils.getInstance(getApplicationContext()).getSetValue(Constant.SharedPrefKey.SELECTED_CATEGORIES);
+        List<Integer> idInteger = new ArrayList<>();
+        for (String id : idSet) {
+            idInteger.add(Integer.parseInt(id));
+        }
+        return idInteger;
     }
 
     private void bindUI() {
@@ -143,7 +159,6 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
             /*
              * stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
              */
-
 
 
         } else {
@@ -210,7 +225,43 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
     @Override
     public void onShareButtonTap(Fact fact) {
-        ActivityUtil.openShareIntent(this, fact.getTitle());
+        loadImageAndOpenShareDialog(fact);
+    }
+
+    @AfterPermissionGranted(Constant.Permission.RC_STORAGE)
+    private void loadImageAndOpenShareDialog(Fact fact) {
+        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            GlideApp.with(getApplicationContext())
+                    .asBitmap()
+                    .load(fact.getImagePath())
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@androidx.annotation.NonNull Bitmap bitmap, Transition<? super Bitmap> transition) {
+                            Uri uri = getImageUri(bitmap);
+                            Intent shareIntent = new Intent();
+                            shareIntent.setAction(Intent.ACTION_SEND);
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, fact.getTitle());
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                            shareIntent.setType("image/*");
+                            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            startActivity(Intent.createChooser(shareIntent, "Share fact..."));
+                        }
+                    });
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.storage_rationale),
+                    Constant.Permission.RC_STORAGE, perms);
+        }
+    }
+
+
+
+
+    public Uri getImageUri(Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), inImage, UUID.randomUUID().toString() + ".png", "drawing");
+        return Uri.parse(path);
     }
 
 
@@ -318,5 +369,11 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
         FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true);
         Toast.makeText(getApplicationContext(), categories.size() + " categories added to your preference list", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 }
