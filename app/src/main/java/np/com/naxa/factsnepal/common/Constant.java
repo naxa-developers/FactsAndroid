@@ -23,4 +23,8 @@ public class Constant {
 
 
     }
+
+    public class Permission {
+        public static final int RC_STORAGE = 1994;
+    }
 }
