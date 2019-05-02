@@ -63,6 +63,7 @@ public class BookmarkedFeedV2Activity extends BaseActivity {
                     @Override
                     public void unBookmarkedListner(Fact fact) {
                         Log.d("Bookmarked", "unBookmarkedListner: ");
+
                     }
 
                     @Override
