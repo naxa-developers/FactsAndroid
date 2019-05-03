@@ -26,9 +26,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
@@ -54,6 +56,8 @@ public class SurveyActivity extends BaseActivity {
 
     JSONObject jsonObject = new JSONObject();
 
+    LinearLayout linearLayoutFormList ;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +65,9 @@ public class SurveyActivity extends BaseActivity {
 
         btnFormSubmit = findViewById(R.id.btn_form_submit);
         setupToolbar("Survey Activity");
-        RecyclerView recyclerView = findViewById(R.id.rv_survey);
+        linearLayoutFormList = findViewById(R.id.ll_survey_form_list);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new SurveyAdapter(buildUi()));
+        generateViewFromJSON(buildUi());
 
         btnFormSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,6 +299,7 @@ public class SurveyActivity extends BaseActivity {
         Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
         return textView.getText().toString();
     }
+
     public synchronized String getValueFromEditTex(EditText editText) {
         Log.d(TAG, "getValueFromTextView: " + editText.getClass().getSimpleName() + " " + editText.getText().toString());
         return editText.getText().toString();
@@ -330,51 +334,59 @@ public class SurveyActivity extends BaseActivity {
     }
 
 
-}
 
-class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
-    private static final String TAG = "SurveyAdapter";
-    JSONArray surveyArray;
-    Context context;
-    int arrayCounter = -1;
+    private synchronized void generateViewFromJSON (@NonNull JSONArray jsonArray1){
+        Observable.just(jsonArray1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<JSONArray, ObservableSource<JSONObject>>() {
+                    @Override
+                    public ObservableSource<JSONObject> apply(JSONArray jsonArray) throws Exception {
+                        return Observable.range(0,jsonArray.length())
+                                .map(new Function<Integer, JSONObject>() {
+                                    @Override
+                                    public JSONObject apply(Integer index) throws Exception {
+                                        return jsonArray.getJSONObject(index);
+                                    }
+                                });
+                    }
+                })
+               .map(new Function<JSONObject, JSONObject>() {
+                   @Override
+                   public JSONObject apply(JSONObject jsonObject) throws Exception {
+                       return jsonObject;
+                   }
+               })
+                .subscribe(new DisposableObserver<JSONObject>() {
+                    @Override
+                    public void onNext(JSONObject jsonObject) {
+                        linearLayoutFormList.addView(convert(jsonObject));
+                    }
 
-    public SurveyAdapter(JSONArray surveyArray) {
-        this.surveyArray = surveyArray;
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
-    private CardView convert(JSONObject jsonObject, Context context) {
-        this.context = context;
+
+    private CardView convert(JSONObject jsonObject) {
         try {
             JsonView.ViewParams params = JsonView.ViewParams.instanceFromJSON(jsonObject);
-            JsonView jsonView = new JsonView(context);
+            JsonView jsonView = new JsonView(SurveyActivity.this);
             jsonView.init(params).create();
 
             return wrapByCardView(jsonView);
         } catch (Exception e) {
             e.printStackTrace();
-            return wrapByCardView(new LinearLayout(context));
+            return wrapByCardView(new LinearLayout(SurveyActivity.this));
         }
-    }
-
-    @NonNull
-    @Override
-    public SurveyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        arrayCounter++;
-
-        Log.d(TAG, "onCreateViewHolder: position "+i);
-        Log.d(TAG, "onCreateViewHolder: arrayCounter "+arrayCounter);
-        return new SurveyViewHolder(convert(surveyArray.optJSONObject(arrayCounter), viewGroup.getContext()));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull SurveyViewHolder surveyViewHolder, int i) {
-//        surveyViewHolder.setIsRecyclable(false);
-    }
-
-    @Override
-    public int getItemCount() {
-        Log.d("SurveyRecycler", "getItemCount: " + surveyArray.length());
-        return surveyArray.length();
     }
 
     private CardView wrapByCardView(LinearLayout linearLayout) {
@@ -409,15 +421,10 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
         return card;
     }
+
+
 }
 
-
-class SurveyViewHolder extends RecyclerView.ViewHolder {
-    public SurveyViewHolder(View view) {
-        super(view);
-    }
-
-}
 
 
 
