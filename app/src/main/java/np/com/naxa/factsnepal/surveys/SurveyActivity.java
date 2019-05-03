@@ -1,5 +1,6 @@
 package np.com.naxa.factsnepal.surveys;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,11 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -34,10 +38,14 @@ import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
+import np.com.naxa.factsnepal.userprofile.UserLoginDetails;
+import np.com.naxa.factsnepal.userprofile.UserLoginResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.JsonView;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
 
 public class SurveyActivity extends BaseActivity {
@@ -49,6 +57,8 @@ public class SurveyActivity extends BaseActivity {
     String lastViewTag = "";
 
     JSONObject jsonObject = new JSONObject();
+    SurveyCompany surveyCompany;
+    SurevyForms surevyForms;
 
     LinearLayout linearLayoutFormList ;
 
@@ -61,6 +71,8 @@ public class SurveyActivity extends BaseActivity {
         setupToolbar("Survey Activity");
         linearLayoutFormList = findViewById(R.id.ll_survey_form_list);
 
+        getNewIntent(getIntent());
+
         generateViewFromJSON(buildUi());
 
         btnFormSubmit.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +84,26 @@ public class SurveyActivity extends BaseActivity {
 
     }
 
+    protected void getNewIntent(Intent intent){
+        if(intent != null){
+            Gson gson = new Gson();
+
+            HashMap<String, Object> hashMap = (HashMap<String, Object>)intent.getSerializableExtra("map");
+            surveyCompany = (SurveyCompany)hashMap.get(KEY_OBJECT);
+            surevyForms = (SurevyForms)hashMap.get(KEY_EXTRA_OBJECT);
+            UserLoginResponse userLoginResponse = gson.fromJson(SharedPreferenceUtils.getInstance(SurveyActivity.this).getStringValue(Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS, null), UserLoginResponse.class);
+
+            try {
+                jsonObject.put("company_id", surveyCompany.getId());
+                jsonObject.put("survey_id", surevyForms.getId());
+                jsonObject.put("user_id", userLoginResponse.getUserLoginDetails().getId());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
 
     private synchronized JSONArray buildUi() {
         try {

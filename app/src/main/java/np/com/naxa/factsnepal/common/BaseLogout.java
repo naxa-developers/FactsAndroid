@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.Task;
 
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_LOGGED_IN_TYPE;
+
 
 public abstract class BaseLogout {
 
@@ -26,9 +28,9 @@ public abstract class BaseLogout {
     public BaseLogout(Context context) {
         this.context = context;
         sharedPreferenceUtils = new SharedPreferenceUtils(context);
-        if (sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1)== BaseLoginActivity.GMAIL_LOG_IN) {
+        if (sharedPreferenceUtils.getIntValue(KEY_LOGGED_IN_TYPE, -1)== BaseLoginActivity.GMAIL_LOG_IN) {
             googleLogout();
-        }else if(sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1)== BaseLoginActivity.FACEBOOK_LOG_IN){
+        }else if(sharedPreferenceUtils.getIntValue(KEY_LOGGED_IN_TYPE, -1)== BaseLoginActivity.FACEBOOK_LOG_IN){
             facebookLogout();
         }
     }

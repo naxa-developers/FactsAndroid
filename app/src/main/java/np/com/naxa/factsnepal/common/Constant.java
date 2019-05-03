@@ -13,6 +13,11 @@ public class Constant {
     public static List<Integer> generatedViewIdsList = new ArrayList<Integer>();
 
     public class SharedPrefKey {
+        public static final String KEY_LOGGED_IN_TYPE = "logged_in_type";
+        public static final String KEY_USER_BEARER_ACCESS_TOKEN = "bear_access_token";
+        public static final String KEY_USER_SOCIAL_LOGGED_IN_DETAILS = "social_logged_in_details";
+        public static final String KEY_USER_LOGGED_IN_DETAILS = "user_logged_in_details";
+
         public static final String SELECTED_CATEGORIES = "selected_categories";
         public static final String KEY_IS_USER_LOGGED_IN = "is_user_logged_in";
         public static final String IS_APP_FIRST_TIME_LAUNCH = "is_app_first_time_launch";
