@@ -227,6 +227,7 @@ public class SurveyActivity extends BaseActivity {
                     @Override
                     public void onComplete() {
                         Constant.generatedViewIdsList = null;
+                        Constant.generatedViewIdsList = new ArrayList<Integer>();
                         Log.d(TAG, "json to send : "+jsonObject.toString());
                         ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
 
