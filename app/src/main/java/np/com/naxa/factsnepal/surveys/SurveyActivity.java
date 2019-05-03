@@ -229,7 +229,7 @@ public class SurveyActivity extends BaseActivity {
                         Log.d(TAG, "json to send : "+jsonObject.toString());
                         Constant.generatedViewIdsList = null;
                         Constant.generatedViewIdsList = new ArrayList<Integer>();
-                        ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
+//                        ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
 
 
                     }
@@ -244,6 +244,7 @@ public class SurveyActivity extends BaseActivity {
             return;
         }
         Log.d(TAG, "getChildFromLinearLayout: " + view.getClass().getSimpleName());
+
 
         switch (view.getClass().getSimpleName()) {
             case "TextView":
@@ -271,6 +272,14 @@ public class SurveyActivity extends BaseActivity {
                 }
                 break;
 
+            case "LinearLayout":
+                LinearLayout linearLayout = (LinearLayout)view ;
+                if(linearLayout.getChildAt(0) instanceof CheckBox){
+                    jsonObject.put(viewTag, getValueFromCheckedLinearLayout(linearLayout));
+                    Log.d(TAG, "getChildFromLinearLayout: "+linearLayout.getChildCount());
+                }
+                break;
+
             case "EditText":
                     jsonObject.put(viewTag, getValueFromEditTex((EditText) view) );
                 break;
@@ -279,13 +288,26 @@ public class SurveyActivity extends BaseActivity {
 
     }
 
+    public synchronized String getValueFromCheckedLinearLayout (LinearLayout linearLayout){
+        checkedStringList = new ArrayList<String>();
+        for (int i = 0 ; i<linearLayout.getChildCount(); i++){
+            CheckBox checkBox = (CheckBox)linearLayout.getChildAt(i);
+            if(checkBox.isChecked()){
+                checkedStringList.add(checkBox.getTag().toString());
+            }
+        }
+
+        return checkedStringList.toString();
+    }
+
     public synchronized String getValueFromRadioGroup(RadioGroup radioGroup) throws Exception {
         RadioButton rb1 = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
         if (rb1 == null) {
             showToast("no any option selected");
             throw new  Exception();
         }
-        String radiovalue = rb1.getText().toString();
+//        String radiovalue = rb1.getText().toString();
+        String radiovalue = rb1.getTag().toString();
         Log.d(TAG, "getValueFromRadioGroup: radiovalue " + radiovalue);
         return radiovalue;
     }
