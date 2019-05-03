@@ -50,13 +50,15 @@ import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SU
 
 public class SurveyActivity extends BaseActivity {
     private static final String TAG = "SurveyActivity";
+    private static final String KEY_QN_ID = "question_id";
+    private static final String KEY_ANS_ID = "answer_id";
     Button btnFormSubmit;
-    List<String> checkedStringList = new ArrayList<String>();
+    List<Integer> checkedStringList = new ArrayList<Integer>();
     String checkboxString = "";
     String viewTag = "";
     String lastViewTag = "";
 
-    JSONObject jsonObject = new JSONObject();
+    JSONArray jsonArray = new JSONArray();
     SurveyCompany surveyCompany;
     SurevyForms surevyForms;
 
@@ -93,13 +95,13 @@ public class SurveyActivity extends BaseActivity {
             surevyForms = (SurevyForms)hashMap.get(KEY_EXTRA_OBJECT);
             UserLoginResponse userLoginResponse = gson.fromJson(SharedPreferenceUtils.getInstance(SurveyActivity.this).getStringValue(Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS, null), UserLoginResponse.class);
 
-            try {
-                jsonObject.put("company_id", surveyCompany.getId());
-                jsonObject.put("survey_id", surevyForms.getId());
-                jsonObject.put("user_id", userLoginResponse.getUserLoginDetails().getId());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                jsonObject.put("company_id", surveyCompany.getId());
+//                jsonObject.put("survey_id", surevyForms.getId());
+//                jsonObject.put("user_id", userLoginResponse.getUserLoginDetails().getId());
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
 
 
         }
@@ -258,9 +260,10 @@ public class SurveyActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "json to send : "+jsonObject.toString());
+                        Log.d(TAG, "json to send : "+jsonArray.toString());
                         Constant.generatedViewIdsList = null;
                         Constant.generatedViewIdsList = new ArrayList<Integer>();
+                        jsonArray = new JSONArray();
 //                        ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
 
 
@@ -284,19 +287,19 @@ public class SurveyActivity extends BaseActivity {
                 break;
 
             case "RadioGroup":
-                    jsonObject.put(viewTag, getValueFromRadioGroup((RadioGroup) view) );
+                    jsonArray.put(getValueFromRadioGroup((RadioGroup) view) );
                 Log.d(TAG, "getChildFromRadioGroup: " + ((RadioGroup) view).getChildCount());
                 break;
 
             case "RatingBar":
-                    jsonObject.put(viewTag, getValueFromratingBar((RatingBar) view) );
+                jsonArray.put(getValueFromratingBar((RatingBar) view) );
                 break;
 
             case "CheckBox":
                 getValueFromCheckBox((CheckBox) view);
                 if (TextUtils.equals(viewTag, lastViewTag)) {
                     try {
-                        jsonObject.put(viewTag, checkboxString);
+                        jsonArray.put(getValueFromCheckBox((CheckBox)view));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -307,79 +310,100 @@ public class SurveyActivity extends BaseActivity {
             case "LinearLayout":
                 LinearLayout linearLayout = (LinearLayout)view ;
                 if(linearLayout.getChildAt(0) instanceof CheckBox){
-                    jsonObject.put(viewTag, getValueFromCheckedLinearLayout(linearLayout));
+                    jsonArray.put(getValueFromCheckedLinearLayout(linearLayout));
                     Log.d(TAG, "getChildFromLinearLayout: "+linearLayout.getChildCount());
                 }
                 break;
 
             case "EditText":
-                    jsonObject.put(viewTag, getValueFromEditTex((EditText) view) );
+                jsonArray.put(getValueFromEditTex((EditText) view) );
                 break;
 
         }
 
     }
 
-    public synchronized String getValueFromCheckedLinearLayout (LinearLayout linearLayout){
-        checkedStringList = new ArrayList<String>();
+    public synchronized JSONObject getValueFromCheckedLinearLayout (LinearLayout linearLayout) throws Exception{
+        List<Integer> checkedStringList1 = new ArrayList<Integer>();
         for (int i = 0 ; i<linearLayout.getChildCount(); i++){
             CheckBox checkBox = (CheckBox)linearLayout.getChildAt(i);
             if(checkBox.isChecked()){
-                checkedStringList.add(checkBox.getTag().toString());
+                checkedStringList1.add(Integer.parseInt(checkBox.getTag().toString()));
             }
         }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, checkedStringList1);
 
-        return checkedStringList.toString();
+        return jsonObject;
     }
 
-    public synchronized String getValueFromRadioGroup(RadioGroup radioGroup) throws Exception {
+    public synchronized JSONObject getValueFromRadioGroup(RadioGroup radioGroup) throws Exception {
         RadioButton rb1 = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
         if (rb1 == null) {
             showToast("no any option selected");
             throw new  Exception();
         }
 //        String radiovalue = rb1.getText().toString();
-        String radiovalue = rb1.getTag().toString();
+        int radiovalue = Integer.parseInt(rb1.getTag().toString());
         Log.d(TAG, "getValueFromRadioGroup: radiovalue " + radiovalue);
-        return radiovalue;
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, radiovalue);
+        return jsonObject;
     }
 
-    public synchronized String getValueFromTextView(TextView textView) {
+    public synchronized JSONObject getValueFromTextView(TextView textView) throws Exception {
         Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
-        return textView.getText().toString();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, textView.getText().toString());
+        return jsonObject;
     }
 
-    public synchronized String getValueFromEditTex(EditText editText) {
+    public synchronized JSONObject getValueFromEditTex(EditText editText) throws Exception {
         Log.d(TAG, "getValueFromTextView: " + editText.getClass().getSimpleName() + " " + editText.getText().toString());
-        return editText.getText().toString();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, editText.getText().toString());
+        return jsonObject;
     }
 
-    public synchronized void getValueFromCheckBox(CheckBox checkBox) {
+    public synchronized JSONObject getValueFromCheckBox(CheckBox checkBox) throws Exception {
 
         if (checkBox.isChecked()) {
 
             if (TextUtils.equals("",viewTag) || TextUtils.equals(lastViewTag,viewTag)) {
-                checkedStringList.add(checkBox.getText().toString());
+                checkedStringList.add(Integer.parseInt(checkBox.getTag().toString()));
             } else {
 //                lastViewTag = checkBox.getTag().toString();
-                checkedStringList = new ArrayList<String>();
-                checkedStringList.add(checkBox.getText().toString());
-
+                checkedStringList = new ArrayList<Integer>();
+                checkedStringList.add(Integer.parseInt(checkBox.getTag().toString()));
             }
         } else {
-            int position = checkedStringList.indexOf(checkBox.getText().toString());
+            int position = checkedStringList.indexOf(Integer.parseInt(checkBox.getTag().toString()));
             checkedStringList.remove(position);
         }
 
         lastViewTag = viewTag;
         checkboxString = checkedStringList.toString();
         Log.d(TAG, "getValueFromCheckBox: " + checkboxString);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, checkedStringList);
+        return jsonObject;
     }
 
-    public synchronized String getValueFromratingBar(RatingBar ratingBar) {
+    public synchronized JSONObject getValueFromratingBar(RatingBar ratingBar)throws Exception {
         String rating = String.valueOf(ratingBar.getRating());
         Log.d(TAG, "getValueFromratingBar: " + rating);
-        return rating;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, rating);
+        return jsonObject;
     }
 
 
