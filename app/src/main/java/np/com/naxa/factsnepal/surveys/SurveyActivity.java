@@ -226,9 +226,9 @@ public class SurveyActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
+                        Log.d(TAG, "json to send : "+jsonObject.toString());
                         Constant.generatedViewIdsList = null;
                         Constant.generatedViewIdsList = new ArrayList<Integer>();
-                        Log.d(TAG, "json to send : "+jsonObject.toString());
                         ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
 
 
@@ -261,7 +261,7 @@ public class SurveyActivity extends BaseActivity {
 
             case "CheckBox":
                 getValueFromCheckBox((CheckBox) view);
-                if (!TextUtils.equals(viewTag, lastViewTag)) {
+                if (TextUtils.equals(viewTag, lastViewTag)) {
                     try {
                         jsonObject.put(viewTag, checkboxString);
                     } catch (JSONException e) {
@@ -304,10 +304,10 @@ public class SurveyActivity extends BaseActivity {
 
         if (checkBox.isChecked()) {
 
-            if (TextUtils.equals("",viewTag) || TextUtils.equals(viewTag,checkBox.getTag().toString())) {
+            if (TextUtils.equals("",viewTag) || TextUtils.equals(lastViewTag,viewTag)) {
                 checkedStringList.add(checkBox.getText().toString());
             } else {
-                lastViewTag = checkBox.getTag().toString();
+//                lastViewTag = checkBox.getTag().toString();
                 checkedStringList = new ArrayList<String>();
                 checkedStringList.add(checkBox.getText().toString());
 
@@ -317,7 +317,7 @@ public class SurveyActivity extends BaseActivity {
             checkedStringList.remove(position);
         }
 
-        viewTag = checkBox.getTag().toString();
+        lastViewTag = viewTag;
         checkboxString = checkedStringList.toString();
         Log.d(TAG, "getValueFromCheckBox: " + checkboxString);
     }
