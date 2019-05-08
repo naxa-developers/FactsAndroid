@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -261,6 +262,10 @@ public class SurveyActivity extends BaseActivity {
                     jsonObject.put(viewTag, getValueFromratingBar((RatingBar) view) );
                 break;
 
+            case "Spinner":
+                    jsonObject.put(viewTag, getValueFromSpinner((Spinner) view) );
+                break;
+
             case "CheckBox":
                 getValueFromCheckBox((CheckBox) view);
                 if (!TextUtils.equals(viewTag, lastViewTag)) {
@@ -329,6 +334,11 @@ public class SurveyActivity extends BaseActivity {
         return rating;
     }
 
+    public synchronized String getValueFromSpinner(Spinner spinner) {
+        String selectedSpinnerValue = String.valueOf(spinner.getSelectedItem());
+        Log.d(TAG, "getValueFromratingBar: " + selectedSpinnerValue);
+        return selectedSpinnerValue;
+    }
 
 }
 
