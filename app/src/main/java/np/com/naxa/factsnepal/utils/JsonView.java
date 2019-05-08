@@ -14,18 +14,21 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +49,7 @@ public class JsonView extends LinearLayout {
     }
 
     enum Type {
-        CHECKBOX, RADIO, RATING, EDITTEXT
+        CHECKBOX, RADIO, RATING, EDITTEXT, SPINNER
     }
 
     public static class ViewParams {
@@ -62,6 +65,7 @@ public class JsonView extends LinearLayout {
             put("radio", Type.RADIO);
             put("rating", Type.RATING);
             put("edittext", Type.EDITTEXT);
+            put("dropdown", Type.SPINNER);
         }};
 
         private ViewParams(String title, JSONArray options, Type type, String questionID) {
@@ -157,7 +161,6 @@ public class JsonView extends LinearLayout {
 
     private synchronized LinearLayout getCheckBoxView() {
         LinearLayout chkGroup = new LinearLayout(getContext());
-//        CheckBox[] checkBoxes = new CheckBox[params.options.length()];
 
         chkGroup.setOrientation(VERTICAL);
         for (int i = 0; i < params.options.length(); i++) {
@@ -201,6 +204,26 @@ public class JsonView extends LinearLayout {
         radioGroup.setId(viewId);
         Constant.generatedViewIdsList.add(viewId);
         return radioGroup;
+    }
+
+    private synchronized Spinner getSpinnerView(){
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+
+        for (int i = 0; i < params.options.length(); i++) {
+            JSONObject option = params.options.optJSONObject(i);
+            spinnerArray.add(option.optString("question"));
+        }
+
+        Spinner spinner = new Spinner(getContext());
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinnerArray);
+        spinner.setAdapter(spinnerArrayAdapter);
+
+        spinner.setTag(params.questionID);
+        int viewId = ViewUtils.generateViewId();
+        spinner.setId(viewId);
+        Constant.generatedViewIdsList.add(viewId);
+
+        return spinner;
     }
 
     private synchronized TextView getTextView(String text, String questionID) {
@@ -311,6 +334,9 @@ public class JsonView extends LinearLayout {
                             break;
                         case EDITTEXT:
                             optionGroup = getEditTextView();
+                            break;
+                        case SPINNER:
+                            optionGroup = getSpinnerView();
                             break;
                     }
                     if (optionGroup != null) {
