@@ -3,17 +3,14 @@ package np.com.naxa.factsnepal.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-
-import androidx.annotation.Nullable;
-
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -25,6 +22,9 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.common.Constant;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -313,7 +312,7 @@ public class JsonView extends LinearLayout {
         return ll;
     }
 
-    void destroy() {
+    public void destroy() {
         if (handler != null && buildUi != null) {
             handler.removeCallbacks(buildUi);
         }

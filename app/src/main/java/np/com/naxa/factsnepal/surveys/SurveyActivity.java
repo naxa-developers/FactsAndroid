@@ -39,7 +39,6 @@ import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
-import np.com.naxa.factsnepal.userprofile.UserLoginDetails;
 import np.com.naxa.factsnepal.userprofile.UserLoginResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.JsonView;
@@ -62,6 +61,7 @@ public class SurveyActivity extends BaseActivity {
     JSONArray jsonArray = new JSONArray();
     SurveyCompany surveyCompany;
     SurevyForms surevyForms;
+    UserLoginResponse userLoginResponse;
 
     LinearLayout linearLayoutFormList ;
 
@@ -81,6 +81,7 @@ public class SurveyActivity extends BaseActivity {
         btnFormSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                jsonArray = new JSONArray();
                 getValueFromView();
             }
         });
@@ -94,7 +95,7 @@ public class SurveyActivity extends BaseActivity {
             HashMap<String, Object> hashMap = (HashMap<String, Object>)intent.getSerializableExtra("map");
             surveyCompany = (SurveyCompany)hashMap.get(KEY_OBJECT);
             surevyForms = (SurevyForms)hashMap.get(KEY_EXTRA_OBJECT);
-            UserLoginResponse userLoginResponse = gson.fromJson(SharedPreferenceUtils.getInstance(SurveyActivity.this).getStringValue(Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS, null), UserLoginResponse.class);
+            userLoginResponse = gson.fromJson(SharedPreferenceUtils.getInstance(SurveyActivity.this).getStringValue(Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS, null), UserLoginResponse.class);
 
 //            try {
 //                jsonObject.put("company_id", surveyCompany.getId());
@@ -262,9 +263,7 @@ public class SurveyActivity extends BaseActivity {
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "json to send : "+jsonArray.toString());
-                        Constant.generatedViewIdsList = null;
-                        Constant.generatedViewIdsList = new ArrayList<Integer>();
-                        jsonArray = new JSONArray();
+                        postFormDataToSerever();
 //                        ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
 
 
@@ -274,7 +273,7 @@ public class SurveyActivity extends BaseActivity {
     }
 
 
-    public synchronized void getChildFromLinearLayout(View view) throws Exception {
+    public synchronized void getChildFromLinearLayout(View view) throws JSONException {
         if (view == null) {
             Log.d(TAG, "getChildFromLinearLayout: Null View");
             return;
@@ -297,7 +296,7 @@ public class SurveyActivity extends BaseActivity {
                 break;
 
             case "Spinner":
-                    jsonObject.put(viewTag, getValueFromSpinner((Spinner) view) );
+                    jsonArray.put(getValueFromSpinner((Spinner) view) );
                 break;
 
             case "CheckBox":
@@ -328,7 +327,7 @@ public class SurveyActivity extends BaseActivity {
 
     }
 
-    public synchronized JSONObject getValueFromCheckedLinearLayout (LinearLayout linearLayout) throws Exception{
+    public synchronized JSONObject getValueFromCheckedLinearLayout (LinearLayout linearLayout) throws JSONException{
         List<Integer> checkedStringList1 = new ArrayList<Integer>();
         for (int i = 0 ; i<linearLayout.getChildCount(); i++){
             CheckBox checkBox = (CheckBox)linearLayout.getChildAt(i);
@@ -343,11 +342,11 @@ public class SurveyActivity extends BaseActivity {
         return jsonObject;
     }
 
-    public synchronized JSONObject getValueFromRadioGroup(RadioGroup radioGroup) throws Exception {
+    public synchronized JSONObject getValueFromRadioGroup(RadioGroup radioGroup) throws JSONException {
         RadioButton rb1 = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
         if (rb1 == null) {
             showToast("no any option selected");
-            throw new  Exception();
+            throw new  JSONException("no any option selected");
         }
 //        String radiovalue = rb1.getText().toString();
         int radiovalue = Integer.parseInt(rb1.getTag().toString());
@@ -359,7 +358,7 @@ public class SurveyActivity extends BaseActivity {
         return jsonObject;
     }
 
-    public synchronized JSONObject getValueFromTextView(TextView textView) throws Exception {
+    public synchronized JSONObject getValueFromTextView(TextView textView) throws JSONException {
         Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(KEY_QN_ID, viewTag);
@@ -367,7 +366,7 @@ public class SurveyActivity extends BaseActivity {
         return jsonObject;
     }
 
-    public synchronized JSONObject getValueFromEditTex(EditText editText) throws Exception {
+    public synchronized JSONObject getValueFromEditTex(EditText editText) throws JSONException {
         Log.d(TAG, "getValueFromTextView: " + editText.getClass().getSimpleName() + " " + editText.getText().toString());
 
         JSONObject jsonObject = new JSONObject();
@@ -376,7 +375,7 @@ public class SurveyActivity extends BaseActivity {
         return jsonObject;
     }
 
-    public synchronized JSONObject getValueFromCheckBox(CheckBox checkBox) throws Exception {
+    public synchronized JSONObject getValueFromCheckBox(CheckBox checkBox) throws JSONException {
 
         if (checkBox.isChecked()) {
 
@@ -402,8 +401,9 @@ public class SurveyActivity extends BaseActivity {
         return jsonObject;
     }
 
-    public synchronized JSONObject getValueFromratingBar(RatingBar ratingBar)throws Exception {
+    public synchronized JSONObject getValueFromratingBar(RatingBar ratingBar)throws JSONException {
         String rating = String.valueOf(ratingBar.getRating());
+
         Log.d(TAG, "getValueFromratingBar: " + rating);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(KEY_QN_ID, viewTag);
@@ -411,10 +411,18 @@ public class SurveyActivity extends BaseActivity {
         return jsonObject;
     }
 
-    public synchronized String getValueFromSpinner(Spinner spinner) {
+    public synchronized JSONObject getValueFromSpinner(Spinner spinner) throws JSONException {
         String selectedSpinnerValue = String.valueOf(spinner.getSelectedItem());
+//        String selectedItemTAG = spinner.getSelectedView().getTag().toString();
+        int selectedSpinnerValueID = spinner.getSelectedItemPosition();
         Log.d(TAG, "getValueFromratingBar: " + selectedSpinnerValue);
-        return selectedSpinnerValue;
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, selectedSpinnerValueID);
+//        jsonObject.put(KEY_ANS_ID, selectedItemTAG);
+
+        return jsonObject;
     }
 
 
@@ -510,6 +518,45 @@ public class SurveyActivity extends BaseActivity {
     }
 
 
+
+    private void postFormDataToSerever (){
+        apiInterface.postSurveyAnswerDetailsResponse(userLoginResponse.getUserLoginDetails().getId(),
+                surveyCompany.getId(), surevyForms.getId(), jsonArray.toString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<PostSurveyAnswerResponse>() {
+                    @Override
+                    public void onNext(PostSurveyAnswerResponse postSurveyAnswerResponse) {
+
+                        if (postSurveyAnswerResponse.isSuccess()){
+                            Constant.generatedViewIdsList = null;
+                            Constant.generatedViewIdsList = new ArrayList<Integer>();
+
+                            ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
+                            onDestroy();
+                            finish();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        JsonView jsonView = new JsonView(SurveyActivity.this);
+        jsonView.destroy();
+        super.onDestroy();
+    }
 }
 
 
