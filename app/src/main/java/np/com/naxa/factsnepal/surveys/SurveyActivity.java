@@ -415,7 +415,7 @@ public class SurveyActivity extends BaseActivity {
         String selectedSpinnerValue = String.valueOf(spinner.getSelectedItem());
 //        String selectedItemTAG = spinner.getSelectedView().getTag().toString();
         int selectedSpinnerValueID = spinner.getSelectedItemPosition();
-        Log.d(TAG, "getValueFromratingBar: " + selectedSpinnerValue);
+        Log.d(TAG, "getValueFromSPinner: " + selectedSpinnerValue);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(KEY_QN_ID, viewTag);

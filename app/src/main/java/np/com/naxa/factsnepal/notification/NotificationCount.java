@@ -2,8 +2,9 @@ package np.com.naxa.factsnepal.notification;
 
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
@@ -49,10 +50,10 @@ public class NotificationCount {
     public synchronized long getNotificationCount() throws JSONException {
         count = 0;
             JSONArray jsonArray = new JSONArray(sharedPreferenceUtils.getStringValue(KEY_NOTIFICATION_LIST, null));
+
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (!jsonArray.getJSONObject(i).getBoolean("isRead")) {
                     count = count + 1;
-                    Log.d(TAG, "getNotificationCount: "+count);
                 }
             }
             return count;
