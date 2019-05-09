@@ -1,9 +1,10 @@
 package np.com.naxa.factsnepal.userprofile;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.facebook.GraphRequest;
 import com.facebook.Profile;
@@ -18,9 +19,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.common.BaseLoginActivity;
 import np.com.naxa.factsnepal.feed.feedv2.FactsFeedActivity;
-import np.com.naxa.factsnepal.feed.list.FeedListActivity;
 import np.com.naxa.factsnepal.network.NetworkApiClient;
-
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import np.com.naxa.factsnepal.utils.Utils;
@@ -84,12 +83,16 @@ public class LoginActivity extends BaseLoginActivity {
         sharedPreferenceUtils = new SharedPreferenceUtils(this);
         Utils.log(this.getClass(), account.getDisplayName());
         sharedPreferenceUtils.setValue(KEY_USER_SOCIAL_LOGGED_IN_DETAILS, gson.toJson(new UserSocialLoginDetails(account.getIdToken(), 2,
-                account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString())));
+                account.getDisplayName(), account.getEmail(), getImageUrl(account))));
 
         Log.d(TAG, "onGoogleLoginSuccess: "+account.getEmail());
         getLoginResponse(new LoginCredentials(account.getEmail(), "123456"));
 //        getLoginResponse(new LoginCredentials("samir1001@gmail.com", "123456"));
 
+    }
+
+    private String getImageUrl (GoogleSignInAccount account){
+       return  null == account.getPhotoUrl()  ? "" : account.getPhotoUrl().toString();
     }
 
 

@@ -6,11 +6,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -22,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.security.MessageDigest;
@@ -58,13 +61,9 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
 
     public void init() {
         callbackManager = CallbackManager.Factory.create();
-        // [START config_signin]
-        // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        // [END config_signin]
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
@@ -108,8 +107,8 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
                             @Override
                             public void onSuccess(LoginResult loginResult) {
                                 // App code
-                                onFacebookLogiSuccess(loginResult);
                                 sharedPreferenceUtils.setValue(KEY_LOGGED_IN_TYPE, FACEBOOK_LOG_IN);
+                                onFacebookLogiSuccess(loginResult);
                             }
 
                             @Override
@@ -164,8 +163,16 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
 
     // [START signin]
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+
+        //   The account selection is cached, so you have to call signOut first to show account chooser every time with GoogleSignIn
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                        startActivityForResult(signInIntent, RC_SIGN_IN);
+                    }
+                });
     }
     // [END signin]
 
