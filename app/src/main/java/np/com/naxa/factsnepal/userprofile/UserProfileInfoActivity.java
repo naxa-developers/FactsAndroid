@@ -1,13 +1,14 @@
 package np.com.naxa.factsnepal.userprofile;
 
 import android.os.Bundle;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
@@ -28,7 +29,8 @@ import np.com.naxa.factsnepal.userprofile.earninghistory.UsersEarningResponse;
 import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-import static np.com.naxa.factsnepal.common.BaseLoginActivity.KEY_USER_BEARER_ACCESS_TOKEN;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_BEARER_ACCESS_TOKEN;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_SOCIAL_LOGGED_IN_DETAILS;
 
 public class UserProfileInfoActivity extends BaseActivity {
 
@@ -67,7 +69,7 @@ public class UserProfileInfoActivity extends BaseActivity {
         tvTotalEarning = findViewById(R.id.tv_users_total_earning);
         ivUserProfileImage = findViewById(R.id.iv_users_profile_image);
 
-        BaseLoginActivity.UserSocialLoginDetails userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(LoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
+        BaseLoginActivity.UserSocialLoginDetails userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
 
         tvUserName.setText(userSocialLoginDetails.getUser_name());
         tvEmail.setText(userSocialLoginDetails.getUser_email());

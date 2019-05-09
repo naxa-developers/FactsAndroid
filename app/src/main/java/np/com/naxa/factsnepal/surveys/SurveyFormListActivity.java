@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -25,6 +26,7 @@ import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
 import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_FORM_TYPE;
@@ -150,7 +152,11 @@ public class SurveyFormListActivity extends BaseActivity {
                         @Override
                         public void onComplete() {
                             if (isQuestionNotNull) {
-                                ActivityUtil.openActivity(SurveyActivity.class, SurveyFormListActivity.this);
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put(KEY_OBJECT, surveyCompany);
+                                hashMap.put(KEY_EXTRA_OBJECT, surevyForms);
+                                ActivityUtil.openActivity(SurveyActivity.class, SurveyFormListActivity.this, hashMap, false);
+
                             }
                         }
                     });

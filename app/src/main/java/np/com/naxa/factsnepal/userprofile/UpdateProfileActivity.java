@@ -46,6 +46,8 @@ import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_BEARER_ACCESS_TOKEN;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_SOCIAL_LOGGED_IN_DETAILS;
 import static np.com.naxa.factsnepal.gps.GeoPointActivity.LOCATION_RESULT;
 
 public class UpdateProfileActivity extends BaseActivity implements View.OnClickListener {
@@ -150,7 +152,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
         btnNext.setOnClickListener(this);
         btnGetGPS.setOnClickListener(this);
 
-        userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
+        userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
 
         if(userSocialLoginDetails.getUser_login_type() == BaseLoginActivity.FACEBOOK_LOG_IN){
             provider = "facebook";
@@ -428,7 +430,7 @@ public class UpdateProfileActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onNext(UserRegistrationDetailsResponse userRegistrationDetailsResponse) {
                         if(userRegistrationDetailsResponse.getSuccess()){
-                            sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_BEARER_ACCESS_TOKEN, userRegistrationDetailsResponse.getToken());
+                            sharedPreferenceUtils.setValue(KEY_USER_BEARER_ACCESS_TOKEN, userRegistrationDetailsResponse.getToken());
                             sharedPreferenceUtils.setValue(KEY_IS_USER_LOGGED_IN, true);
 
 

@@ -26,6 +26,8 @@ import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import np.com.naxa.factsnepal.utils.Utils;
 
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_SOCIAL_LOGGED_IN_DETAILS;
 
 public class LoginActivity extends BaseLoginActivity {
     private static final String TAG = "LoginActivity";
@@ -50,7 +52,7 @@ public class LoginActivity extends BaseLoginActivity {
                 String name = object.getString("name");
                 String email = object.getString("email");
 
-                sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, gson.toJson(new UserSocialLoginDetails(result.getAccessToken().getToken(), 1,
+                sharedPreferenceUtils.setValue(KEY_USER_SOCIAL_LOGGED_IN_DETAILS, gson.toJson(new UserSocialLoginDetails(result.getAccessToken().getToken(), 1,
                         name, email, String.format("https://graph.facebook.com/%s/picture?type=large",result.getAccessToken().getUserId()))));
 
                 getLoginResponse(new LoginCredentials(email, "123456"));
@@ -81,7 +83,7 @@ public class LoginActivity extends BaseLoginActivity {
     public void onGoogleLoginSuccess(GoogleSignInAccount account) {
         sharedPreferenceUtils = new SharedPreferenceUtils(this);
         Utils.log(this.getClass(), account.getDisplayName());
-        sharedPreferenceUtils.setValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, gson.toJson(new UserSocialLoginDetails(account.getIdToken(), 2,
+        sharedPreferenceUtils.setValue(KEY_USER_SOCIAL_LOGGED_IN_DETAILS, gson.toJson(new UserSocialLoginDetails(account.getIdToken(), 2,
                 account.getDisplayName(), account.getEmail(), account.getPhotoUrl().toString())));
 
         Log.d(TAG, "onGoogleLoginSuccess: "+account.getEmail());
@@ -137,7 +139,7 @@ public class LoginActivity extends BaseLoginActivity {
                         if(userLoginResponse1.isSuccess()){
                             String loginResponseInString = gson.toJson(userLoginResponse1);
                             Log.d(TAG, "onNext: "+loginResponseInString);
-                            sharedPreferenceUtils.setValue(LoginActivity.KEY_USER_LOGGED_IN_DETAILS, loginResponseInString);
+                            sharedPreferenceUtils.setValue(KEY_USER_LOGGED_IN_DETAILS, loginResponseInString);
                             sharedPreferenceUtils.setValue(KEY_IS_USER_LOGGED_IN , true);
                         }
                     }

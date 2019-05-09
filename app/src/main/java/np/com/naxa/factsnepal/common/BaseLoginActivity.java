@@ -32,6 +32,8 @@ import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import np.com.naxa.factsnepal.utils.Utils;
 
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_LOGGED_IN_TYPE;
+
 public abstract class BaseLoginActivity extends BaseActivity implements View.OnClickListener {
 
     CardView cv_login_google, cv_login_twitter, cv_login_facebook;
@@ -44,10 +46,6 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
 
     public static final int FACEBOOK_LOG_IN = 1;
     public static final int GMAIL_LOG_IN = 2;
-    public static final String KEY_LOGGED_IN_TYPE = "logged_in_type";
-    public static final String KEY_USER_BEARER_ACCESS_TOKEN = "bear_access_token";
-    public static final String KEY_USER_SOCIAL_LOGGED_IN_DETAILS = "social_logged_in_details";
-    public static final String KEY_USER_LOGGED_IN_DETAILS = "user_logged_in_details";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
