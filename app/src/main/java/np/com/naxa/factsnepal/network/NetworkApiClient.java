@@ -24,7 +24,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static np.com.naxa.factsnepal.common.BaseLoginActivity.KEY_USER_BEARER_ACCESS_TOKEN;
 
 public class NetworkApiClient {
 

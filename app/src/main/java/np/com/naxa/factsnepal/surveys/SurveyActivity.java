@@ -1,11 +1,10 @@
 package np.com.naxa.factsnepal.surveys;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -19,17 +18,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
@@ -38,22 +39,31 @@ import np.com.naxa.factsnepal.FactsNepal;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.common.Constant;
-import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
+import np.com.naxa.factsnepal.userprofile.UserLoginDetails;
+import np.com.naxa.factsnepal.userprofile.UserLoginResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.JsonView;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
 
 public class SurveyActivity extends BaseActivity {
     private static final String TAG = "SurveyActivity";
+    private static final String KEY_QN_ID = "question_id";
+    private static final String KEY_ANS_ID = "answer_id";
     Button btnFormSubmit;
-    List<String> checkedStringList = new ArrayList<String>();
+    List<Integer> checkedStringList = new ArrayList<Integer>();
     String checkboxString = "";
     String viewTag = "";
     String lastViewTag = "";
 
-    JSONObject jsonObject = new JSONObject();
+    JSONArray jsonArray = new JSONArray();
+    SurveyCompany surveyCompany;
+    SurevyForms surevyForms;
+
+    LinearLayout linearLayoutFormList ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,10 +72,11 @@ public class SurveyActivity extends BaseActivity {
 
         btnFormSubmit = findViewById(R.id.btn_form_submit);
         setupToolbar("Survey Activity");
-        RecyclerView recyclerView = findViewById(R.id.rv_survey);
+        linearLayoutFormList = findViewById(R.id.ll_survey_form_list);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new SurveyAdapter(buildUi()));
+        getNewIntent(getIntent());
+
+        generateViewFromJSON(buildUi());
 
         btnFormSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +87,26 @@ public class SurveyActivity extends BaseActivity {
 
     }
 
+    protected void getNewIntent(Intent intent){
+        if(intent != null){
+            Gson gson = new Gson();
+
+            HashMap<String, Object> hashMap = (HashMap<String, Object>)intent.getSerializableExtra("map");
+            surveyCompany = (SurveyCompany)hashMap.get(KEY_OBJECT);
+            surevyForms = (SurevyForms)hashMap.get(KEY_EXTRA_OBJECT);
+            UserLoginResponse userLoginResponse = gson.fromJson(SharedPreferenceUtils.getInstance(SurveyActivity.this).getStringValue(Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS, null), UserLoginResponse.class);
+
+//            try {
+//                jsonObject.put("company_id", surveyCompany.getId());
+//                jsonObject.put("survey_id", surevyForms.getId());
+//                jsonObject.put("user_id", userLoginResponse.getUserLoginDetails().getId());
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
+
+        }
+    }
 
     private synchronized JSONArray buildUi() {
         try {
@@ -230,9 +261,11 @@ public class SurveyActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
+                        Log.d(TAG, "json to send : "+jsonArray.toString());
                         Constant.generatedViewIdsList = null;
-                        Log.d(TAG, "json to send : "+jsonObject.toString());
-                        ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
+                        Constant.generatedViewIdsList = new ArrayList<Integer>();
+                        jsonArray = new JSONArray();
+//                        ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
 
 
                     }
@@ -248,18 +281,19 @@ public class SurveyActivity extends BaseActivity {
         }
         Log.d(TAG, "getChildFromLinearLayout: " + view.getClass().getSimpleName());
 
+
         switch (view.getClass().getSimpleName()) {
             case "TextView":
                 getValueFromTextView((TextView) view);
                 break;
 
             case "RadioGroup":
-                    jsonObject.put(viewTag, getValueFromRadioGroup((RadioGroup) view) );
+                    jsonArray.put(getValueFromRadioGroup((RadioGroup) view) );
                 Log.d(TAG, "getChildFromRadioGroup: " + ((RadioGroup) view).getChildCount());
                 break;
 
             case "RatingBar":
-                    jsonObject.put(viewTag, getValueFromratingBar((RatingBar) view) );
+                jsonArray.put(getValueFromratingBar((RatingBar) view) );
                 break;
 
             case "Spinner":
@@ -268,9 +302,9 @@ public class SurveyActivity extends BaseActivity {
 
             case "CheckBox":
                 getValueFromCheckBox((CheckBox) view);
-                if (!TextUtils.equals(viewTag, lastViewTag)) {
+                if (TextUtils.equals(viewTag, lastViewTag)) {
                     try {
-                        jsonObject.put(viewTag, checkboxString);
+                        jsonArray.put(getValueFromCheckBox((CheckBox)view));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -278,60 +312,103 @@ public class SurveyActivity extends BaseActivity {
                 }
                 break;
 
+            case "LinearLayout":
+                LinearLayout linearLayout = (LinearLayout)view ;
+                if(linearLayout.getChildAt(0) instanceof CheckBox){
+                    jsonArray.put(getValueFromCheckedLinearLayout(linearLayout));
+                    Log.d(TAG, "getChildFromLinearLayout: "+linearLayout.getChildCount());
+                }
+                break;
+
             case "EditText":
-                    jsonObject.put(viewTag, getValueFromEditTex((EditText) view) );
+                jsonArray.put(getValueFromEditTex((EditText) view) );
                 break;
 
         }
 
     }
 
-    public synchronized String getValueFromRadioGroup(RadioGroup radioGroup) throws Exception {
+    public synchronized JSONObject getValueFromCheckedLinearLayout (LinearLayout linearLayout) throws Exception{
+        List<Integer> checkedStringList1 = new ArrayList<Integer>();
+        for (int i = 0 ; i<linearLayout.getChildCount(); i++){
+            CheckBox checkBox = (CheckBox)linearLayout.getChildAt(i);
+            if(checkBox.isChecked()){
+                checkedStringList1.add(Integer.parseInt(checkBox.getTag().toString()));
+            }
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, checkedStringList1);
+
+        return jsonObject;
+    }
+
+    public synchronized JSONObject getValueFromRadioGroup(RadioGroup radioGroup) throws Exception {
         RadioButton rb1 = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
         if (rb1 == null) {
             showToast("no any option selected");
             throw new  Exception();
         }
-        String radiovalue = rb1.getText().toString();
+//        String radiovalue = rb1.getText().toString();
+        int radiovalue = Integer.parseInt(rb1.getTag().toString());
         Log.d(TAG, "getValueFromRadioGroup: radiovalue " + radiovalue);
-        return radiovalue;
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, radiovalue);
+        return jsonObject;
     }
 
-    public synchronized String getValueFromTextView(TextView textView) {
+    public synchronized JSONObject getValueFromTextView(TextView textView) throws Exception {
         Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
-        return textView.getText().toString();
-    }
-    public synchronized String getValueFromEditTex(EditText editText) {
-        Log.d(TAG, "getValueFromTextView: " + editText.getClass().getSimpleName() + " " + editText.getText().toString());
-        return editText.getText().toString();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, textView.getText().toString());
+        return jsonObject;
     }
 
-    public synchronized void getValueFromCheckBox(CheckBox checkBox) {
+    public synchronized JSONObject getValueFromEditTex(EditText editText) throws Exception {
+        Log.d(TAG, "getValueFromTextView: " + editText.getClass().getSimpleName() + " " + editText.getText().toString());
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, editText.getText().toString());
+        return jsonObject;
+    }
+
+    public synchronized JSONObject getValueFromCheckBox(CheckBox checkBox) throws Exception {
 
         if (checkBox.isChecked()) {
 
-            if (TextUtils.equals("",viewTag) || TextUtils.equals(viewTag,checkBox.getTag().toString())) {
-                checkedStringList.add(checkBox.getText().toString());
+            if (TextUtils.equals("",viewTag) || TextUtils.equals(lastViewTag,viewTag)) {
+                checkedStringList.add(Integer.parseInt(checkBox.getTag().toString()));
             } else {
-                lastViewTag = checkBox.getTag().toString();
-                checkedStringList = new ArrayList<String>();
-                checkedStringList.add(checkBox.getText().toString());
-
+//                lastViewTag = checkBox.getTag().toString();
+                checkedStringList = new ArrayList<Integer>();
+                checkedStringList.add(Integer.parseInt(checkBox.getTag().toString()));
             }
         } else {
-            int position = checkedStringList.indexOf(checkBox.getText().toString());
+            int position = checkedStringList.indexOf(Integer.parseInt(checkBox.getTag().toString()));
             checkedStringList.remove(position);
         }
 
-        viewTag = checkBox.getTag().toString();
+        lastViewTag = viewTag;
         checkboxString = checkedStringList.toString();
         Log.d(TAG, "getValueFromCheckBox: " + checkboxString);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, checkedStringList);
+        return jsonObject;
     }
 
-    public synchronized String getValueFromratingBar(RatingBar ratingBar) {
+    public synchronized JSONObject getValueFromratingBar(RatingBar ratingBar)throws Exception {
         String rating = String.valueOf(ratingBar.getRating());
         Log.d(TAG, "getValueFromratingBar: " + rating);
-        return rating;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_ID, viewTag);
+        jsonObject.put(KEY_ANS_ID, rating);
+        return jsonObject;
     }
 
     public synchronized String getValueFromSpinner(Spinner spinner) {
@@ -340,51 +417,63 @@ public class SurveyActivity extends BaseActivity {
         return selectedSpinnerValue;
     }
 
-}
 
-class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
-    private static final String TAG = "SurveyAdapter";
-    JSONArray surveyArray;
-    Context context;
-    int arrayCounter = -1;
+    private synchronized void generateViewFromJSON (@NonNull JSONArray jsonArray1){
+        if(jsonArray1 == null){
+            showToast("null data \ncan't create view");
+            return;
+        }
+        Observable.just(jsonArray1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<JSONArray, ObservableSource<JSONObject>>() {
+                    @Override
+                    public ObservableSource<JSONObject> apply(JSONArray jsonArray) throws Exception {
+                        return Observable.range(0,jsonArray.length())
+                                .map(new Function<Integer, JSONObject>() {
+                                    @Override
+                                    public JSONObject apply(Integer index) throws Exception {
+                                        return jsonArray.getJSONObject(index);
+                                    }
+                                });
+                    }
+                })
+               .map(new Function<JSONObject, JSONObject>() {
+                   @Override
+                   public JSONObject apply(JSONObject jsonObject) throws Exception {
+                       return jsonObject;
+                   }
+               })
+                .subscribe(new DisposableObserver<JSONObject>() {
+                    @Override
+                    public void onNext(JSONObject jsonObject) {
+                        linearLayoutFormList.addView(convert(jsonObject));
+                    }
 
-    public SurveyAdapter(JSONArray surveyArray) {
-        this.surveyArray = surveyArray;
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
-    private CardView convert(JSONObject jsonObject, Context context) {
-        this.context = context;
+
+    private CardView convert(JSONObject jsonObject) {
         try {
             JsonView.ViewParams params = JsonView.ViewParams.instanceFromJSON(jsonObject);
-            JsonView jsonView = new JsonView(context);
+            JsonView jsonView = new JsonView(SurveyActivity.this);
             jsonView.init(params).create();
 
             return wrapByCardView(jsonView);
         } catch (Exception e) {
             e.printStackTrace();
-            return wrapByCardView(new LinearLayout(context));
+            return wrapByCardView(new LinearLayout(SurveyActivity.this));
         }
-    }
-
-    @NonNull
-    @Override
-    public SurveyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        arrayCounter++;
-
-        Log.d(TAG, "onCreateViewHolder: position "+i);
-        Log.d(TAG, "onCreateViewHolder: arrayCounter "+arrayCounter);
-        return new SurveyViewHolder(convert(surveyArray.optJSONObject(arrayCounter), viewGroup.getContext()));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull SurveyViewHolder surveyViewHolder, int i) {
-//        surveyViewHolder.setIsRecyclable(false);
-    }
-
-    @Override
-    public int getItemCount() {
-        Log.d("SurveyRecycler", "getItemCount: " + surveyArray.length());
-        return surveyArray.length();
     }
 
     private CardView wrapByCardView(LinearLayout linearLayout) {
@@ -419,15 +508,10 @@ class SurveyAdapter extends RecyclerView.Adapter<SurveyViewHolder> {
 
         return card;
     }
+
+
 }
 
-
-class SurveyViewHolder extends RecyclerView.ViewHolder {
-    public SurveyViewHolder(View view) {
-        super(view);
-    }
-
-}
 
 
 

@@ -67,6 +67,8 @@ import np.com.naxa.factsnepal.utils.ImageUtils;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_LOGGED_IN_TYPE;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_SOCIAL_LOGGED_IN_DETAILS;
 
 @Deprecated
 public class FeedListActivity extends BaseActivity
@@ -169,7 +171,7 @@ public class FeedListActivity extends BaseActivity
         TextView tvUserName = (TextView) headerLayout.findViewById(R.id.nav_user_username);
         TextView tvUserEmail = (TextView) headerLayout.findViewById(R.id.nav_user_email);
 
-        BaseLoginActivity.UserSocialLoginDetails userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(BaseLoginActivity.KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
+        BaseLoginActivity.UserSocialLoginDetails userSocialLoginDetails = gson.fromJson((sharedPreferenceUtils.getStringValue(KEY_USER_SOCIAL_LOGGED_IN_DETAILS, null)), BaseLoginActivity.UserSocialLoginDetails.class);
         ImageUtils.loadRemoteImage(this, userSocialLoginDetails.getUser_image_url())
 
                 .fitCenter()
@@ -178,7 +180,7 @@ public class FeedListActivity extends BaseActivity
         tvUserName.setText(userSocialLoginDetails.getUser_name());
         tvUserEmail.setText(userSocialLoginDetails.getUser_email());
 
-        if (sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(BaseLoginActivity.KEY_LOGGED_IN_TYPE, -1) == 2) {
+        if (sharedPreferenceUtils.getIntValue(KEY_LOGGED_IN_TYPE, -1) == 1 || sharedPreferenceUtils.getIntValue(KEY_LOGGED_IN_TYPE, -1) == 2) {
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_user_logout).setVisible(true);
         }

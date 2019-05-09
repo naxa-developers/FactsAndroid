@@ -7,6 +7,7 @@ import android.net.Uri;
 import androidx.appcompat.widget.ShareActionProvider;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class ActivityUtil {
 

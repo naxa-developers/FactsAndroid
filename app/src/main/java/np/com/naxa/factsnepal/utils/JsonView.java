@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+
 import androidx.annotation.Nullable;
 
 import android.text.Html;
@@ -40,7 +41,6 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 /**
  * TODO: create the ratingbar view, check style adding
  * [2019-04-02] first created
- *
  */
 
 public class JsonView extends LinearLayout {
@@ -76,17 +76,17 @@ public class JsonView extends LinearLayout {
         }
 
         public void addTitleStyle(int titleStyleId) {
-            this.titleStyleRes= titleStyleId;
+            this.titleStyleRes = titleStyleId;
         }
 
         public void addOptionStyle(int optionStyleRes) {
             this.optionStyleRes = optionStyleRes;
         }
+
         public void addStyle(int titleStyleId, int optionStyleRes) {
             this.titleStyleRes = titleStyleId;
             this.optionStyleRes = optionStyleRes;
         }
-
 
 
         public static ViewParams instancefromString(String viewData) throws JSONException {
@@ -105,7 +105,7 @@ public class JsonView extends LinearLayout {
             if (!isValidJSON) throw new JSONException("Invlaid json");
 
             String title = jsonObject.optString("question");
-            String questionID = jsonObject.optInt("id")+"";
+            String questionID = jsonObject.optInt("id") + "";
             String question_type = jsonObject.optString("question_type");
             JSONArray options = jsonObject.optJSONArray("options");
             return new ViewParams(title, options, typeMap.get(question_type), questionID);
@@ -172,14 +172,19 @@ public class JsonView extends LinearLayout {
                 checkBox = new CheckBox(getContext());
             }
             checkBox.setText(option.optString("question"));
-            checkBox.setTag(params.questionID);
-//            checkBox.setTag(option.optString("question_id"));
+//            checkBox.setTag(params.questionID);
+            checkBox.setTag(option.optInt("id"));
             chkGroup.addView(checkBox, i);
 
-            int viewId = ViewUtils.generateViewId();
+            int viewId = Integer.parseInt(params.questionID + option.optString("id"));
             checkBox.setId(viewId);
-            Constant.generatedViewIdsList.add(viewId);
         }
+        int viewId = ViewUtils.generateViewId();
+        int checkID = Integer.parseInt(params.questionID);
+        chkGroup.setId(viewId);
+        chkGroup.setTag(params.questionID);
+        Constant.generatedViewIdsList.add(viewId);
+
         return chkGroup;
     }
 
@@ -196,12 +201,14 @@ public class JsonView extends LinearLayout {
             }
             radioButton.setText(option.optString("question"));
             radioGroup.addView(radioButton);
-            radioButton.setTag(params.questionID);
-//            radioButton.setTag(option.optString("question_id"));
+//            radioButton.setTag(params.questionID);
+            radioButton.setTag(option.optInt("id"));
         }
         radioGroup.setTag(params.questionID);
         int viewId = ViewUtils.generateViewId();
+        int viewTagId = Integer.parseInt(params.questionID);
         radioGroup.setId(viewId);
+        radioGroup.setTag(viewTagId);
         Constant.generatedViewIdsList.add(viewId);
         return radioGroup;
     }
@@ -231,14 +238,14 @@ public class JsonView extends LinearLayout {
 
         Log.d("getText", "titleRes = " + params.titleStyleRes);
         if (params.titleStyleRes != 0) {
-            textView= new TextView(getContext(), null, params.titleStyleRes);
-        }else {
-            textView= new TextView(getContext());
+            textView = new TextView(getContext(), null, params.titleStyleRes);
+        } else {
+            textView = new TextView(getContext());
         }
 //        textView.setTextAppearance(params.titleStyleRes);
         textView.setTag(questionID);
 
-        textView.setText("\t"+Html.fromHtml(text));
+        textView.setText("\t" + Html.fromHtml(text));
         textView.setTextColor(Color.parseColor("#212121"));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
@@ -251,22 +258,23 @@ public class JsonView extends LinearLayout {
     private synchronized LinearLayout getEditTextView() {
         LinearLayout ll = new LinearLayout(getApplicationContext());
         EditText editText;
-            Log.d("getText", "titleRes = " + params.titleStyleRes);
-            if (params.titleStyleRes != 0) {
-                editText = new EditText(getContext(), null, params.titleStyleRes);
-            } else {
-                editText = new EditText(getContext());
-            }
+        Log.d("getText", "titleRes = " + params.titleStyleRes);
+        if (params.titleStyleRes != 0) {
+            editText = new EditText(getContext(), null, params.titleStyleRes);
+        } else {
+            editText = new EditText(getContext());
+        }
         for (int i = 0; i < params.options.length(); i++) {
             JSONObject option = params.options.optJSONObject(i);
 
             editText.setHint(Html.fromHtml(option.optString("question")));
-            editText.setTag(params.questionID);
-//            editText.setTag(option.optString("question_id"));
+//            editText.setTag(params.questionID);
+            editText.setTag(option.optString("id"));
             editText.setTextColor(Color.parseColor("#212121"));
             editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
-            int viewId = ViewUtils.generateViewId();
+//            int viewId = ViewUtils.generateViewId();
+            int viewId = Integer.parseInt(option.optString("question_id"));
             editText.setId(viewId);
             Constant.generatedViewIdsList.add(viewId);
         }
@@ -276,7 +284,7 @@ public class JsonView extends LinearLayout {
         return ll;
     }
 
-    private synchronized LinearLayout getRatingBar(){
+    private synchronized LinearLayout getRatingBar() {
         // first create a layout
         LinearLayout ll = new LinearLayout(getApplicationContext());
         for (int i = 0; i < params.options.length(); i++) {
@@ -285,20 +293,21 @@ public class JsonView extends LinearLayout {
 
 
 // now you will have to set width and height
-        ll.setMinimumWidth(300);
-        ll.setMinimumHeight(100);
+            ll.setMinimumWidth(300);
+            ll.setMinimumHeight(100);
 // now init Rating bar
-        RatingBar ratingBar = new RatingBar(getApplicationContext());
+            RatingBar ratingBar = new RatingBar(getApplicationContext());
 // now set num of stars
-        ratingBar.setNumStars(Integer.parseInt(option.optString("question")));
+            ratingBar.setNumStars(Integer.parseInt(option.optString("question")));
 
         ratingBar.setTag(params.questionID);
-//        ratingBar.setTag(option.optString("question_id"));
+//            ratingBar.setTag(option.optString("id"));
             int viewId = ViewUtils.generateViewId();
+//            int viewId = Integer.parseInt(option.optString("question_id"));
             ratingBar.setId(viewId);
             Constant.generatedViewIdsList.add(viewId);
 // adding ratingBar into the created layout
-        ll.addView(ratingBar);
+            ll.addView(ratingBar);
         }
 
         return ll;
