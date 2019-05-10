@@ -46,6 +46,7 @@ import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.bookmarkedfeed.BookmarkedFeedV2Activity;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.common.BaseLogout;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.GlideApp;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
@@ -61,12 +62,15 @@ import np.com.naxa.factsnepal.notification.NotificationCount;
 import np.com.naxa.factsnepal.preferences.PreferencesActivity;
 import np.com.naxa.factsnepal.publicpoll.PublicPollActivity;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity;
+import np.com.naxa.factsnepal.userprofile.LoginActivity;
 import np.com.naxa.factsnepal.userprofile.UserProfileInfoActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_LOGGED_IN;
 
 public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener, BottomDialogFragment.OnCategoriesSelectedListener,EasyPermissions.PermissionCallbacks {
 
@@ -349,6 +353,17 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 break;
             case R.id.backdrop_public_survey:
                 ActivityUtil.openActivity(SurveyCompanyListActivity.class, this);
+
+            case R.id.backdrop_user_logout:
+                new BaseLogout(FactsFeedActivity.this) {
+                    @Override
+                    public void onLogoutSuccess() {
+                        SharedPreferenceUtils.getInstance(FactsFeedActivity.this).setValue(KEY_IS_USER_LOGGED_IN, false);
+                        SharedPreferenceUtils.getInstance(FactsFeedActivity.this).clearAll();
+                        ActivityUtil.openActivity(LoginActivity.class, FactsFeedActivity.this);
+
+                    }
+                };
                 break;
         }
     }
