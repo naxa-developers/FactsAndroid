@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
+import java.io.EOFException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,8 +31,8 @@ import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_SURVEY_COMPANY_DETAILS_JSON;
 import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_FORM_TYPE;
-import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_SURVEY_COMPANY_DETAILS_JSON;
 
 public class SurveyFormListActivity extends BaseActivity {
     private static final String TAG = "SurveyFormsListActivity";
@@ -126,6 +128,8 @@ public class SurveyFormListActivity extends BaseActivity {
             return;
         }
 
+        createProgressDialog("Please wait!!!\nFetching survey questions from server");
+
             apiInterface.getSurveyQuestionDetailsResponse(surveyCompany.getId(), surevyForms.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -146,12 +150,21 @@ public class SurveyFormListActivity extends BaseActivity {
                         @Override
                         public void onError(Throwable e) {
                             showToast(e.getMessage());
-                            Log.d(TAG, "onError: "+e.getMessage());
+                            hideProgressDialog();
+
+                           if(e instanceof SocketTimeoutException){
+                               fetctQuestioOptions(surevyForms);
+                           }
+                           if(e instanceof EOFException){
+                               fetctQuestioOptions(surevyForms);
+                           }
+
                         }
 
                         @Override
                         public void onComplete() {
                             if (isQuestionNotNull) {
+                                hideProgressDialog();
                                 HashMap<String, Object> hashMap = new HashMap<>();
                                 hashMap.put(KEY_OBJECT, surveyCompany);
                                 hashMap.put(KEY_EXTRA_OBJECT, surevyForms);

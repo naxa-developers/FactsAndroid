@@ -56,6 +56,7 @@ public class SurveyActivity extends BaseActivity {
     List<Integer> checkedStringList = new ArrayList<Integer>();
     String checkboxString = "";
     String viewTag = "";
+    int viewPosition;
     String lastViewTag = "";
 
     JSONArray jsonArray = new JSONArray();
@@ -224,6 +225,7 @@ public class SurveyActivity extends BaseActivity {
     }
 
     private void getValueFromView() {
+        viewPosition = -1;
         Log.d(TAG, "getValueFromView: " + Constant.generatedViewIdsList.size());
         Observable.just(Constant.generatedViewIdsList)
                 .subscribeOn(Schedulers.io())
@@ -248,6 +250,7 @@ public class SurveyActivity extends BaseActivity {
                         try {
                             View view = findViewById(integer);
                             viewTag = view.getTag().toString();
+                            viewPosition++;
                             getChildFromLinearLayout(view);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -264,9 +267,6 @@ public class SurveyActivity extends BaseActivity {
                     public void onComplete() {
                         Log.d(TAG, "json to send : "+jsonArray.toString());
                         postFormDataToSerever();
-//                        ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
-
-
                     }
                 });
 
@@ -412,16 +412,13 @@ public class SurveyActivity extends BaseActivity {
     }
 
     public synchronized JSONObject getValueFromSpinner(Spinner spinner) throws JSONException {
-        String selectedSpinnerValue = String.valueOf(spinner.getSelectedItem());
-//        String selectedItemTAG = spinner.getSelectedView().getTag().toString();
-        int selectedSpinnerValueID = spinner.getSelectedItemPosition();
-        Log.d(TAG, "getValueFromSPinner: " + selectedSpinnerValue);
+        int selectedSpinnerValuePos = spinner.getSelectedItemPosition();
+        int selectedSpinnerValueID = buildUi().optJSONObject(viewPosition).optJSONArray("options").optJSONObject(selectedSpinnerValuePos).optInt("id");
+        Log.d(TAG, "getValueFromSpinner: TAG "+selectedSpinnerValueID);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(KEY_QN_ID, viewTag);
         jsonObject.put(KEY_ANS_ID, selectedSpinnerValueID);
-//        jsonObject.put(KEY_ANS_ID, selectedItemTAG);
-
         return jsonObject;
     }
 

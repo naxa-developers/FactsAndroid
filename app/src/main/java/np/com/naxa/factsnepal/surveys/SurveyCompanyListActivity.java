@@ -2,17 +2,19 @@ package np.com.naxa.factsnepal.surveys;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
 import com.google.gson.Gson;
 
+import java.io.EOFException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -22,11 +24,10 @@ import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_SURVEY_COMPANY_DETAILS_JSON;
 
 public class SurveyCompanyListActivity extends BaseActivity {
     private static final String TAG = "SurveyCompanyListActivity";
-    public static final String KEY_SURVEY_COMPANY_DETAILS_JSON = "survey_company_details_json";
-    public static final String KEY_COMPANY_ID = "company_id";
     public static final int KEY_COMPANY_TYPE = 001;
     public static final int KEY_FORM_TYPE = 002;
     private BaseRecyclerViewAdapter<SurveyCompany, SurveyItemListVH> adapter;
@@ -81,6 +82,12 @@ public class SurveyCompanyListActivity extends BaseActivity {
                     public void onError(Throwable e) {
                         showToast(e.getMessage());
                         hideProgressDialog();
+                        if(e instanceof SocketTimeoutException){
+                            getSurveyQuestionDetailsResponseFromServer();
+                        }
+                        if(e instanceof EOFException){
+                            getSurveyQuestionDetailsResponseFromServer();
+                        }
                     }
 
                     @Override
@@ -96,27 +103,13 @@ public class SurveyCompanyListActivity extends BaseActivity {
 
         SurveyCompanyDetails surveyCompanyDetails = gson.fromJson(sharedPreferenceUtils.getStringValue(KEY_SURVEY_COMPANY_DETAILS_JSON, ""), SurveyCompanyDetails.class);
 
-        Observable.just(surveyCompanyDetails)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<SurveyCompanyDetails>() {
-                    @Override
-                    public void onNext(SurveyCompanyDetails surveyCompanyDetails) {
-                        surveyCompanies = surveyCompanyDetails.getSurveyCompany();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        showToast(e.getMessage());
-                        hideProgressDialog();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        hideProgressDialog();
-                        setupRecyclerView(surveyCompanies);
-                    }
-                });
+        if(surveyCompanyDetails != null){
+            setupRecyclerView(surveyCompanyDetails.getSurveyCompany());
+            hideProgressDialog();
+        }else {
+            showToast("No Offline Data found");
+            hideProgressDialog();
+        }
     }
 
 

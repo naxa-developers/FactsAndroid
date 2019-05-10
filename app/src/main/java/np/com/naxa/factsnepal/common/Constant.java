@@ -24,9 +24,7 @@ public class Constant {
         public static final String KEY_NOTIFICATION_LIST = "notification_list";
         public static final String KEY_RECENT_SURVEY_FORM_DETAILS = "recent_survey_form_details";
 
-
-
-
+        public static final String KEY_SURVEY_COMPANY_DETAILS_JSON = "survey_company_details_json";
     }
 
     public class Permission {
