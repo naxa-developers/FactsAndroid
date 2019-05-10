@@ -29,8 +29,8 @@ import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_SURVEY_COMPANY_DETAILS_JSON;
 import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_FORM_TYPE;
-import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_SURVEY_COMPANY_DETAILS_JSON;
 
 public class SurveyFormListActivity extends BaseActivity {
     private static final String TAG = "SurveyFormsListActivity";
