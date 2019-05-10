@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
+import java.io.EOFException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +82,12 @@ public class SurveyCompanyListActivity extends BaseActivity {
                     public void onError(Throwable e) {
                         showToast(e.getMessage());
                         hideProgressDialog();
+                        if(e instanceof SocketTimeoutException){
+                            getSurveyQuestionDetailsResponseFromServer();
+                        }
+                        if(e instanceof EOFException){
+                            getSurveyQuestionDetailsResponseFromServer();
+                        }
                     }
 
                     @Override

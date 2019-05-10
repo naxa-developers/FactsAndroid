@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
+import java.io.EOFException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,6 +128,8 @@ public class SurveyFormListActivity extends BaseActivity {
             return;
         }
 
+        createProgressDialog("Please wait!!!\nFetching survey questions from server");
+
             apiInterface.getSurveyQuestionDetailsResponse(surveyCompany.getId(), surevyForms.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -146,12 +150,21 @@ public class SurveyFormListActivity extends BaseActivity {
                         @Override
                         public void onError(Throwable e) {
                             showToast(e.getMessage());
-                            Log.d(TAG, "onError: "+e.getMessage());
+                            hideProgressDialog();
+
+                           if(e instanceof SocketTimeoutException){
+                               fetctQuestioOptions(surevyForms);
+                           }
+                           if(e instanceof EOFException){
+                               fetctQuestioOptions(surevyForms);
+                           }
+
                         }
 
                         @Override
                         public void onComplete() {
                             if (isQuestionNotNull) {
+                                hideProgressDialog();
                                 HashMap<String, Object> hashMap = new HashMap<>();
                                 hashMap.put(KEY_OBJECT, surveyCompany);
                                 hashMap.put(KEY_EXTRA_OBJECT, surevyForms);
