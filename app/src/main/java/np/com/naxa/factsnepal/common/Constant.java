@@ -27,6 +27,27 @@ public class Constant {
         public static final String KEY_SURVEY_COMPANY_DETAILS_JSON = "survey_company_details_json";
     }
 
+    public class JsonKeySurvey {
+        public static final String KEY_COMPANY_ID = "company_id";
+        public static final String KEY_SURVEY_ID = "survey_id";
+        public static final String KEY_USER_ID = "user_id";
+        public static final String KEY_QN_ID = "question_id";
+        public static final String KEY_ANS_ID = "answer_id";
+        public static final String KEY_QN_TYPE = "question_type";
+        public static final String KEY_ANSWER = "answer_data";
+        public static final String KEY_JSON_DATA = "json_data";
+    }
+
+    public class ViewTypeStringKey {
+        public static final String KEY_TEXTVIEW = "textview";
+        public static final String KEY_EDITTEXT = "edittext";
+        public static final String KEY_CHECKBOX = "checkbox";
+        public static final String KEY_RADIO = "radio";
+        public static final String KEY_RATING_BAR = "rating";
+        public static final String KEY_SPINNER = "dropdown";
+
+    }
+
     public class Permission {
         public static final int RC_STORAGE = 1994;
     }

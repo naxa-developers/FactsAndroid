@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
 import np.com.naxa.factsnepal.surveys.PostSurveyAnswerResponse;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyDetails;
@@ -62,8 +63,5 @@ public interface NetworkApiInterface {
     @Headers("Content-Type: application/json; charset=utf-8")
     @POST(UrlConstant.POST_SURVEY_ANSWER_DETAILS_URL)
     @FormUrlEncoded
-    Observable<PostSurveyAnswerResponse> postSurveyAnswerDetailsResponse(@Field("user_id") int user_id,
-                                                                         @Field("company_id") int company_id,
-                                                                         @Field("survey_id") int survey_id,
-                                                                         @Field("form_data") String formData);
+    Observable<PostSurveyAnswerResponse> postSurveyAnswerDetailsResponse(@Field(Constant.JsonKeySurvey.KEY_JSON_DATA) String formData);
 }
