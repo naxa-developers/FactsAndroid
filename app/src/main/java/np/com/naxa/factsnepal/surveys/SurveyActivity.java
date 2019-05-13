@@ -44,14 +44,16 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.JsonView;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurveyAnswer.KEY_ANS_ID;
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurveyAnswer.KEY_QN_ID;
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurveyAnswer.KEY_QN_TYPE;
 import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
 
 public class SurveyActivity extends BaseActivity {
     private static final String TAG = "SurveyActivity";
-    private static final String KEY_QN_ID = "question_id";
-    private static final String KEY_ANS_ID = "answer_id";
+
     Button btnFormSubmit;
     List<Integer> checkedStringList = new ArrayList<Integer>();
     String checkboxString = "";
@@ -292,7 +294,7 @@ public class SurveyActivity extends BaseActivity {
                 break;
 
             case "RatingBar":
-                jsonArray.put(getValueFromratingBar((RatingBar) view) );
+                jsonArray.put(getValueFromRatingBar((RatingBar) view) );
                 break;
 
             case "Spinner":
@@ -336,6 +338,7 @@ public class SurveyActivity extends BaseActivity {
             }
         }
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_CHECKBOX);
         jsonObject.put(KEY_QN_ID, viewTag);
         jsonObject.put(KEY_ANS_ID, checkedStringList1);
 
@@ -353,6 +356,7 @@ public class SurveyActivity extends BaseActivity {
         Log.d(TAG, "getValueFromRadioGroup: radiovalue " + radiovalue);
 
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_RADIO);
         jsonObject.put(KEY_QN_ID, viewTag);
         jsonObject.put(KEY_ANS_ID, radiovalue);
         return jsonObject;
@@ -361,6 +365,7 @@ public class SurveyActivity extends BaseActivity {
     public synchronized JSONObject getValueFromTextView(TextView textView) throws JSONException {
         Log.d(TAG, "getValueFromTextView: " + textView.getClass().getSimpleName() + " " + textView.getText().toString());
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_TEXTVIEW);
         jsonObject.put(KEY_QN_ID, viewTag);
         jsonObject.put(KEY_ANS_ID, textView.getText().toString());
         return jsonObject;
@@ -370,6 +375,7 @@ public class SurveyActivity extends BaseActivity {
         Log.d(TAG, "getValueFromTextView: " + editText.getClass().getSimpleName() + " " + editText.getText().toString());
 
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_EDITTEXT);
         jsonObject.put(KEY_QN_ID, viewTag);
         jsonObject.put(KEY_ANS_ID, editText.getText().toString());
         return jsonObject;
@@ -396,16 +402,18 @@ public class SurveyActivity extends BaseActivity {
         Log.d(TAG, "getValueFromCheckBox: " + checkboxString);
 
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_CHECKBOX);
         jsonObject.put(KEY_QN_ID, viewTag);
         jsonObject.put(KEY_ANS_ID, checkedStringList);
         return jsonObject;
     }
 
-    public synchronized JSONObject getValueFromratingBar(RatingBar ratingBar)throws JSONException {
+    public synchronized JSONObject getValueFromRatingBar(RatingBar ratingBar)throws JSONException {
         String rating = String.valueOf(ratingBar.getRating());
 
         Log.d(TAG, "getValueFromratingBar: " + rating);
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_RATING_BAR);
         jsonObject.put(KEY_QN_ID, viewTag);
         jsonObject.put(KEY_ANS_ID, rating);
         return jsonObject;
@@ -417,6 +425,7 @@ public class SurveyActivity extends BaseActivity {
         Log.d(TAG, "getValueFromSpinner: TAG "+selectedSpinnerValueID);
 
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_SPINNER);
         jsonObject.put(KEY_QN_ID, viewTag);
         jsonObject.put(KEY_ANS_ID, selectedSpinnerValueID);
         return jsonObject;

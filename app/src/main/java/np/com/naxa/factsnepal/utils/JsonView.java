@@ -45,7 +45,7 @@ public class JsonView extends LinearLayout {
         void onRendered(boolean isSuccess);
     }
 
-    enum Type {
+    public enum Type {
         CHECKBOX, RADIO, RATING, EDITTEXT, SPINNER
     }
 
@@ -58,11 +58,11 @@ public class JsonView extends LinearLayout {
         int optionStyleRes = 0;
 
         static Map<String, Type> typeMap = new HashMap<String, Type>() {{
-            put("checkbox", Type.CHECKBOX);
-            put("radio", Type.RADIO);
-            put("rating", Type.RATING);
-            put("edittext", Type.EDITTEXT);
-            put("dropdown", Type.SPINNER);
+            put(Constant.ViewTypeStringKey.KEY_CHECKBOX, Type.CHECKBOX);
+            put(Constant.ViewTypeStringKey.KEY_RADIO, Type.RADIO);
+            put(Constant.ViewTypeStringKey.KEY_RATING_BAR, Type.RATING);
+            put(Constant.ViewTypeStringKey.KEY_EDITTEXT, Type.EDITTEXT);
+            put(Constant.ViewTypeStringKey.KEY_SPINNER, Type.SPINNER);
         }};
 
         private ViewParams(String title, JSONArray options, Type type, String questionID) {
