@@ -45,7 +45,7 @@ public class JsonView extends LinearLayout {
         void onRendered(boolean isSuccess);
     }
 
-    public enum Type {
+    enum Type {
         CHECKBOX, RADIO, RATING, EDITTEXT, SPINNER
     }
 
