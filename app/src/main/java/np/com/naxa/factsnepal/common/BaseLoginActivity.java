@@ -192,8 +192,8 @@ public abstract class BaseLoginActivity extends BaseActivity implements View.OnC
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                onGoogleLoginSuccess(account);
                 sharedPreferenceUtils.setValue(KEY_LOGGED_IN_TYPE, GMAIL_LOG_IN);
+                onGoogleLoginSuccess(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("BaseLoginActivity", "Google sign in failed", e);
