@@ -12,6 +12,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,12 +75,13 @@ import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_IS_USER_L
 
 public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.OnFeedCardItemClickListener, View.OnClickListener, BottomDialogFragment.OnCategoriesSelectedListener,EasyPermissions.PermissionCallbacks {
 
+    private static final String TAG = "FactsFeedActivity";
     private View rootLayout;
     private FactsFeedAdapter adapter;
     private RecyclerView recyclerViewFeed;
     private LinearLayoutManager layoutManager;
     private Toolbar toolbar;
-    private MaterialButton btnHome, btnPublicPoll, btnSurvey, btnBookmarked, btnAccount;
+    private MaterialButton btnHome, btnPublicPoll, btnSurvey, btnBookmarked, btnAccount, btnLogout;
     private NotificationCount notificationCount;
 
     String colors[] = new String[]{"#571821", "#5C3219", "#103B31"};
@@ -131,12 +133,14 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
         btnHome = findViewById(R.id.backdrop_home);
         btnPublicPoll = findViewById(R.id.backdrop_public_poll);
         btnSurvey = findViewById(R.id.backdrop_public_survey);
+        btnLogout = findViewById(R.id.backdrop_user_logout);
 
         btnAccount.setOnClickListener(this);
         btnBookmarked.setOnClickListener(this);
         btnHome.setOnClickListener(this);
         btnPublicPoll.setOnClickListener(this);
         btnSurvey.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
     }
 
     private void setupRecyclerView() {
@@ -353,8 +357,10 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 break;
             case R.id.backdrop_public_survey:
                 ActivityUtil.openActivity(SurveyCompanyListActivity.class, this);
+                break;
 
             case R.id.backdrop_user_logout:
+                Log.d(TAG, "onClick: logout ");
                 new BaseLogout(FactsFeedActivity.this) {
                     @Override
                     public void onLogoutSuccess() {
