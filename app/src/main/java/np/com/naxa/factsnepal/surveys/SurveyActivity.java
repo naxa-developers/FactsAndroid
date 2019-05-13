@@ -44,9 +44,12 @@ import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.JsonView;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
-import static np.com.naxa.factsnepal.common.Constant.JsonKeySurveyAnswer.KEY_ANS_ID;
-import static np.com.naxa.factsnepal.common.Constant.JsonKeySurveyAnswer.KEY_QN_ID;
-import static np.com.naxa.factsnepal.common.Constant.JsonKeySurveyAnswer.KEY_QN_TYPE;
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurvey.KEY_ANS_ID;
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurvey.KEY_COMPANY_ID;
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurvey.KEY_QN_ID;
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurvey.KEY_QN_TYPE;
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurvey.KEY_SURVEY_ID;
+import static np.com.naxa.factsnepal.common.Constant.JsonKeySurvey.KEY_USER_ID;
 import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
@@ -61,6 +64,7 @@ public class SurveyActivity extends BaseActivity {
     int viewPosition;
     String lastViewTag = "";
 
+    JSONObject jsonObject = new JSONObject();
     JSONArray jsonArray = new JSONArray();
     SurveyCompany surveyCompany;
     SurevyForms surevyForms;
@@ -100,13 +104,13 @@ public class SurveyActivity extends BaseActivity {
             surevyForms = (SurevyForms)hashMap.get(KEY_EXTRA_OBJECT);
             userLoginResponse = gson.fromJson(SharedPreferenceUtils.getInstance(SurveyActivity.this).getStringValue(Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS, null), UserLoginResponse.class);
 
-//            try {
-//                jsonObject.put("company_id", surveyCompany.getId());
-//                jsonObject.put("survey_id", surevyForms.getId());
-//                jsonObject.put("user_id", userLoginResponse.getUserLoginDetails().getId());
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                jsonObject.put(KEY_COMPANY_ID, surveyCompany.getId());
+                jsonObject.put(KEY_SURVEY_ID, surevyForms.getId());
+                jsonObject.put(KEY_USER_ID, userLoginResponse.getUserLoginDetails().getId());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
         }
@@ -267,7 +271,13 @@ public class SurveyActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "json to send : "+jsonArray.toString());
+                        try {
+                            jsonObject.put(Constant.JsonKeySurvey.KEY_ANSWER, jsonArray);
+                            Log.d(TAG, "json to send : "+jsonObject.toString());
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         postFormDataToSerever();
                     }
                 });
