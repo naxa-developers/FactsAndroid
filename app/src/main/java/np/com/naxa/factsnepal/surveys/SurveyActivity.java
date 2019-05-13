@@ -273,12 +273,12 @@ public class SurveyActivity extends BaseActivity {
                     public void onComplete() {
                         try {
                             jsonObject.put(Constant.JsonKeySurvey.KEY_ANSWER, jsonArray);
+                            postFormDataToSerever();
                             Log.d(TAG, "json to send : "+jsonObject.toString());
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        postFormDataToSerever();
+
                     }
                 });
 
@@ -536,8 +536,7 @@ public class SurveyActivity extends BaseActivity {
 
 
     private void postFormDataToSerever (){
-        apiInterface.postSurveyAnswerDetailsResponse(userLoginResponse.getUserLoginDetails().getId(),
-                surveyCompany.getId(), surevyForms.getId(), jsonArray.toString())
+        apiInterface.postSurveyAnswerDetailsResponse(jsonObject.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<PostSurveyAnswerResponse>() {
