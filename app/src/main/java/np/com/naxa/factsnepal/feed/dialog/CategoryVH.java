@@ -1,14 +1,13 @@
 package np.com.naxa.factsnepal.feed.dialog;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.CheckBox;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.feed.Fact;
-import np.com.naxa.factsnepal.network.facts.Category;
 
 class CategoryVH extends RecyclerView.ViewHolder {
 
@@ -24,6 +23,8 @@ class CategoryVH extends RecyclerView.ViewHolder {
     void bindView(Fact s) {
         tvCategoryTitle.setText(s.getCategoryName());
         tvCategoryTitle.setChecked(s.isCategorySelected());
-        tvCategoryTitle.setOnClickListener(v -> s.setCategorySelected(!s.isCategorySelected()));
+        tvCategoryTitle.setOnClickListener((View v) -> {
+            s.setCategorySelected(!s.isCategorySelected());
+        });
     }
 }

@@ -25,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.EOFException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -231,6 +233,7 @@ public class SurveyActivity extends BaseActivity {
     }
 
     private void getValueFromView() {
+        createProgressDialog("Sending data");
         viewPosition = -1;
         Log.d(TAG, "getValueFromView: " + Constant.generatedViewIdsList.size());
         Observable.just(Constant.generatedViewIdsList)
@@ -266,6 +269,8 @@ public class SurveyActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        hideProgressDialog();
+                        showToast(e.getMessage());
                         e.printStackTrace();
                     }
 
@@ -543,20 +548,24 @@ public class SurveyActivity extends BaseActivity {
                     @Override
                     public void onNext(PostSurveyAnswerResponse postSurveyAnswerResponse) {
 
-                        if (postSurveyAnswerResponse.isSuccess()){
+                        hideProgressDialog();
+                        if (postSurveyAnswerResponse.getSuccess()){
+                            showToast(postSurveyAnswerResponse.getMessage());
                             Constant.generatedViewIdsList = null;
                             Constant.generatedViewIdsList = new ArrayList<Integer>();
+                            jsonArray = new JSONArray();
 
                             ActivityUtil.openActivity(SurveyCompanyListActivity.class, SurveyActivity.this);
-                            onDestroy();
-                            finish();
                         }
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        hideProgressDialog();
+                        if(e instanceof EOFException || e instanceof SocketTimeoutException){
+                            createProgressDialog("Retrying Data send");
+                        }
                     }
 
                     @Override

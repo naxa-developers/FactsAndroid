@@ -35,7 +35,7 @@ public class Constant {
         public static final String KEY_ANS_ID = "answer_id";
         public static final String KEY_QN_TYPE = "question_type";
         public static final String KEY_ANSWER = "answer_data";
-        public static final String KEY_JSON_DATA = "json_data";
+        public static final String KEY_JSON_DATA = "survey";
     }
 
     public class ViewTypeStringKey {
