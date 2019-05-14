@@ -565,6 +565,7 @@ public class SurveyActivity extends BaseActivity {
                         hideProgressDialog();
                         if(e instanceof EOFException || e instanceof SocketTimeoutException){
                             createProgressDialog("Retrying Data send");
+                            postFormDataToSerever();
                         }
                     }
 
