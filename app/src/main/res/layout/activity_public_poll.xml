@@ -49,6 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_small"
         android:text="@string/demo_survey_question"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_material_header"
         android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@id/iv_survey_banner" />
 

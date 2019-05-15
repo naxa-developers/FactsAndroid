@@ -51,6 +51,7 @@ import np.com.naxa.factsnepal.common.BaseLogout;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.common.GlideApp;
 import np.com.naxa.factsnepal.common.ItemOffsetDecoration;
+import np.com.naxa.factsnepal.common.NetworkUtils;
 import np.com.naxa.factsnepal.feed.Fact;
 import np.com.naxa.factsnepal.feed.FactsLocalSource;
 import np.com.naxa.factsnepal.feed.detail.FactDetailActivity;
@@ -349,7 +350,12 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
                 ActivityUtil.openActivity(PreferencesActivity.class, this);
                 break;
             case R.id.backdrop_public_poll:
-                ActivityUtil.openActivity(PublicPollActivity.class, this);
+                if(NetworkUtils.isConnected()) {
+                    ActivityUtil.openActivity(PublicPollActivity.class, this);
+                }else {
+                    showToast("No internet connection");
+                }
+
                 break;
             case R.id.backdrop_bookmark:
 //                ActivityUtil.openActivity(BookmarkedFactsActivity.class, this);
