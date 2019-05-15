@@ -11,17 +11,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
 
 import java.io.EOFException;
 import java.net.SocketTimeoutException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+import np.com.naxa.factsnepal.surveys.PostSurveyAnswerResponse;
+import np.com.naxa.factsnepal.userprofile.UserLoginResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
+import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
+
+import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS;
 
 public class PublicPollActivity extends BaseActivity {
     private static final String TAG = "PublicPollActivity";
@@ -48,8 +56,12 @@ public class PublicPollActivity extends BaseActivity {
         View button = null;
 
         View.OnClickListener onClick = v -> {
+            createProgressDialog("Sending data...");
             Log.d(TAG, "setupButtonForDemo: view tag " +v.getTag().toString());
-            ActivityUtil.openActivity(PublicPollResultActivity.class, this, null, false);
+
+            Gson gson = new Gson();
+            UserLoginResponse userLoginResponse = gson.fromJson((SharedPreferenceUtils.getInstance(this).getStringValue(KEY_USER_LOGGED_IN_DETAILS, null)), UserLoginResponse.class);
+            postPublicPollAnswerToServer(userLoginResponse.getUserLoginDetails().getId(), publicPollQuestionDetail.getId(), Integer.parseInt(v.getTag().toString()));
         };
 
         List<Option> optionList = publicPollQuestionDetail.getOptions();
@@ -103,4 +115,40 @@ public class PublicPollActivity extends BaseActivity {
                     }
                 });
     }
+
+
+    private void postPublicPollAnswerToServer (int userId, int questionId, int ansserId){
+
+        apiInterface.postPublicPOllAnswerResponse(userId, questionId, ansserId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retry(5)
+                .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
+                .subscribe(new DisposableObserver<PostSurveyAnswerResponse>() {
+                    @Override
+                    public void onNext(PostSurveyAnswerResponse postSurveyAnswerResponse) {
+                        hideProgressDialog();
+                        if (postSurveyAnswerResponse == null){
+                            showToast("Null response from the server.");
+                        }else {
+                            ActivityUtil.openActivity(PublicPollResultActivity.class, PublicPollActivity.this, null, false);
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideProgressDialog();
+                        showToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+
+
 }
