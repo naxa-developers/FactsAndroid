@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
@@ -40,8 +41,7 @@ public class PublicPollActivity extends BaseActivity {
         fetchPublicPollFromServer();
     }
 
-    @Deprecated
-    private void setupButtonForDemo(PublicPollQuestionDetail publicPollQuestionDetail) {
+    private void setupButtonForDemo(@NonNull PublicPollQuestionDetail publicPollQuestionDetail) {
         tvQuestionTitle.setText(publicPollQuestionDetail.getQuestion());
 
         LinearLayout view = findViewById(R.id.layout_button_wrapper);
