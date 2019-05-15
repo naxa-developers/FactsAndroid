@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
-import java.io.EOFException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -24,6 +24,7 @@ import np.com.naxa.factsnepal.common.BaseRecyclerViewAdapter;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.Network.KEY_MAX_RETRY_COUNT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_SURVEY_COMPANY_DETAILS_JSON;
 
 public class SurveyCompanyListActivity extends BaseActivity {
@@ -70,6 +71,8 @@ public class SurveyCompanyListActivity extends BaseActivity {
         apiInterface.getSurveyCompanyDetailsResponse()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retry(KEY_MAX_RETRY_COUNT)
+                .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
                 .subscribe(new DisposableObserver<SurveyCompanyDetails>() {
                     @Override
                     public void onNext(SurveyCompanyDetails surveyCompanyDetails) {
@@ -82,12 +85,12 @@ public class SurveyCompanyListActivity extends BaseActivity {
                     public void onError(Throwable e) {
                         showToast(e.getMessage());
                         hideProgressDialog();
-                        if(e instanceof SocketTimeoutException){
-                            getSurveyQuestionDetailsResponseFromServer();
-                        }
-                        if(e instanceof EOFException){
-                            getSurveyQuestionDetailsResponseFromServer();
-                        }
+//                        if(e instanceof SocketTimeoutException){
+//                            getSurveyQuestionDetailsResponseFromServer();
+//                        }
+//                        if(e instanceof EOFException){
+//                            getSurveyQuestionDetailsResponseFromServer();
+//                        }
                     }
 
                     @Override

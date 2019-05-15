@@ -48,6 +48,10 @@ public class Constant {
 
     }
 
+    public class Network {
+        public static final int KEY_MAX_RETRY_COUNT = 5;
+    }
+
     public class Permission {
         public static final int RC_STORAGE = 1994;
     }
