@@ -12,16 +12,18 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
 
-import java.io.EOFException;
-import java.net.SocketTimeoutException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
+
+import static np.com.naxa.factsnepal.common.Constant.Network.KEY_MAX_RETRY_COUNT;
 
 public class PublicPollActivity extends BaseActivity {
     private static final String TAG = "PublicPollActivity";
@@ -71,6 +73,8 @@ public class PublicPollActivity extends BaseActivity {
         apiInterface.getPublicPollQuestionDetail()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retry(KEY_MAX_RETRY_COUNT)
+                .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
                 .subscribe(new DisposableObserver<List<PublicPollQuestionDetail>>() {
                     @Override
                     public void onNext(List<PublicPollQuestionDetail> publicPollQuestionDetailList) {
@@ -88,13 +92,6 @@ public class PublicPollActivity extends BaseActivity {
                     public void onError(Throwable e) {
                         hideProgressDialog();
                         showToast(e.getMessage());
-                        if((retryCounter < 5)&&(e instanceof EOFException || e instanceof SocketTimeoutException)){
-                            createProgressDialog("Retry loading poll data");
-                            fetchPublicPollFromServer();
-                            retryCounter++;
-                        }else {
-                            showToast("Unable to fetch data from server");
-                        }
                     }
 
                     @Override

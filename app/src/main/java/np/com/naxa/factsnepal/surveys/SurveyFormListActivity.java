@@ -11,11 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
-import java.io.EOFException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,6 +29,7 @@ import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
 import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.Network.KEY_MAX_RETRY_COUNT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_RECENT_SURVEY_FORM_DETAILS;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_SURVEY_COMPANY_DETAILS_JSON;
 import static np.com.naxa.factsnepal.surveys.SurveyCompanyListActivity.KEY_FORM_TYPE;
@@ -133,6 +133,8 @@ public class SurveyFormListActivity extends BaseActivity {
             apiInterface.getSurveyQuestionDetailsResponse(surveyCompany.getId(), surevyForms.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .retry(KEY_MAX_RETRY_COUNT)
+                    .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
                     .subscribe(new DisposableObserver<SurveyQuestionDetailsResponse>() {
                         @Override
                         public void onNext(SurveyQuestionDetailsResponse surveyQuestionDetailsResponse) {
@@ -151,14 +153,6 @@ public class SurveyFormListActivity extends BaseActivity {
                         public void onError(Throwable e) {
                             showToast(e.getMessage());
                             hideProgressDialog();
-
-                           if(e instanceof SocketTimeoutException){
-                               fetctQuestioOptions(surevyForms);
-                           }
-                           if(e instanceof EOFException){
-                               fetctQuestioOptions(surevyForms);
-                           }
-
                         }
 
                         @Override
