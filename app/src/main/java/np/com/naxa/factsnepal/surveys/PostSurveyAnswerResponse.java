@@ -6,25 +6,24 @@ import com.google.gson.annotations.SerializedName;
 public class PostSurveyAnswerResponse {
     @SerializedName("success")
     @Expose
-    private boolean success;
-
-    @SerializedName("error")
+    private Boolean success;
+    @SerializedName("message")
     @Expose
-    private String error;
+    private String message;
 
-    public boolean isSuccess() {
+    public Boolean getSuccess() {
         return success;
     }
 
-    public void setSuccess(boolean success) {
+    public void setSuccess(Boolean success) {
         this.success = success;
     }
 
-    public String getError() {
-        return error;
+    public String getMessage() {
+        return message;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
