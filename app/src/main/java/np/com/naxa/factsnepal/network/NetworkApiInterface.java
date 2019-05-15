@@ -6,6 +6,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.network.facts.FactsResponse;
+import np.com.naxa.factsnepal.publicpoll.PublicPollQuestionDetail;
 import np.com.naxa.factsnepal.surveys.PostSurveyAnswerResponse;
 import np.com.naxa.factsnepal.surveys.SurveyCompanyDetails;
 import np.com.naxa.factsnepal.surveys.surveyforms.SurveyQuestionDetailsResponse;
@@ -55,6 +56,11 @@ public interface NetworkApiInterface {
     @Headers("Content-Type: application/json; charset=utf-8")
     @GET(UrlConstant.GET_SAMPLE_SURVEY_QUESTION_DETAILS_URL)
     Observable<SurveyQuestionDetailsResponse> getSampleSurveyQuestionDetailsResponse(@Query("file_name") String filename);
+
+
+    @Headers("Content-Type: application/json; charset=utf-8")
+    @GET(UrlConstant.GET_PUBLIC_POOL_QUESTION_URL)
+    Observable<List<PublicPollQuestionDetail>> getPublicPollQuestionDetail();
 
 //    @Headers("Content-Type: application/json; charset=utf-8")
 //    @GET(UrlConstant.GET_SAMPLE_SURVEY_QUESTION_DETAILS_URL)
