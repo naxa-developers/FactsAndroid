@@ -14,7 +14,7 @@ gen/
 out/
 
 # Gradle files
-.gradle/
+.gradle
 /build
 
 # Local configuration file (sdk path, etc)
@@ -41,6 +41,9 @@ proguard/
 /.idea/dictionaries
 /.idea/libraries
 /.idea/caches
+/.idea/modules.xml
+/.idea/navEditor.xml
+/.idea/**
 .DS_Store
 
 # Keystore files
