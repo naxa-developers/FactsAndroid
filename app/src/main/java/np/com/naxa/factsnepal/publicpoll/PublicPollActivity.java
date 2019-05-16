@@ -24,7 +24,6 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
-import np.com.naxa.factsnepal.surveys.PostSurveyAnswerResponse;
 import np.com.naxa.factsnepal.userprofile.UserLoginResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
@@ -119,20 +118,23 @@ public class PublicPollActivity extends BaseActivity {
 
     private void postPublicPollAnswerToServer (int userId, int questionId, int ansserId){
 
-        apiInterface.postPublicPOllAnswerResponse(userId, questionId, ansserId)
+        apiInterface.postPublicPOllAnswerResponse(questionId, ansserId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(5)
                 .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
-                .subscribe(new DisposableObserver<PostSurveyAnswerResponse>() {
+                .subscribe(new DisposableObserver<PostPublicPollAnswerResponse>() {
                     @Override
-                    public void onNext(PostSurveyAnswerResponse postSurveyAnswerResponse) {
+                    public void onNext(PostPublicPollAnswerResponse postPublicPollAnswerResponse) {
                         hideProgressDialog();
-                        if (postSurveyAnswerResponse == null){
+                        if (postPublicPollAnswerResponse == null){
                             showToast("Null response from the server.");
                         }else {
-                            ActivityUtil.openActivity(PublicPollResultActivity.class, PublicPollActivity.this, null, false);
-
+                            if(postPublicPollAnswerResponse.getSuccess()) {
+                                ActivityUtil.openActivity(PublicPollResultActivity.class, PublicPollActivity.this, null, false);
+                            }else {
+                                showToast(postPublicPollAnswerResponse.getMessage());
+                            }
                         }
                     }
 
