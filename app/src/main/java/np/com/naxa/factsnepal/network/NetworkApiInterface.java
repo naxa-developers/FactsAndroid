@@ -73,11 +73,8 @@ public interface NetworkApiInterface {
     Observable<PostSurveyAnswerResponse> postSurveyAnswerDetailsResponse(@Field(Constant.JsonKeySurvey.KEY_JSON_DATA) String formData);
 
 
-    @Headers("Content-Type: application/json; charset=utf-8")
     @POST(UrlConstant.POST_PUBLIC_POOL_ANSWER_URL)
     @FormUrlEncoded
-    Observable<PostPublicPollAnswerResponse> postPublicPOllAnswerResponse(
-//            @Field(Constant.JsonKeySurvey.KEY_USER_ID) int userId,
-                                                                      @Field(Constant.JsonKeySurvey.KEY_QN_ID) int questionId,
+    Observable<PostPublicPollAnswerResponse> postPublicPOllAnswerResponse(@Field(Constant.JsonKeySurvey.KEY_QN_ID) int questionId,
                                                                       @Field(Constant.JsonKeySurvey.KEY_ANS_ID) int answerId);
 }
