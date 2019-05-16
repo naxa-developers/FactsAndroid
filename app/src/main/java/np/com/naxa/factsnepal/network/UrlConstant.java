@@ -19,5 +19,6 @@ public class UrlConstant {
         public static final String GET_SURVEY_QUESTION_DETAILS_URL = "api/surveyapi/form";
         public static final String POST_SURVEY_ANSWER_DETAILS_URL = "api/surveyapi/storeresponse";
         public static final String GET_PUBLIC_POOL_QUESTION_URL = "api/publicpoll";
+        public static final String POST_PUBLIC_POOL_ANSWER_URL = "api/publicpollstore";
         public static final String GET_SAMPLE_SURVEY_QUESTION_DETAILS_URL = "api";
 }
