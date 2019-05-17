@@ -114,7 +114,7 @@ public class PublicPollActivity extends BaseActivity {
     }
 
 
-    private void postPublicPollAnswerToServer (int userId, PublicPollQuestionDetail publicPollQuestionDetail, int ansserId){
+    private void postPublicPollAnswerToServer (int userId, @NonNull PublicPollQuestionDetail publicPollQuestionDetail, int ansserId){
 
         apiInterface.postPublicPOllAnswerResponse(publicPollQuestionDetail.getId(), ansserId)
                 .subscribeOn(Schedulers.io())
