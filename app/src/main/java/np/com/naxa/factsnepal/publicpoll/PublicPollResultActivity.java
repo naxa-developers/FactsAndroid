@@ -1,10 +1,12 @@
 package np.com.naxa.factsnepal.publicpoll;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -18,6 +20,9 @@ import java.util.ArrayList;
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
 
+import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
+
 public class PublicPollResultActivity extends BaseActivity {
 
     BarChart chart ;
@@ -25,11 +30,21 @@ public class PublicPollResultActivity extends BaseActivity {
     ArrayList<String> BarEntryLabels ;
     BarDataSet Bardataset ;
     BarData BARDATA ;
+    PostPublicPollAnswerResponse postPublicPollAnswerResponse;
+    PublicPollQuestionDetail publicPollQuestionDetail;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result_poll_public);
+
+        Intent intent = getIntent();
+        postPublicPollAnswerResponse = intent.getParcelableExtra(KEY_OBJECT);
+        publicPollQuestionDetail = intent.getParcelableExtra(KEY_EXTRA_OBJECT);
+        TextView tvQuestionTitle =  findViewById(R.id.tv_question_title);
+        tvQuestionTitle.setText(publicPollQuestionDetail.getQuestion());
+
+
         setupToolbar();
         setSkillGraph();
     }

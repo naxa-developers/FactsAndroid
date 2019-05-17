@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +27,8 @@ import np.com.naxa.factsnepal.userprofile.UserLoginResponse;
 import np.com.naxa.factsnepal.utils.ActivityUtil;
 import np.com.naxa.factsnepal.utils.SharedPreferenceUtils;
 
+import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 import static np.com.naxa.factsnepal.common.Constant.SharedPrefKey.KEY_USER_LOGGED_IN_DETAILS;
 
 import static np.com.naxa.factsnepal.common.Constant.Network.KEY_MAX_RETRY_COUNT;
@@ -60,7 +63,7 @@ public class PublicPollActivity extends BaseActivity {
 
             Gson gson = new Gson();
             UserLoginResponse userLoginResponse = gson.fromJson((SharedPreferenceUtils.getInstance(this).getStringValue(KEY_USER_LOGGED_IN_DETAILS, null)), UserLoginResponse.class);
-            postPublicPollAnswerToServer(userLoginResponse.getUserLoginDetails().getId(), publicPollQuestionDetail.getId(), Integer.parseInt(v.getTag().toString()));
+            postPublicPollAnswerToServer(userLoginResponse.getUserLoginDetails().getId(), publicPollQuestionDetail, Integer.parseInt(v.getTag().toString()));
         };
 
         List<Option> optionList = publicPollQuestionDetail.getOptions();
@@ -111,9 +114,9 @@ public class PublicPollActivity extends BaseActivity {
     }
 
 
-    private void postPublicPollAnswerToServer (int userId, int questionId, int ansserId){
+    private void postPublicPollAnswerToServer (int userId, PublicPollQuestionDetail publicPollQuestionDetail, int ansserId){
 
-        apiInterface.postPublicPOllAnswerResponse(questionId, ansserId)
+        apiInterface.postPublicPOllAnswerResponse(publicPollQuestionDetail.getId(), ansserId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(5)
@@ -126,7 +129,10 @@ public class PublicPollActivity extends BaseActivity {
                             showToast("Null response from the server.");
                         }else {
                             if(postPublicPollAnswerResponse.getSuccess()) {
-                                ActivityUtil.openActivity(PublicPollResultActivity.class, PublicPollActivity.this, null, false);
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put(KEY_OBJECT, postPublicPollAnswerResponse);
+                                hashMap.put(KEY_EXTRA_OBJECT, publicPollQuestionDetail);
+                                ActivityUtil.openActivity(PublicPollResultActivity.class, PublicPollActivity.this, hashMap, false);
                             }else {
                                 showToast(postPublicPollAnswerResponse.getMessage());
                             }
