@@ -16,6 +16,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
@@ -38,15 +39,20 @@ public class PublicPollResultActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result_poll_public);
 
-        Intent intent = getIntent();
-        postPublicPollAnswerResponse = intent.getParcelableExtra(KEY_OBJECT);
-        publicPollQuestionDetail = intent.getParcelableExtra(KEY_EXTRA_OBJECT);
-        TextView tvQuestionTitle =  findViewById(R.id.tv_question_title);
-        tvQuestionTitle.setText(publicPollQuestionDetail.getQuestion());
-
+        newIntent(getIntent());
 
         setupToolbar();
         setSkillGraph();
+    }
+
+    protected void newIntent(Intent intent){
+
+        HashMap<String, Object> hashMap = (HashMap<String, Object>) intent.getSerializableExtra("map");
+        postPublicPollAnswerResponse = (PostPublicPollAnswerResponse) hashMap.get(KEY_OBJECT);
+        publicPollQuestionDetail = (PublicPollQuestionDetail) hashMap.get(KEY_EXTRA_OBJECT);
+
+        TextView tvQuestionTitle =  findViewById(R.id.tv_question_title);
+        tvQuestionTitle.setText(publicPollQuestionDetail.getQuestion());
     }
 
 //    @Deprecated
@@ -76,20 +82,28 @@ public class PublicPollResultActivity extends BaseActivity {
 
 //    @Deprecated
     public void AddValuesToBARENTRY(){
+        int position = -1;
+        for (ResultData resultData :postPublicPollAnswerResponse.getResultData()){
+            position++;
+            BarEntryLabels.add(resultData.getQuestion());
+            BARENTRY.add(new BarEntry(position, resultData.getTotalCount(), BarEntryLabels.get(position)));
 
-        BARENTRY.add(new BarEntry(1, 20f, BarEntryLabels.get(0)));
-        BARENTRY.add(new BarEntry(2, 40f, BarEntryLabels.get(1)));
-        BARENTRY.add(new BarEntry(3,60f, BarEntryLabels.get(2) ));
-        BARENTRY.add(new BarEntry(4,80f, BarEntryLabels.get(3)));
+        }
+//        BARENTRY.add(new BarEntry(1, 20f, BarEntryLabels.get(0)));
+//        BARENTRY.add(new BarEntry(2, 40f, BarEntryLabels.get(1)));
+//        BARENTRY.add(new BarEntry(3,60f, BarEntryLabels.get(2) ));
+//        BARENTRY.add(new BarEntry(4,80f, BarEntryLabels.get(3)));
     }
 
 //    @Deprecated
     public void AddValuesToBarEntryLabels(){
-
-        BarEntryLabels.add("Nepali Congress");
-        BarEntryLabels.add("Nepal Communist Party");
-        BarEntryLabels.add("Rastriya Janata Party");
-        BarEntryLabels.add("Bibeksheel Sajha Party");
+        for (ResultData resultData :postPublicPollAnswerResponse.getResultData()){
+            BarEntryLabels.add(resultData.getQuestion());
+        }
+//        BarEntryLabels.add("Nepali Congress");
+//        BarEntryLabels.add("Nepal Communist Party");
+//        BarEntryLabels.add("Rastriya Janata Party");
+//        BarEntryLabels.add("Bibeksheel Sajha Party");
     }
 
 
