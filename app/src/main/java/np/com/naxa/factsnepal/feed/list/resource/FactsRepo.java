@@ -1,8 +1,12 @@
 package np.com.naxa.factsnepal.feed.list.resource;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
@@ -53,9 +57,25 @@ public class FactsRepo {
     }
 
 
-    private void showMessage(String message) {
-            Toast.makeText(FactsNepal.getInstance(), message, Toast.LENGTH_SHORT).show();
+    private void showMessage(String message1) {
+//            Toast.makeText(FactsNepal.getInstance(), message1, Toast.LENGTH_SHORT).show();
+
+        Handler handler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(@NonNull Message message) {
+                Log.d("FactsRepo", "handleMessage: "+message);
+                // This is where you do your work in the UI thread.
+                // Your worker tells you in the message what to do.
+                Toast.makeText(FactsNepal.getInstance(), message1, Toast.LENGTH_SHORT).show();
+            }
+        };
+        // And this is how you call it from the worker thread:
+        Message message = handler.obtainMessage();
+        message.sendToTarget();
+
     }
+
+
 
     public LiveData<Fact> getById(String factId, boolean refreshCache) {
         if (refreshCache) {

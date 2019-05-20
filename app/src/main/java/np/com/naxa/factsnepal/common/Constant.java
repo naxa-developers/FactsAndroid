@@ -5,6 +5,9 @@ import java.util.List;
 
 public class Constant {
     public static final String KEY_OBJECT = "object";
+    public static boolean isFactsFeedFirstTime = true;
+    public static boolean isIndividualCheckboxClicked = false;
+
     public static final String KEY_EXTRA_OBJECT = "extra_object";
     public static final String EXTRA_IMAGE = "extra_image";
     public static String RANDOM_PHOTO = "https://picsum.photos/1000/600/?random";

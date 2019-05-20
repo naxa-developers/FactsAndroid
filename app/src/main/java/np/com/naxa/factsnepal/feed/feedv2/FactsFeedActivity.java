@@ -382,7 +382,6 @@ public class FactsFeedActivity extends BaseActivity implements FactsFeedAdapter.
 
     @Override
     public void onCategoriesSelected(Set<String> categories) {
-
         FactsRepo.getINSTANCE().getByCategoryIds(getSelectedCategories(), true);
         Toast.makeText(getApplicationContext(), categories.size() + " categories added to your preference list", Toast.LENGTH_SHORT).show();
     }

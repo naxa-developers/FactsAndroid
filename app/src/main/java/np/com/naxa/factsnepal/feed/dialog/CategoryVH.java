@@ -7,7 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import np.com.naxa.factsnepal.R;
+import np.com.naxa.factsnepal.common.Constant;
 import np.com.naxa.factsnepal.feed.Fact;
+
+import static np.com.naxa.factsnepal.feed.dialog.BottomDialogFragment.selectAllCheckbox;
 
 class CategoryVH extends RecyclerView.ViewHolder {
 
@@ -24,7 +27,9 @@ class CategoryVH extends RecyclerView.ViewHolder {
         tvCategoryTitle.setText(s.getCategoryName());
         tvCategoryTitle.setChecked(s.isCategorySelected());
         tvCategoryTitle.setOnClickListener((View v) -> {
-            s.setCategorySelected(!s.isCategorySelected());
+            Constant.isIndividualCheckboxClicked = true;
+            selectAllCheckbox.setChecked(false);
+            s.setCategorySelected(s.isCategorySelected());
         });
     }
 }

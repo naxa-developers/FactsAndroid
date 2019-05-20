@@ -2,15 +2,15 @@ package np.com.naxa.factsnepal.feed.dialog;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -52,11 +52,12 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
     }
 
     private RecyclerView recyclerView;
-    private CheckBox selectAllCheckbox;
+    public static CheckBox selectAllCheckbox;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Constant.isIndividualCheckboxClicked = false;
         return inflater.inflate(R.layout.layout_dialog_category_chips, container, false);
     }
 
@@ -83,7 +84,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
 
     }
 
-    private List<Fact> mapFactsToCategories(List<Fact> facts) {
+    private List<Fact> mapFactsToCategories(@NonNull List<Fact> facts) {
         for (Fact fact : facts) {
             fact.setCategorySelected(selectedCategories.contains(fact.getCatgoryId()));
         }
@@ -95,12 +96,21 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
         View btnClose = getView().findViewById(R.id.btn_close_dialog_category_chips);
         selectAllCheckbox = getView().findViewById(R.id.checkbox_dialog_category_chips);
         selectAllCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            setAllCheckBoxSelectStatus(isChecked);
+            Constant.isIndividualCheckboxClicked = false;
+        });
+        btnClose.setOnClickListener(this);
+
+    }
+
+    private void setAllCheckBoxSelectStatus(boolean isChecked){
+        if(!Constant.isIndividualCheckboxClicked) {
             for (Fact fact : adapter.getData()) {
                 fact.setCategorySelected(isChecked);
             }
             adapter.notifyDataSetChanged();
-        });
-        btnClose.setOnClickListener(this);
+        }
+        Constant.isIndividualCheckboxClicked = false;
     }
 
     private void setupListAdapter(List<Fact> list) {
@@ -123,6 +133,12 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
         recyclerView.setHasFixedSize(true);
         recyclerView.setMinimumHeight(400);
         recyclerView.setAdapter(adapter);
+
+        if(Constant.isFactsFeedFirstTime){
+            selectAllCheckbox.setChecked(true);
+            setAllCheckBoxSelectStatus(true);
+            Constant.isFactsFeedFirstTime = false;
+        }
     }
 
     @Override
