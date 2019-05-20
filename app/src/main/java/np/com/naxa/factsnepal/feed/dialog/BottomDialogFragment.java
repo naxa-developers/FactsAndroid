@@ -97,7 +97,6 @@ public class BottomDialogFragment extends BottomSheetDialogFragment implements V
         selectAllCheckbox = getView().findViewById(R.id.checkbox_dialog_category_chips);
         selectAllCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             setAllCheckBoxSelectStatus(isChecked);
-            Constant.isIndividualCheckboxClicked = false;
         });
         btnClose.setOnClickListener(this);
 
