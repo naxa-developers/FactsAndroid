@@ -1,10 +1,15 @@
 package np.com.naxa.factsnepal.publicpoll;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -14,9 +19,13 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import np.com.naxa.factsnepal.R;
 import np.com.naxa.factsnepal.common.BaseActivity;
+
+import static np.com.naxa.factsnepal.common.Constant.KEY_EXTRA_OBJECT;
+import static np.com.naxa.factsnepal.common.Constant.KEY_OBJECT;
 
 public class PublicPollResultActivity extends BaseActivity {
 
@@ -25,16 +34,30 @@ public class PublicPollResultActivity extends BaseActivity {
     ArrayList<String> BarEntryLabels ;
     BarDataSet Bardataset ;
     BarData BARDATA ;
+    PostPublicPollAnswerResponse postPublicPollAnswerResponse;
+    PublicPollQuestionDetail publicPollQuestionDetail;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result_poll_public);
+
+        newIntent(getIntent());
+
         setupToolbar();
         setSkillGraph();
     }
 
-//    @Deprecated
+    protected void newIntent(Intent intent){
+
+        HashMap<String, Object> hashMap = (HashMap<String, Object>) intent.getSerializableExtra("map");
+        postPublicPollAnswerResponse = (PostPublicPollAnswerResponse) hashMap.get(KEY_OBJECT);
+        publicPollQuestionDetail = (PublicPollQuestionDetail) hashMap.get(KEY_EXTRA_OBJECT);
+
+        TextView tvQuestionTitle =  findViewById(R.id.tv_question_title);
+        tvQuestionTitle.setText(publicPollQuestionDetail.getQuestion());
+    }
+
     private void setSkillGraph() {
         chart = (BarChart) findViewById(R.id.chart_poll_result);
 
@@ -59,22 +82,19 @@ public class PublicPollResultActivity extends BaseActivity {
     }
 
 
-//    @Deprecated
     public void AddValuesToBARENTRY(){
-
-        BARENTRY.add(new BarEntry(1, 20f, BarEntryLabels.get(0)));
-        BARENTRY.add(new BarEntry(2, 40f, BarEntryLabels.get(1)));
-        BARENTRY.add(new BarEntry(3,60f, BarEntryLabels.get(2) ));
-        BARENTRY.add(new BarEntry(4,80f, BarEntryLabels.get(3)));
+        int position = -1;
+        for (ResultData resultData :postPublicPollAnswerResponse.getResultData()){
+            position++;
+            BarEntryLabels.add(resultData.getQuestion());
+            BARENTRY.add(new BarEntry(position, resultData.getTotalCount(), BarEntryLabels.get(position)));
+        }
     }
 
-//    @Deprecated
     public void AddValuesToBarEntryLabels(){
-
-        BarEntryLabels.add("Nepali Congress");
-        BarEntryLabels.add("Nepal Communist Party");
-        BarEntryLabels.add("Rastriya Janata Party");
-        BarEntryLabels.add("Bibeksheel Sajha Party");
+        for (ResultData resultData :postPublicPollAnswerResponse.getResultData()){
+            BarEntryLabels.add(resultData.getQuestion());
+        }
     }
 
 
@@ -98,24 +118,21 @@ public class PublicPollResultActivity extends BaseActivity {
     }
 
     private void initAndSetLegend(){
-        View legendIcon1 = findViewById(R.id.legend1);
-        View legendIcon2 = findViewById(R.id.legend2);
-        View legendIcon3 = findViewById(R.id.legend3);
-        View legendIcon4 = findViewById(R.id.legend4);
+        LinearLayout linearLayout = findViewById(R.id.legend_root_layout);
 
-        TextView tvLegendLabel1 = findViewById(R.id.tv_legend1);
-        TextView tvLegendLabel2 = findViewById(R.id.tv_legend2);
-        TextView tvLegendLabel3 = findViewById(R.id.tv_legend3);
-        TextView tvLegendLabel4 = findViewById(R.id.tv_legend4);
+        ImageView imageView;
+        TextView textView;
+        int position = -1;
+        for (ResultData resultData : postPublicPollAnswerResponse.getResultData()){
+            position++;
+            View relativeLayout = LayoutInflater.from(this).inflate(R.layout.chart_legend_layout, linearLayout, false);
+            imageView = (ImageView)relativeLayout.findViewById(R.id.iv_legend);
+            imageView.setBackgroundColor(ColorTemplate.COLORFUL_COLORS[position]);
 
-        legendIcon1.setBackgroundColor(ColorTemplate.COLORFUL_COLORS[0]);
-        legendIcon2.setBackgroundColor(ColorTemplate.COLORFUL_COLORS[1]);
-        legendIcon3.setBackgroundColor(ColorTemplate.COLORFUL_COLORS[2]);
-        legendIcon4.setBackgroundColor(ColorTemplate.COLORFUL_COLORS[3]);
+            textView = (TextView)relativeLayout.findViewById(R.id.tv_legend);
+            textView.setText(BarEntryLabels.get(position));
+            linearLayout.addView(relativeLayout);
 
-        tvLegendLabel1.setText(BarEntryLabels.get(0));
-        tvLegendLabel2.setText(BarEntryLabels.get(1));
-        tvLegendLabel3.setText(BarEntryLabels.get(2));
-        tvLegendLabel4.setText(BarEntryLabels.get(3));
+        }
     }
 }

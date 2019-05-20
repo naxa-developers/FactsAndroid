@@ -1,12 +1,16 @@
 
 package np.com.naxa.factsnepal.publicpoll;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class PublicPollQuestionDetail {
+public class PublicPollQuestionDetail implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -86,4 +90,45 @@ public class PublicPollQuestionDetail {
         this.options = options;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.question);
+        dest.writeValue(this.dayPoll);
+        dest.writeString(this.pollDate);
+        dest.writeString(this.questionType);
+        dest.writeValue(this.active);
+        dest.writeList(this.options);
+    }
+
+    public PublicPollQuestionDetail() {
+    }
+
+    protected PublicPollQuestionDetail(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.question = in.readString();
+        this.dayPoll = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.pollDate = in.readString();
+        this.questionType = in.readString();
+        this.active = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.options = new ArrayList<Option>();
+        in.readList(this.options, Option.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<PublicPollQuestionDetail> CREATOR = new Parcelable.Creator<PublicPollQuestionDetail>() {
+        @Override
+        public PublicPollQuestionDetail createFromParcel(Parcel source) {
+            return new PublicPollQuestionDetail(source);
+        }
+
+        @Override
+        public PublicPollQuestionDetail[] newArray(int size) {
+            return new PublicPollQuestionDetail[size];
+        }
+    };
 }
