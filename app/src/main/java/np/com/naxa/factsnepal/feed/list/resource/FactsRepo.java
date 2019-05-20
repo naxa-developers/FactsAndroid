@@ -58,8 +58,6 @@ public class FactsRepo {
 
 
     private void showMessage(String message1) {
-//            Toast.makeText(FactsNepal.getInstance(), message1, Toast.LENGTH_SHORT).show();
-
         Handler handler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(@NonNull Message message) {
