@@ -360,7 +360,7 @@ public class SurveyActivity extends BaseActivity {
 //                            createProgressDialog("Retrying Data send");
 //                            postFormDataToSerever();
 //                        }
-//                        showToast("sending failed!!!"+"\n"+e.getMessage());
+                        showToast("sending failed!!!"+"\n"+e.getMessage());
                     }
 
                     @Override
