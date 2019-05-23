@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.JsonIOException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,13 +50,12 @@ public abstract class GetDataFromJsonView {
     Context context;
     AppCompatActivity activity;
 
-    public GetDataFromJsonView (AppCompatActivity activity, JSONArray rawQnBuilderJsonArray){
+    public GetDataFromJsonView(AppCompatActivity activity, JSONArray rawQnBuilderJsonArray) {
         this.context = activity;
         this.activity = activity;
         this.rawQnBuilderJsonArray = rawQnBuilderJsonArray;
         getValueFromView();
     }
-
 
 
     public void getValueFromView() {
@@ -87,6 +88,7 @@ public abstract class GetDataFromJsonView {
                             getChildFromLinearLayout(view);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            onError(e);
                         }
 
                     }
@@ -100,8 +102,8 @@ public abstract class GetDataFromJsonView {
 
                     @Override
                     public void onComplete() {
-                            onCompleteListner( jsonArray);
-                            Log.d(TAG, "json to send : "+jsonArray.toString());
+                        onCompleteListner(jsonArray);
+                        Log.d(TAG, "json to send : " + jsonArray.toString());
                     }
                 });
 
@@ -122,23 +124,23 @@ public abstract class GetDataFromJsonView {
                 break;
 
             case "RadioGroup":
-                jsonArray.put(getValueFromRadioGroup((RadioGroup) view) );
+                jsonArray.put(getValueFromRadioGroup((RadioGroup) view));
                 Log.d(TAG, "getChildFromRadioGroup: " + ((RadioGroup) view).getChildCount());
                 break;
 
             case "RatingBar":
-                jsonArray.put(getValueFromRatingBar((RatingBar) view) );
+                jsonArray.put(getValueFromRatingBar((RatingBar) view));
                 break;
 
             case "Spinner":
-                jsonArray.put(getValueFromSpinner((Spinner) view) );
+                jsonArray.put(getValueFromSpinner((Spinner) view));
                 break;
 
             case "CheckBox":
                 getValueFromCheckBox((CheckBox) view);
                 if (TextUtils.equals(viewTag, lastViewTag)) {
                     try {
-                        jsonArray.put(getValueFromCheckBox((CheckBox)view));
+                        jsonArray.put(getValueFromCheckBox((CheckBox) view));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -147,29 +149,36 @@ public abstract class GetDataFromJsonView {
                 break;
 
             case "LinearLayout":
-                LinearLayout linearLayout = (LinearLayout)view ;
-                if(linearLayout.getChildAt(0) instanceof CheckBox){
+                LinearLayout linearLayout = (LinearLayout) view;
+                if (linearLayout.getChildAt(0) instanceof CheckBox) {
                     jsonArray.put(getValueFromCheckedLinearLayout(linearLayout));
-                    Log.d(TAG, "getChildFromLinearLayout: "+linearLayout.getChildCount());
+                    Log.d(TAG, "getChildFromLinearLayout: " + linearLayout.getChildCount());
                 }
                 break;
 
             case "EditText":
-                jsonArray.put(getValueFromEditTex((EditText) view) );
+                jsonArray.put(getValueFromEditTex((EditText) view));
                 break;
 
         }
 
     }
 
-    private synchronized JSONObject getValueFromCheckedLinearLayout (@NonNull LinearLayout linearLayout) throws JSONException{
+    private synchronized JSONObject getValueFromCheckedLinearLayout(@NonNull LinearLayout linearLayout) throws JSONException {
         List<Integer> checkedStringList1 = new ArrayList<Integer>();
-        for (int i = 0 ; i<linearLayout.getChildCount(); i++){
-            CheckBox checkBox = (CheckBox)linearLayout.getChildAt(i);
-            if(checkBox.isChecked()){
+        for (int i = 0; i < linearLayout.getChildCount(); i++) {
+            CheckBox checkBox = (CheckBox) linearLayout.getChildAt(i);
+            if (checkBox.isChecked()) {
                 checkedStringList1.add(Integer.parseInt(checkBox.getTag().toString()));
             }
         }
+
+        if(checkedStringList1.size() == 0){
+            linearLayout.requestFocus();
+
+            throw new JsonIOException("Atleast one checkbox should be selected");
+        }
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_CHECKBOX);
         jsonObject.put(KEY_QN_ID, viewTag);
@@ -182,7 +191,8 @@ public abstract class GetDataFromJsonView {
         RadioButton rb1 = (RadioButton) activity.findViewById(radioGroup.getCheckedRadioButtonId());
         if (rb1 == null) {
             Toast.makeText(context, "no any option selected", Toast.LENGTH_SHORT).show();
-            throw new  JSONException("no any option selected");
+            radioGroup.requestFocus();
+            throw new JsonIOException("no any option selected");
         }
 //        String radiovalue = rb1.getText().toString();
         int radiovalue = Integer.parseInt(rb1.getTag().toString());
@@ -206,7 +216,10 @@ public abstract class GetDataFromJsonView {
 
     private synchronized JSONObject getValueFromEditTex(@NonNull EditText editText) throws JSONException {
         Log.d(TAG, "getValueFromTextView: " + editText.getClass().getSimpleName() + " " + editText.getText().toString());
-
+        if (TextUtils.isEmpty(editText.getText().toString())) {
+            editText.requestFocus();
+            throw new JsonIOException("Field can not be empty");
+        }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_EDITTEXT);
         jsonObject.put(KEY_QN_ID, viewTag);
@@ -218,7 +231,7 @@ public abstract class GetDataFromJsonView {
 
         if (checkBox.isChecked()) {
 
-            if (TextUtils.equals("",viewTag) || TextUtils.equals(lastViewTag,viewTag)) {
+            if (TextUtils.equals("", viewTag) || TextUtils.equals(lastViewTag, viewTag)) {
                 checkedStringList.add(Integer.parseInt(checkBox.getTag().toString()));
             } else {
 //                lastViewTag = checkBox.getTag().toString();
@@ -241,7 +254,7 @@ public abstract class GetDataFromJsonView {
         return jsonObject;
     }
 
-    private synchronized JSONObject getValueFromRatingBar(@NonNull RatingBar ratingBar)throws JSONException {
+    private synchronized JSONObject getValueFromRatingBar(@NonNull RatingBar ratingBar) throws JSONException {
         String rating = String.valueOf(ratingBar.getRating());
 
         Log.d(TAG, "getValueFromratingBar: " + rating);
@@ -254,8 +267,14 @@ public abstract class GetDataFromJsonView {
 
     private synchronized JSONObject getValueFromSpinner(@NonNull Spinner spinner) throws JSONException {
         int selectedSpinnerValuePos = spinner.getSelectedItemPosition();
+
+        if(selectedSpinnerValuePos == 0){
+            spinner.requestFocus();
+            throw new JsonIOException("please Select option");
+        }
+
         int selectedSpinnerValueID = rawQnBuilderJsonArray.optJSONObject(viewPosition).optJSONArray("options").optJSONObject(selectedSpinnerValuePos).optInt("id");
-        Log.d(TAG, "getValueFromSpinner: TAG "+selectedSpinnerValueID);
+        Log.d(TAG, "getValueFromSpinner: TAG " + selectedSpinnerValueID);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(KEY_QN_TYPE, Constant.ViewTypeStringKey.KEY_SPINNER);

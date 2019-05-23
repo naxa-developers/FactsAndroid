@@ -212,7 +212,7 @@ public class JsonView extends LinearLayout {
 
     private synchronized Spinner getSpinnerView(){
         ArrayList<String> spinnerArray = new ArrayList<String>();
-
+        spinnerArray.add("Select Option");
         for (int i = 0; i < params.options.length(); i++) {
             JSONObject option = params.options.optJSONObject(i);
             spinnerArray.add(option.optString("question"));
