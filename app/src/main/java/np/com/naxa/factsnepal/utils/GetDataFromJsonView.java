@@ -192,7 +192,7 @@ public abstract class GetDataFromJsonView {
         if (rb1 == null) {
             Toast.makeText(context, "no any option selected", Toast.LENGTH_SHORT).show();
             radioGroup.requestFocus();
-            throw new JsonIOException("no any option selected");
+            throw new JsonIOException("No any radio option selected");
         }
 //        String radiovalue = rb1.getText().toString();
         int radiovalue = Integer.parseInt(rb1.getTag().toString());
@@ -270,6 +270,8 @@ public abstract class GetDataFromJsonView {
 
         if(selectedSpinnerValuePos == 0){
             spinner.requestFocus();
+            spinner.requestLayout();
+            spinner.invalidate();
             throw new JsonIOException("please Select option");
         }
 
