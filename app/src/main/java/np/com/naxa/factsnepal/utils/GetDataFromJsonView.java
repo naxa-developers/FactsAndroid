@@ -273,7 +273,7 @@ public abstract class GetDataFromJsonView {
             throw new JsonIOException("please Select option");
         }
 
-        int selectedSpinnerValueID = rawQnBuilderJsonArray.optJSONObject(viewPosition).optJSONArray("options").optJSONObject(selectedSpinnerValuePos).optInt("id");
+        int selectedSpinnerValueID = rawQnBuilderJsonArray.optJSONObject(viewPosition).optJSONArray("options").optJSONObject(selectedSpinnerValuePos-1).optInt("id");
         Log.d(TAG, "getValueFromSpinner: TAG " + selectedSpinnerValueID);
 
         JSONObject jsonObject = new JSONObject();
