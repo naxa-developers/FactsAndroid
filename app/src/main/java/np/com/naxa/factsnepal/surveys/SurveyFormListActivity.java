@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -134,7 +133,7 @@ public class SurveyFormListActivity extends BaseActivity {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .retry(KEY_MAX_RETRY_COUNT)
-                    .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
+//                    .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
                     .subscribe(new DisposableObserver<SurveyQuestionDetailsResponse>() {
                         @Override
                         public void onNext(SurveyQuestionDetailsResponse surveyQuestionDetailsResponse) {

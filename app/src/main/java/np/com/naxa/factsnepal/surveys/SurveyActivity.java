@@ -17,8 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.EOFException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -68,7 +66,7 @@ public class SurveyActivity extends BaseActivity {
         setupToolbar("Survey Activity");
         linearLayoutFormList = findViewById(R.id.ll_survey_form_list);
 
-        getNewIntent(getIntent());
+//        getNewIntent(getIntent());
 
         generateViewFromJSON(buildUi());
 
@@ -210,7 +208,7 @@ public class SurveyActivity extends BaseActivity {
                     "   ]";
             Log.d(TAG, "buildUi: " + jsonArray.toString());
 //            Log.d(TAG, "buildUi: " + SurveyQuestionDetailsResponse.getDemoJson());
-//            return new JSONArray(SurveyQuestionDetailsResponse.getDemoJson());
+//            return new JSONArray(json);
             return jsonArray;
         } catch (Exception e) {
             return new JSONArray();
@@ -358,10 +356,11 @@ public class SurveyActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         hideProgressDialog();
-                        if (e instanceof EOFException || e instanceof SocketTimeoutException) {
-                            createProgressDialog("Retrying Data send");
-                            postFormDataToSerever();
-                        }
+//                        if (e instanceof EOFException || e instanceof SocketTimeoutException) {
+//                            createProgressDialog("Retrying Data send");
+//                            postFormDataToSerever();
+//                        }
+                        showToast("sending failed!!!"+"\n"+e.getMessage());
                     }
 
                     @Override

@@ -181,7 +181,7 @@ public class JsonView extends LinearLayout {
         chkGroup.setId(viewId);
         chkGroup.setTag(params.questionID);
         Constant.generatedViewIdsList.add(viewId);
-
+        chkGroup.setFocusable(true);
         return chkGroup;
     }
 
@@ -207,12 +207,13 @@ public class JsonView extends LinearLayout {
         radioGroup.setId(viewId);
         radioGroup.setTag(viewTagId);
         Constant.generatedViewIdsList.add(viewId);
+        radioGroup.setFocusable(true);
         return radioGroup;
     }
 
     private synchronized Spinner getSpinnerView(){
         ArrayList<String> spinnerArray = new ArrayList<String>();
-
+        spinnerArray.add("Select Option");
         for (int i = 0; i < params.options.length(); i++) {
             JSONObject option = params.options.optJSONObject(i);
             spinnerArray.add(option.optString("question"));
@@ -224,6 +225,7 @@ public class JsonView extends LinearLayout {
         spinner.setAdapter(spinnerArrayAdapter);
 
         spinner.setTag(params.questionID);
+        spinner.setFocusable(true);
         int viewId = ViewUtils.generateViewId();
         spinner.setId(viewId);
         Constant.generatedViewIdsList.add(viewId);
@@ -268,6 +270,7 @@ public class JsonView extends LinearLayout {
             editText.setHint(Html.fromHtml(option.optString("question")));
 //            editText.setTag(params.questionID);
             editText.setTag(option.optString("id"));
+            editText.setFocusable(true);
             editText.setTextColor(Color.parseColor("#212121"));
             editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 

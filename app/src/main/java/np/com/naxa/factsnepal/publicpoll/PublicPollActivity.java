@@ -86,7 +86,7 @@ public class PublicPollActivity extends BaseActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retry(KEY_MAX_RETRY_COUNT)
-                .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
+//                .retryWhen(errors -> errors.flatMap(error -> Observable.timer(5, TimeUnit.SECONDS)))
                 .subscribe(new DisposableObserver<List<PublicPollQuestionDetail>>() {
                     @Override
                     public void onNext(List<PublicPollQuestionDetail> publicPollQuestionDetailList) {
